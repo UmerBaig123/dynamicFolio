@@ -1,0 +1,122 @@
+.pCard {
+  border: 1px solid #e0e0e031;
+  border-radius: 5px;
+}
+.pImageContainer {
+  padding: 5px;
+}
+.pImage {
+  border-radius: 5px;
+  width: 120px;
+  height: 120px;
+}
+.pInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.pTitle {
+  font-size: 20px;
+  text-transform: uppercase;
+}
+.pAuthors {
+  font-size: 12px;
+}
+.pDesc {
+  font-size: 12px;
+}
+.links {
+  display: flex;
+  gap: 5px;
+}
+.link {
+  font-size: 12px;
+  color: #ffffff;
+  margin: 4px;
+  padding: 4px;
+  border-radius: 5px;
+  border: 1px solid #6b6b6b7c;
+  transition: all 0.3s ease;
+}
+.link:hover {
+  background-color: #6b6b6b25;
+}
+#publications {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.abs {
+  width: 95.3%;
+  height: inherit;
+  overflow-y: scroll;
+  margin-top: 5px;
+  padding: 0px 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  background-color: #0f0f0f;
+  transition: all 0.3s ease;
+}
+.bib {
+  width: 95.3%;
+  height: inherit;
+  overflow-y: scroll;
+  margin-top: 5px;
+  padding: 0px 5px;
+  font-size: 12px;
+  border-radius: 5px;
+  background-color: #6868685d;
+  transition: all 0.3s ease;
+}
+.paralell {
+  display: flex;
+  justify-content: flex-start;
+  gap: 5px;
+}
+button {
+  background-color: inherit;
+  color: inherit;
+  border: inherit;
+  border-radius: inherit;
+  padding: inherit;
+  cursor: inherit;
+  /* transition: all 0.3s ease; */
+}
+textarea {
+  resize: none;
+  border: 1px solid #e0e0e031;
+}
+.imgSelect {
+  font-size: 12px;
+  padding: 5px;
+  border: 1px solid #e0e0e031;
+  cursor: pointer;
+}
+.imgSelect:hover {
+  background-color: #e0e0e031;
+}
+#pdf {
+  margin: 5px;
+  margin-bottom: 15px;
+}
+#filename {
+  font-size: 12px;
+}
+
+.okBtn {
+  /* margin-top: 10px; */
+  font-size: 17px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  padding: 5px 10px;
+  color: #0f0f0f;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
+.okBtn:hover {
+  background-color: rgba(255, 255, 255);
+}

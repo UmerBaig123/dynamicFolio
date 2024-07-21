@@ -1,0 +1,92 @@
+{% extends 'base.html' %} {% block title %} Faseeh Ahmed {% endblock title%}
+{%load static %} {% block content %} {% comment %} container with 93% width
+{%endcomment %}
+    <link rel="stylesheet" href="{% static "css/repos.css" %}" />
+<!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
+<div class="container">
+  <div class="heading">Repositories</div>
+  {% if description_text != "" %}
+  <div class="pDesc" id="page_description"></div>
+  {% endif %}
+  <div class="item-box">
+    <div class="heading" style="font-size: 16px;">
+      github user
+    </div>
+    <div
+    style="
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;min-height: 100px;
+    ">  <div style="width: 70%;">
+      <a href="https://github.com/{{github_username}}" target="_blank" style="cursor: pointer;margin: 15px;">
+        <img
+          src="https://github-readme-stats.vercel.app/api?username={{github_username}}&show_icons=true&theme=dark&count_private=true"
+          alt="github user"
+          style="width: fit-content"
+        /></a></div>
+  </div>
+  </div>
+  <div class="item-box">
+    <div class="heading" style="font-size: 16px;"> github repos</div>
+  <div
+    style="
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    "
+  >
+    <div id="repos">
+      <div
+        style="
+          width: 100%;
+          min-height: 60vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+    </div></div>
+  </div>
+</div>
+</div>
+<script>
+  var selectedRepos = `{{repos}}`;
+  page_description.innerHTML = decodeHtml("{{description_text}}");
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+  selectedRepos = selectedRepos.split(",");
+
+  var response = fetch(
+    "https://api.github.com/users/{{github_username}}/repos"
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      var repos = document.getElementById("repos");
+      var injectionString = "";
+      data.forEach((repo) => {
+        if (selectedRepos.includes(repo.id.toString())) {
+          injectionString += `<a target="_blank" href="${repo.html_url}" class = "ppAnchor"><img src="https://github-readme-stats.vercel.app/api/pin/?username={{github_username}}&repo=${repo.name}&theme=dark&show_owner=true" alt="repo logo" class="repo-logo" style="height:fit-content;cursor:pointer" /></a>`;
+        }
+      });
+      repos.innerHTML = injectionString;
+    });
+</script>
+{% endblock %}

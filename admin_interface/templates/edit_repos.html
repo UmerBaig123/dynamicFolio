@@ -1,0 +1,190 @@
+{% extends 'admin_base.html' %}asdasdaasasddads {% block title %} edit repos
+{%endblock title%} {%load static %} {% block content %}
+<link rel="stylesheet" href="{% static '/css/admin_repos.css' %}" />
+<div class="container">
+  <div class="item-box">
+    <div class="heading" style="margin-top: 0; margin-bottom: 10px">
+      Select repositories to be shown:
+    </div>
+    <div
+      class="paralell"
+      style="
+        font-size: 12px;
+        justify-content: flex-start;
+        gap: 3px;
+        margin-bottom: 10px;
+      "
+    >
+      change github username from
+      <a
+        href="{% url 'admin_about' %}"
+        style="margin: 0; padding: 0; color: aquamarine"
+        >about me</a
+      >
+      if repos don't display
+    </div>
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 20px;
+      "
+    >
+      <div id="repos" style="min-height: 60vh">
+        <div
+          style="
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+          "
+        >
+          <div class="spinner">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      style="
+        display: flex;
+        width: 85%;
+        justify-content: flex-end;
+        margin-bottom: 20px;
+        align-items: center;
+        margin-top: 20px;
+        gap: 10px;
+      "
+    >
+      <button
+        class="okBtn"
+        style="font-size: 12px; font-weight: 100; margin: 2.5px"
+        onclick="submit()"
+      >
+        ok
+      </button>
+      <button
+        class="okBtn"
+        onclick="toggle()"
+        style="font-size: 12px; font-weight: 100; margin: 2.5px"
+      >
+        add/edit page description
+      </button>
+    </div>
+    <form
+      action="{% url 'admin_repos' %}"
+      method="post"
+      onsubmit="changeDescription()"
+    >
+      {% csrf_token %}
+      <div id="description" hidden style="margin-bottom: 20px">
+        <div
+          style="
+            display: flex;
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 20px;
+            align-items: center;
+            margin-top: 20px;
+          "
+        >
+          <textarea
+            name="page_description"
+            rows="12"
+            placeholder="write description here"
+            cols="40"
+            style="padding: 10px"
+            class="summary"
+            id="description_text"
+            width="85%"
+          ></textarea>
+        </div>
+        <button class="okBtn" style="font-size: 12px; font-weight: 100">
+          submit
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+  const htmlDecode = (input) => {
+    var doc = new DOMParser().parseFromString(input, "text/html");
+    return doc.documentElement.textContent;
+  };
+  var page_description = "{{page_desc}}";
+  description_text.value = htmlDecode(page_description).replace(/<br>/g, "\n");
+  var repo_ids = [];
+  var db_repo_ids = "{{repos}}";
+  if (db_repo_ids != "none") {
+    db_repo_ids = db_repo_ids.split(",");
+    for (let i = 0; i < db_repo_ids.length; i++) {
+      repo_ids.push(parseInt(db_repo_ids[i]));
+    }
+  }
+  var response = fetch("https://api.github.com/users/{{username}}/repos")
+    .then((response) => response.json())
+    .then((data) => {
+      var repos = document.getElementById("repos");
+      var injectionString = "";
+      data.forEach((repo) => {
+        injectionString += `<img src="https://github-readme-stats.vercel.app/api/pin/?username={{username}}&repo=${
+          repo.name
+        }&theme=dark&show_owner=true" alt="repo logo" class="repo-logo ${
+          repo_ids.includes(repo.id) ? "selected" : ""
+        }" style="height:fit-content;cursor:pointer" onclick="addToSelected(${
+          repo.id
+        }, this)"/>`;
+      });
+      repos.innerHTML = injectionString;
+    });
+  const changeDescription = () => {
+    document.getElementById("description_text").value = document
+      .getElementById("description_text")
+      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+  };
+  const addToSelected = (id, element) => {
+    if (repo_ids.includes(id)) {
+      repo_ids = repo_ids.filter((repo_id) => repo_id != id);
+    } else {
+      repo_ids.push(id);
+    }
+    element.classList.toggle("selected");
+  };
+  const submit = () => {
+    fetch("{% url 'repos_select' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({ repos: repo_ids }),
+    }).then((response) => {
+      response.json().then((data) => {
+        if (data.status == 200) {
+          window.location.href = "{% url 'admin_repos' %}";
+        }
+      });
+    });
+  };
+  const toggle = () => {
+    if (description.hidden) {
+      show(description);
+    } else {
+      hide(description);
+    }
+  };
+  const hide = (element) => {
+    element.hidden = true;
+  };
+  const show = (element) => {
+    element.hidden = false;
+  };
+</script>
+{% endblock %}

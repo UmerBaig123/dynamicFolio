@@ -1,0 +1,416 @@
+{% extends 'admin_base.html' %}asdasdaasasddads {% block title %} edit
+publication {%endblock title%} {%load static %} {% block content %}
+<link rel="stylesheet" href="{% static 'css/admin_publications.css' %}" />
+<div class="container">
+  <div class="item-box">
+    <div class="heading" style="margin-top: 0; margin-bottom: 10px">
+      Add or remove publications:
+    </div>
+
+    <div id="publications" style="min-height: 60vh">
+      {% for publication in publications %}
+      <div>
+        <div
+          class="pCard paralell publ"
+          onclick="decodeAbsBib('{{publication.id}}-abs-inner','{{publication.id}}-bib-inner','{{publication.abs}}','{{publication.bib}}')"
+          style="width: 96%"
+        >
+          <div class="pImageContainer">
+            <div
+              class="pImage"
+              style="background-image: url('/{{publication.publication_image}}');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          "
+            ></div>
+          </div>
+          <div class="pInfo" style="width: 100%" id="{{publication.id}}">
+            <div class="pTitle" style="width: 100%">{{publication.title}}</div>
+            <div class="pAuthors" style="width: 100%">
+              {{publication.authors}}
+            </div>
+            <div class="pDesc" style="width: 100%">
+              {{publication.description}}
+            </div>
+            <div class="links">
+              {% if publication.abs != "" %}
+              <div
+                class="link"
+                onclick="toggleAttr('{{publication.id}}-abs','{{publication.id}}-bib')"
+                style="cursor: pointer"
+              >
+                ABS
+              </div>
+              {% endif %} {% if publication.arxiv_url != "" %}
+
+              <a class="link" href="{{publication.arxiv_url}}" target="_blank"
+                >ARXIV</a
+              >
+              {% endif %} {% if publication.bib != "" %}
+              <div
+                class="link"
+                onclick="toggleAttr('{{publication.id}}-bib','{{publication.id}}-abs')"
+                style="cursor: pointer"
+              >
+                BIB
+              </div>
+              {% endif %}
+              <a class="link" href="/{{publication.pdfFile}}" target="_blank"
+                >PDF</a
+              >
+              <button
+                type="button"
+                class="link"
+                style="
+                  background-color: rgb(128, 0, 0);
+                  font-weight: 700;
+                  cursor: pointer;
+                "
+                onclick="delete_publication('{{publication.id}}')"
+              >
+                delete
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          style="width: 100%"
+          id="{{publication.id}}-abs"
+          style="height: 0; overflow: hidden; transition: all 0.3s ease"
+          hidden
+        >
+          <div class="abs" id="{{publication.id}}-abs-inner">
+            {{publication.abs}}
+          </div>
+        </div>
+        <div
+          style="width: 100%"
+          id="{{publication.id}}-bib"
+          style="height: 0; overflow: hidden; transition: all 0.3s ease"
+          hidden
+        >
+          <div class="bib">
+            <code id="{{publication.id}}-bib-inner">{{publication.bib}}</code>
+          </div>
+        </div>
+      </div>
+
+      {% if publication.doi != "" %}
+      <span
+        class="__dimensions_badge_embed__"
+        data-doi="{{publication.doi}}"
+        data-legend="hover-right"
+        data-style="small_rectangle"
+      ></span>
+      <script
+        async
+        src="https://badge.dimensions.ai/badge.js"
+        charset="utf-8"
+      ></script>
+      {% endif %} {% endfor %}
+      <form
+        action="{% url 'admin_publications' %}"
+        onsubmit="changeBibAbs()"
+        method="post"
+        enctype="multipart/form-data"
+      >
+        {%csrf_token%}
+        <div class="pCard paralell" style="width: 96%">
+          <div class="pImageContainer">
+            <img
+              id="publication_image"
+              style="cursor: pointer; pointer-events: all"
+              onclick="
+            pImageInput.click()"
+              class="pImage"
+              src="{% static 'images/add_image_default.jpeg' %}"
+              alt="publication"
+              width="120px"
+              height="120px"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              id="pImageInput"
+              name="publication_image"
+              onchange="changePhoto(this)"
+              hidden
+            />
+          </div>
+          <div class="pInfo" style="width: 100%">
+            <input
+              class="pTitle"
+              style="width: 100%"
+              name="publication_title"
+              placeholder="title"
+            />
+            <input
+              class="pAuthors"
+              style="width: 100%"
+              name="publication_authors"
+              placeholder="authors, comma separated"
+            />
+            <input
+              class="pDesc"
+              style="width: 100%"
+              name="publication_description"
+              placeholder="description"
+            />
+            <div class="links">
+              <button type="button" class="link" onclick="toggle(abs)">
+                ABS
+              </button>
+              <button type="button" class="link" onclick="toggle(arxiv)">
+                ARXIV
+              </button>
+              <button type="button" class="link" onclick="toggle(bib)">
+                BIB
+              </button>
+              <button type="button" class="link" onclick="toggle(pdf)">
+                PDF
+              </button>
+              <input
+                type="date"
+                name="publication_date"
+                style="
+                  border: 1px solid #e0e0e031;
+                  border-radius: 5px;
+                  cursor: pointer;
+                "
+              />
+              <input
+                type="text"
+                name="doi"
+                style="border: 1px solid #e0e0e031; border-radius: 5px"
+                placeholder="DOI (optional)"
+              />
+              <button
+                type="submit"
+                class="link"
+                style="
+                  background-color: green;
+                  font-weight: 700;
+                  cursor: pointer;
+                "
+              >
+                add
+              </button>
+            </div>
+
+            <textarea
+              rows="5"
+              cols="20"
+              style="margin-bottom: 10px"
+              placeholder="abstract"
+              name="abs"
+              id="abs"
+              hidden
+            ></textarea>
+            <input
+              placeholder="arxiv url"
+              type="text"
+              id="arxiv"
+              name="arxiv_url"
+              hidden
+              style="border: 1px solid #e0e0e031; margin-bottom: 10px"
+            />
+            <textarea
+              rows="5"
+              cols="20"
+              style="margin-bottom: 10px"
+              placeholder="bib"
+              name="bib"
+              id="bib"
+              hidden
+            ></textarea>
+            <div id="pdf" class="paralell" hidden>
+              <label for="pdfInput" class="imgSelect">Select PDF file</label>
+              <input
+                placeholder="upload pdf file"
+                type="file"
+                id="pdfInput"
+                name="pdf_file"
+                style="margin-bottom: 10px"
+                onchange="inject()"
+                hidden
+              />
+              <div id="filename"></div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div
+  style="
+    display: flex;
+    width: 85%;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+  "
+>
+  <button
+    class="okBtn"
+    onclick="toggle(description)"
+    style="font-size: 12px; font-weight: 100; margin: 2.5px"
+  >
+    add/edit page description
+  </button>
+</div>
+<div id="description" hidden style="margin-bottom: 20px; width: 96%">
+  <div
+    style="
+      display: flex;
+      width: 96%;
+      justify-content: center;
+      margin-bottom: 20px;
+      align-items: center;
+      margin-top: 20px;
+    "
+  >
+    <textarea
+      name="page_description"
+      rows="12"
+      placeholder="write description here"
+      cols="40"
+      style="padding: 10px"
+      class="summary"
+      id="description_text"
+      width="85%"
+    ></textarea>
+  </div>
+  <div style="width: 96%; display: flex; justify-content: flex-end">
+    <button
+      class="okBtn"
+      style="font-size: 12px; font-weight: 100"
+      onclick="addDesc()"
+    >
+      submit
+    </button>
+  </div>
+</div>
+<script>
+  const decodeAbsBib = (absId, bibId, abs, bib) => {
+    var decodedBib = decodeHtml(bib);
+    var decodedAbs = decodeHtml(abs);
+    document.getElementById(absId).innerHTML = decodedAbs;
+    document.getElementById(bibId).innerHTML = decodedBib;
+  };
+
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+  var decoded = decodeHtml("{{description}}");
+  document.getElementById("description_text").innerHTML = decoded.replace(
+    /<br>/g,
+    "\n"
+  );
+  const getDesc = () => {
+    return document
+      .getElementById("description_text")
+      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+  };
+  const addDesc = () => {
+    fetch("{% url 'add_page_description' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({
+        page_description: getDesc(),
+        page_name: "publications",
+      }),
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+        if (data.status == 200) {
+          window.location.href = "{% url 'admin_publications' %}";
+        }
+      });
+    });
+  };
+  var elements = document.getElementsByClassName("publ");
+  Array.prototype.forEach.call(elements, function (el) {
+    el.click();
+  });
+  const inject = () => {
+    document.getElementById("filename").innerHTML = pdfInput.files[0].name;
+  };
+  const changePhoto = (e) => {
+    publication_image.src = `${globalThis.URL.createObjectURL(e.files[0])}`;
+  };
+  const toggle = (e) => {
+    if (e.hidden) {
+      show(e);
+    } else {
+      hide(e);
+    }
+  };
+  const hide = (e) => {
+    e.hidden = true;
+  };
+  const show = (e) => {
+    hideAll();
+    e.hidden = false;
+  };
+  const toggleAttr = (showElem, hideElem) => {
+    if (document.getElementById(showElem).hidden) {
+      showAttr(showElem, hideElem);
+    } else {
+      document.getElementById(showElem).hidden = true;
+      document.getElementById(showElem).style.height = 0;
+    }
+  };
+  const showAttr = (showElem, hideElem) => {
+    document.getElementById(hideElem).hidden = true;
+    document.getElementById(showElem).hidden = false;
+    setTimeout(() => {
+      document.getElementById(showElem).style.height = 100;
+    }, 1);
+
+    document.getElementById(hideElem).style.height = 0;
+  };
+  const hideAll = () => {
+    hide(abs);
+    hide(bib);
+    hide(pdf);
+    hide(arxiv);
+  };
+  var publication = {
+    title:
+      "A Hybrid Approach Combining Control Theory and AI for Engineering Self-Adaptive Systems",
+    authors: "M. Salehie, L. Tahvildari",
+    description: `Ricardo Caldas, Arthur Rodrigues, Eric Bernd Gil, and 3 more authors
+In Proceedings of the IEEE/ACM 15th International Symposium on Software Engineering for Adaptive and Self-Managing Systems, 2020`,
+  };
+  const delete_publication = (publication_id) => {
+    fetch("{% url 'delete_publication' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({ publication_id: publication_id }),
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+        if (data.status == 200) {
+          window.location.href = "{% url 'admin_publications' %}";
+        }
+      });
+    });
+  };
+  const changeBibAbs = () => {
+    abs.value = abs.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+    bib.value = bib.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+  };
+</script>
+{% endblock %}

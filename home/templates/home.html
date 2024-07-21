@@ -1,0 +1,292 @@
+{% extends 'base.html' %} {% block title %} Faseeh Ahmed {% endblock title%}
+{%load static %} {% block content %} {% comment %} container with 93% width
+{%endcomment %}
+<!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
+<div class="container">
+  <div class="profile-container">
+    <div class="intro">
+      <div class="name">
+        <div style="color: white">{{userdata.first_name}}</div>
+        {{userdata.last_name}}
+      </div>
+      {% comment %} link to socials {% endcomment %}
+      <div class="links">
+        <a href="{{userdata.linkedin_url}}" target="_blank"
+          ><img
+            class="link-image"
+            src="{% static 'photos/linkedin.png' %}"
+            alt="linkedin"
+        /></a>
+        <a
+          href="https://github.com/{{userdata.github_username}}"
+          target="_blank"
+          ><svg
+            fill="#666666"
+            xmlns="http://www.w3.org/2000/svg"
+            data-name="Layer 1"
+            viewBox="0 0 24 24"
+            class="link-image git-svg"
+            id="github"
+          >
+            <path
+              d="M12,2.2467A10.00042,10.00042,0,0,0,8.83752,21.73419c.5.08752.6875-.21247.6875-.475,0-.23749-.01251-1.025-.01251-1.86249C7,19.85919,6.35,18.78423,6.15,18.22173A3.636,3.636,0,0,0,5.125,16.8092c-.35-.1875-.85-.65-.01251-.66248A2.00117,2.00117,0,0,1,6.65,17.17169a2.13742,2.13742,0,0,0,2.91248.825A2.10376,2.10376,0,0,1,10.2,16.65923c-2.225-.25-4.55-1.11254-4.55-4.9375a3.89187,3.89187,0,0,1,1.025-2.6875,3.59373,3.59373,0,0,1,.1-2.65s.83747-.26251,2.75,1.025a9.42747,9.42747,0,0,1,5,0c1.91248-1.3,2.75-1.025,2.75-1.025a3.59323,3.59323,0,0,1,.1,2.65,3.869,3.869,0,0,1,1.025,2.6875c0,3.83747-2.33752,4.6875-4.5625,4.9375a2.36814,2.36814,0,0,1,.675,1.85c0,1.33752-.01251,2.41248-.01251,2.75,0,.26251.1875.575.6875.475A10.0053,10.0053,0,0,0,12,2.2467Z"
+            ></path></svg
+        ></a>
+        <a href="mailto:{{userdata.email_address}}"
+          ><svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            class="link-image"
+            viewBox="0 0 48 48"
+          >
+            <path
+              fill="#4caf50"
+              d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z"
+            ></path>
+            <path
+              fill="#1e88e5"
+              d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z"
+            ></path>
+            <polygon
+              fill="#e53935"
+              points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"
+            ></polygon>
+            <path
+              fill="#c62828"
+              d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z"
+            ></path>
+            <path
+              fill="#fbc02d"
+              d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0 C43.076,8,45,9.924,45,12.298z"
+            ></path></svg
+        ></a>
+      </div>
+      <div class="qualification">
+        {% comment %} Qualification {% endcomment %}
+        {{userdata.qualification}}<br />
+        <a href="{{userdata.university_url}}" target="_blank" class="uni-btn"
+          >{{userdata.university}}</a
+        >
+      </div>
+    </div>
+    <div
+      style="
+        width: 30%;
+        height: fit-content;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+      "
+    >
+      <div class="pic-container">
+        <div
+          class="profile-pic"
+          style='
+         background-image: url("{{userdata.profile_pic}}");
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+
+        '
+        />
+      </div>
+    </div>
+  </div>
+</div>
+<div class="summary">
+  <p id="summaryInject"></p>
+</div>
+<div class="item-box">
+  <div class="heading">publications</div>
+  <div
+    style="width: 100%; display: flex; align-items: center; margin-top: 20px"
+  >
+    <div id="publications">
+      {% for publication in publications %}
+      <div style="width: 100%">
+        <div
+          class="pCard paralell publ"
+          onclick="decodeAbsBib('{{publication.id}}-abs-inner','{{publication.id}}-bib-inner','{{publication.abs}}','{{publication.bib}}')"
+        >
+          <div class="pImageContainer">
+            <div
+              class="pImage"
+              style="background-image: url('/{{publication.publication_image}}');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          width: 120px;
+          height: 120px;
+          "
+            ></div>
+          </div>
+          <div class="pInfo" style="width: 100%">
+            <div class="pTitle" style="width: 100%">{{publication.title}}</div>
+            <div class="pAuthors" style="width: 100%">
+              {{publication.authors}}
+            </div>
+            <div class="publicationDesc" style="width: 100%">
+              {{publication.description}}
+            </div>
+            <div class="links" style="gap: 5px">
+              {% if publication.abs != "" %}
+              <div
+                class="link"
+                onclick="toggleAttr('{{publication.id}}-abs','{{publication.id}}-bib')"
+                style="cursor: pointer"
+              >
+                ABS
+              </div>
+
+              {% endif %} {% if publication.arxiv_url != "" %}
+              <a class="link" href="{{publication.arxiv_url}}" target="_blank"
+                >ARXIV</a
+              >
+              {% endif %} {% if publication.bib != "" %}
+              <div
+                class="link"
+                onclick="toggleAttr('{{publication.id}}-bib','{{publication.id}}-abs')"
+                style="cursor: pointer"
+              >
+                BIB
+              </div>
+              {% endif %}
+              <a class="link" href="/{{publication.pdfFile}}" target="_blank"
+                >PDF</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="width: 100%"
+          id="{{publication.id}}-abs"
+          style="height: 0; overflow: hidden; transition: all 0.3s ease"
+          hidden
+        >
+          <div class="abs" id="{{publication.id}}-abs-inner">
+            {{publication.abs}}
+          </div>
+        </div>
+        <div
+          style="width: 100%"
+          id="{{publication.id}}-bib"
+          style="height: 0; overflow: hidden; transition: all 0.3s ease"
+          hidden
+        >
+          <div class="bib">
+            <code id="{{publication.id}}-bib-inner">{{publication.bib}}</code>
+          </div>
+        </div>
+      </div>
+
+      {% if publication.doi != "" %}
+      <div style="width: 100%">
+        <span
+          class="__dimensions_badge_embed__"
+          data-doi="{{publication.doi}}"
+          data-legend="hover-right"
+          data-style="small_rectangle"
+        ></span>
+        <script
+          async
+          src="https://badge.dimensions.ai/badge.js"
+          charset="utf-8"
+        ></script>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+  </div>
+</div>
+<div class="item-box">
+  <div class="heading">Repositories</div>
+  <div
+    style="
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    "
+  >
+    <div id="repos">
+      <div
+        style="
+          width: 100%;
+          min-height: 60vh;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <div class="spinner">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  var summary = `{{userdata.summary}}`;
+  document.getElementById("summaryInject").innerHTML = decodeHtml(summary);
+  var selectedRepos = `{{repos}}`;
+  selectedRepos = selectedRepos.split(",");
+
+  var elements = document.getElementsByClassName("publ");
+  Array.prototype.forEach.call(elements, function (el) {
+    el.click();
+  });
+  var response = fetch(
+    "https://api.github.com/users/{{userdata.github_username}}/repos"
+  )
+    .then((response) => response.json())
+    .then((data) => {
+      console.log(data);
+      var repos = document.getElementById("repos");
+      var injectionString = "";
+      data.forEach((repo) => {
+        if (selectedRepos.includes(repo.id.toString())) {
+          injectionString += `<a target="_blank" href="${repo.html_url}" class = "ppAnchor"><img src="https://github-readme-stats.vercel.app/api/pin/?username={{userdata.github_username}}&repo=${repo.name}&theme=dark&show_owner=true" alt="repo logo" class="repo-logo" style="height:fit-content;cursor:pointer" /></a>`;
+        }
+      });
+      repos.innerHTML = injectionString;
+    });
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+  const toggleAttr = (showElem, hideElem) => {
+    if (document.getElementById(showElem).hidden) {
+      showAttr(showElem, hideElem);
+    } else {
+      document.getElementById(showElem).hidden = true;
+      document.getElementById(showElem).style.height = 0;
+    }
+  };
+  const showAttr = (showElem, hideElem) => {
+    document.getElementById(hideElem).hidden = true;
+    document.getElementById(showElem).hidden = false;
+    setTimeout(() => {
+      document.getElementById(showElem).style.height = 100;
+    }, 1);
+
+    document.getElementById(hideElem).style.height = 0;
+  };
+
+  const decodeAbsBib = (absId, bibId, abs, bib) => {
+    var decodedBib = decodeHtml(bib);
+    var decodedAbs = decodeHtml(abs);
+    document.getElementById(absId).innerHTML = decodedAbs;
+    document.getElementById(bibId).innerHTML = decodedBib;
+  };
+</script>
+{% endblock %}

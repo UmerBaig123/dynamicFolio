@@ -1,0 +1,49 @@
+.title {
+  text-transform: uppercase;
+  font-size: 15px;
+  font-weight: 100;
+}
+.courseItem {
+  font-size: 13px;
+  font-weight: 100;
+  /* margin-left: auto; */
+}
+.addBtn {
+  width: 100%;
+  background-color: rgb(6, 134, 49);
+  padding: 10px;
+  border: none;
+  outline: none;
+  color: white;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+.addBtn:hover {
+  background-color: rgb(2, 82, 28);
+}
+input.courseItem {
+  padding: 5px 0;
+  border: 1px solid #e0e0e031;
+  border-radius: 5px;
+}
+.courseBox:hover {
+  background-color: rgba(221, 67, 67, 0.247);
+  cursor: pointer;
+}
+
+.okBtn {
+  /* margin-top: 10px; */
+  font-size: 17px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  padding: 5px 10px;
+  font-weight: bold;
+  background-color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}

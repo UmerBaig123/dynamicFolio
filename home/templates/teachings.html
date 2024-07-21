@@ -1,0 +1,85 @@
+{% extends 'base.html' %} {% block title %} Faseeh Ahmed {% endblock title%}
+{%load static %} {% block content %} {% comment %} container with 93% width
+{%endcomment %} <link rel="stylesheet" href="{% static "css/teachings.css" %}"
+/>
+<!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
+<div class="container">
+  <div class="heading">Teachings</div>
+  {% if description_text != "" %}
+  <div class="pDesc" id="page_description"></div>
+  {% endif %}
+
+  <div class="item-box">
+    <div class="heading" style="font-size: 16px">Courses</div>
+    <div
+      style="
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-top: 40px;
+        border: 1px solid rgba(255, 255, 255, 0.144);
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+      "
+    >
+      <div id="teachings" style="width: 100%">
+        <div
+          style="
+            width: 100%;
+            height: fit-content;
+            padding: 20px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.288);
+            display: flex;
+            justify-content: center;
+          "
+        >
+          <div class="title" style="width: 10%">year</div>
+          <div class="title" style="width: 20%">course name</div>
+          <div class="title" style="width: 20%">institution</div>
+          <div class="title" style="width: 20%">role</div>
+          <div class="title" style="width: 16%">students level</div>
+          <div class="title" style="width: 10%">hours</div>
+        </div>
+        {% for course in courses %}
+        <div
+          style="
+            width: 100%;
+            height: fit-content;
+            padding: 15px 0;
+            display: flex;
+            justify-content: center;
+          "
+          onclick="deleteCourse('{{course.id}}')"
+        >
+          <div class="courseItem" style="width: 10%">
+            {{course.course_year}}
+          </div>
+          <div class="courseItem" style="width: 20%">
+            {{course.course_name}}
+          </div>
+          <div class="courseItem" style="width: 20%">
+            {{course.institution_name}}
+          </div>
+          <div class="courseItem" style="width: 20%">{{course.role}}</div>
+          <div class="courseItem" style="width: 16%">
+            {{course.students_level}}
+          </div>
+          <div class="courseItem" style="width: 10%">{{course.hours}}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  var decoded = decodeHtml("{{description}}");
+  console.log(decoded);
+  document.getElementById("page_description").innerHTML = decoded;
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+</script>
+{% endblock %}

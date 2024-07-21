@@ -1,0 +1,30 @@
+{% load static %}
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>{%block title%}{%endblock%}</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="{% static 'css/admin.css' %}" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,500;0,700;1,400;1,500;1,700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body id="about">
+    <div class="topbar">
+      <div style="width: 40%">{%block toptitle%}{%endblock%}</div>
+      <div class="options">
+        <a class="btn" href="{% url 'admin_about' %}">about me</a>
+        <a class="btn" href="{% url 'admin_repos' %}">repositories</a>
+        <a class="btn" href="{% url 'admin_publications' %}">publication</a>
+        <a class="btn" href="{% url 'admin_resume' %}">resume</a>
+        <a class="btn" href="{% url 'admin_teachings' %}">teachings</a>
+      </div>
+    </div>
+    {% block content %}{% endblock %}
+  </body>
+</html>

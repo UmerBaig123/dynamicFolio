@@ -1,0 +1,295 @@
+{% extends 'admin_base.html' %} {% block title %} Faseeh Ahmed
+{% endblock title%} {%load static %} {% block content %} {% comment %} container
+with 93% width {%endcomment %}
+<form action="{% url 'admin_about' %}" method="post" onsubmit="changeSummary()" enctype='multipart/form-data' >
+  {% csrf_token %}
+  <!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
+  <link rel="stylesheet" href="{% static 'css/edit.css' %}" />
+  <div class="container">
+    <div class="profile-container">
+      <div class="intro">
+        <div class="name">
+          <div class="input-group"><input type="checkbox" name="view_news" id="id_view_news" checked="" hidden>
+            <input type="number" value="1" name="user" hidden>
+            <input
+              required=""
+              value="{{first_name}}"
+              type="text"
+              placeholder="first name"
+              name="first_name"
+              autocomplete="off"
+              style="font-size: 45px; color: white; text-transform: uppercase"
+              class="input"
+            />
+          </div>
+          <div class="input-group">
+            <input
+              required=""
+              value="{{last_name}}"
+              type="text"
+              placeholder="last name"
+              name="last_name"
+              autocomplete="off"
+              style="
+                font-size: 45px;
+                color: rgb(175, 175, 175);
+                text-transform: uppercase;
+              "
+              class="input"
+            />
+          </div>
+        </div>
+        {% comment %} link to socials {% endcomment %}
+        <div class="links">
+          <div onclick="show(linkedin)">
+            <img
+              class="link-image"
+              src="{% static 'photos/linkedin.png' %}"
+              alt="linkedin"
+            />
+          </div>
+          <div onclick="show(github)">
+            <svg
+              fill="#666666"
+              xmlns="http://www.w3.org/2000/svg"
+              data-name="Layer 1"
+              viewBox="0 0 24 24"
+              class="link-image git-svg"
+              id="githubSvg"
+            >
+              <path
+                d="M12,2.2467A10.00042,10.00042,0,0,0,8.83752,21.73419c.5.08752.6875-.21247.6875-.475,0-.23749-.01251-1.025-.01251-1.86249C7,19.85919,6.35,18.78423,6.15,18.22173A3.636,3.636,0,0,0,5.125,16.8092c-.35-.1875-.85-.65-.01251-.66248A2.00117,2.00117,0,0,1,6.65,17.17169a2.13742,2.13742,0,0,0,2.91248.825A2.10376,2.10376,0,0,1,10.2,16.65923c-2.225-.25-4.55-1.11254-4.55-4.9375a3.89187,3.89187,0,0,1,1.025-2.6875,3.59373,3.59373,0,0,1,.1-2.65s.83747-.26251,2.75,1.025a9.42747,9.42747,0,0,1,5,0c1.91248-1.3,2.75-1.025,2.75-1.025a3.59323,3.59323,0,0,1,.1,2.65,3.869,3.869,0,0,1,1.025,2.6875c0,3.83747-2.33752,4.6875-4.5625,4.9375a2.36814,2.36814,0,0,1,.675,1.85c0,1.33752-.01251,2.41248-.01251,2.75,0,.26251.1875.575.6875.475A10.0053,10.0053,0,0,0,12,2.2467Z"
+              ></path>
+            </svg>
+          </div>
+          <div onclick="show(email)" href="mailto:someone@example.com">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              x="0px"
+              y="0px"
+              class="link-image"
+              viewBox="0 0 48 48"
+            >
+              <path
+                fill="#4caf50"
+                d="M45,16.2l-5,2.75l-5,4.75L35,40h7c1.657,0,3-1.343,3-3V16.2z"
+              ></path>
+              <path
+                fill="#1e88e5"
+                d="M3,16.2l3.614,1.71L13,23.7V40H6c-1.657,0-3-1.343-3-3V16.2z"
+              ></path>
+              <polygon
+                fill="#e53935"
+                points="35,11.2 24,19.45 13,11.2 12,17 13,23.7 24,31.95 35,23.7 36,17"
+              ></polygon>
+              <path
+                fill="#c62828"
+                d="M3,12.298V16.2l10,7.5V11.2L9.876,8.859C9.132,8.301,8.228,8,7.298,8h0C4.924,8,3,9.924,3,12.298z"
+              ></path>
+              <path
+                fill="#fbc02d"
+                d="M45,12.298V16.2l-10,7.5V11.2l3.124-2.341C38.868,8.301,39.772,8,40.702,8h0 C43.076,8,45,9.924,45,12.298z"
+              ></path>
+            </svg>
+          </div>
+        </div>
+        <div
+          class="paralell"
+          style="width: 90%"
+          id="linkedin"
+          hidden
+          aria-hidden="true"
+        >
+          <input
+            type="text"
+            value="{{linkedin}}"
+            placeholder="linkedin url"
+            class="urlInput"
+            name="linkedin_url"
+          />
+          <button class="btn-save" onclick="hide(linkedin)" type="button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="#009926"
+              class="bi bi-check"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="paralell" style="width: 90%" id="github" hidden>
+          <input
+            type="text"
+            placeholder="github username"
+            value="{{github}}"
+            class="urlInput"
+            name="github_username"
+          />
+          <button class="btn-save" onclick="hide(github)" type="button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="#009926"
+              class="bi bi-check"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="paralell" style="width: 90%" id="email" hidden>
+          <input
+            type="text"
+            placeholder="email address"
+            class="urlInput"
+            value="{{email}}"
+            name="email_address"
+          />
+          <button class="btn-save" onclick="hide(email)" type="button">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="#009926"
+              class="bi bi-check"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M10.97 4.97a.75.75 0 0 1 1.07 1.05l-3.99 4.99a.75.75 0 0 1-1.08.02L4.324 8.384a.75.75 0 1 1 1.06-1.06l2.094 2.093 3.473-4.425z"
+              />
+            </svg>
+          </button>
+        </div>
+        <div class="qualification">
+          {% comment %} Qualification {% endcomment %}
+          <input
+            type="text"
+            class="qualification"
+            value="{{qualification}}"
+              placeholder="qualification"
+            name="qualification"
+          />
+          <br />
+          <div onmouseenter="show(uni)" onmouseleave="hide(uni)">
+            <input
+              class="qualification"
+              value="{{university}}"
+              placeholder="university"
+              name = "university"
+              onfocus="show(uni)"
+            />
+
+            <div
+              class="paralell"
+              style="width: 90%; margin-top: 10px"
+              id="uni"
+              hidden
+            >
+              <input
+                type="text"
+                value="{{universityUrl}}"
+                placeholder="University Link"
+                class="urlInput"
+                name="university_url"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        style="
+          width: 30%;
+          height: fit-content;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        "
+      >
+        <div class="pic-container">
+          <div class="profile-pic" id="profile_pic"></div>
+          </div><input
+            style="width: fit-content;"
+            type="file"
+            id="img"
+            name="profile_pic"
+            style="color: aliceblue"
+            accept="image/*"
+            onchange="onProfilePicChange()"
+          />
+        </div>
+      </div>
+    </div>
+    <textarea
+      name="summary"
+      rows="12"
+      placeholder="write summary"
+      cols="40"
+      style="padding: 10px;"
+      class="summary"
+      id="summary"
+    >{{summary}}</textarea>
+  </div>
+  <div style="display: flex;width: 100%;justify-content: flex-end;">
+    <button class="submitBtn" 
+        style="font-size: 15px; font-weight: 100;" type="submit">submit</button></div>
+</form>
+  <script>
+    summary.value = document.getElementById("summary").value.replace(/<br>/g, "\n");
+profile_pic.style.background = `url(/{{profile_pic}}) no-repeat center center / cover`
+  const onProfilePicChange = () => {
+    var elem = img;
+    profile_pic.style.background = `url(${globalThis.URL.createObjectURL(
+              elem.files[0]
+            )}) no-repeat center center / cover`
+    console.log(profile_pic.style.background);
+  }
+
+  function loadURLToInputFiled(url){
+  getImgURL(url, (imgBlob)=>{
+    // Load img blob to input
+    // WIP: UTF8 character error
+    let fileName = '{{profile_pic}}'
+    let file = new File([imgBlob], fileName,{type:"image/jpeg", lastModified:new Date().getTime()}, 'utf-8');
+    let container = new DataTransfer(); 
+    container.items.add(file);
+    document.querySelector('#img').files = container.files;
+    onProfilePicChange()
+  })
+}
+
+// xmlHTTP return blob respond
+function getImgURL(url, callback){
+  var xhr = new XMLHttpRequest();
+  xhr.onload = function() {
+      callback(xhr.response);
+  };
+  xhr.open('GET', url);
+  xhr.responseType = 'blob';
+  xhr.send();
+}
+    const hideAll = () => {
+      hide(linkedin);
+      hide(github);
+      hide(email);
+    };
+    const show = (element) => {
+      hideAll();
+      console.log(element);
+      element.hidden = false;
+    };
+    const hide = (element) => {
+      element.hidden = true;
+    };
+    const changeSummary = () => {
+      document.getElementById("summary").value=document.getElementById("summary").value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+    };
+  </script>
+{% endblock %}

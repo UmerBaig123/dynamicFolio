@@ -1,0 +1,239 @@
+{% extends 'admin_base.html' %}asdasdaasasddads {% block title %} edit repos
+{%endblock title%} {%load static %} {% block content %}
+<link rel="stylesheet" href="{% static '/css/admin_teachings.css' %}" />
+<form action="{% url 'admin_teachings' %}" method="post">
+  <div class="container">
+    <div class="item-box">
+      <div class="heading" style="margin-top: 0; margin-bottom: 10px">
+        Add or remove teaching courses:
+      </div>
+      <div
+        style="
+          width: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          margin-top: 40px;
+          border: 1px solid rgba(255, 255, 255, 0.144);
+          border-radius: 5px;
+          box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        "
+      >
+        <div id="teachings" style="width: 100%">
+          <div
+            style="
+              width: 100%;
+              height: fit-content;
+              padding: 20px 0;
+              border-bottom: 1px solid rgba(255, 255, 255, 0.288);
+              display: flex;
+              justify-content: center;
+            "
+          >
+            <div class="title" style="width: 10%">year</div>
+            <div class="title" style="width: 20%">course name</div>
+            <div class="title" style="width: 20%">institution</div>
+            <div class="title" style="width: 20%">role</div>
+            <div class="title" style="width: 16%">students level</div>
+            <div class="title" style="width: 10%">hours</div>
+          </div>
+          {% for course in courses %}
+          <div
+            class="courseBox"
+            style="
+              width: 100%;
+              height: fit-content;
+              padding: 15px 0;
+              display: flex;
+              justify-content: center;
+            "
+            onclick="deleteCourse('{{course.id}}')"
+          >
+            <div class="courseItem" style="width: 10%">
+              {{course.course_year}}
+            </div>
+            <div class="courseItem" style="width: 20%">
+              {{course.course_name}}
+            </div>
+            <div class="courseItem" style="width: 20%">
+              {{course.institution_name}}
+            </div>
+            <div class="courseItem" style="width: 20%">{{course.role}}</div>
+            <div class="courseItem" style="width: 16%">
+              course.students_level
+            </div>
+            <div class="courseItem" style="width: 10%">{{course.hours}}</div>
+          </div>
+          {% endfor %} {% csrf_token %}
+          <div
+            style="
+              width: 100%;
+              height: fit-content;
+              padding: 15px 0;
+              display: flex;
+              justify-content: center;
+              gap: 5px;
+            "
+          >
+            <input
+              placeholder="year"
+              class="courseItem"
+              style="width: 10%"
+              name="course_year"
+            />
+            <input
+              placeholder="course name"
+              class="courseItem"
+              style="width: 20%"
+              name="course_name"
+            />
+            <input
+              placeholder="institution"
+              class="courseItem"
+              style="width: 20%"
+              name="institution_name"
+            />
+            <input
+              placeholder="role"
+              class="courseItem"
+              style="width: 20%"
+              name="role"
+            />
+            <input
+              placeholder="students level"
+              class="courseItem"
+              style="width: 16%"
+              name="students_level"
+            />
+            <input
+              placeholder="hours"
+              class="courseItem"
+              style="width: 10%"
+              name="hours"
+            />
+          </div>
+          <button class="addBtn" type="submit">+&ensp;add</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+<div
+  style="
+    display: flex;
+    width: 85%;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+  "
+>
+  <button
+    class="okBtn"
+    onclick="toggle(description)"
+    style="font-size: 12px; font-weight: 100; margin: 2.5px"
+  >
+    add/edit page description
+  </button>
+</div>
+<div id="description" hidden style="margin-bottom: 20px; width: 96%">
+  <div
+    style="
+      display: flex;
+      width: 96%;
+      justify-content: center;
+      margin-bottom: 20px;
+      align-items: center;
+      margin-top: 20px;
+    "
+  >
+    <textarea
+      name="page_description"
+      rows="12"
+      placeholder="write description here"
+      cols="40"
+      style="padding: 10px"
+      class="summary"
+      id="description_text"
+      width="85%"
+    ></textarea>
+  </div>
+  <div style="width: 96%; display: flex; justify-content: flex-end">
+    <button
+      class="okBtn"
+      style="font-size: 12px; font-weight: 100"
+      onclick="addDesc()"
+    >
+      submit
+    </button>
+  </div>
+</div>
+<script>
+  var decoded = decodeHtml("{{description}}");
+  console.log(decoded);
+  document.getElementById("description_text").innerHTML = decoded.replace(
+    /<br>/g,
+    "\n"
+  );
+  const toggle = (element) => {
+    if (element.hidden) {
+      show(element);
+    } else {
+      hide(element);
+    }
+  };
+  const deleteCourse = (courseId) => {
+    fetch("{% url 'delete_course' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ course_id: courseId }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  };
+  const getDesc = () => {
+    return document
+      .getElementById("description_text")
+      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+  };
+  const addDesc = () => {
+    fetch("{% url 'add_page_description' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({
+        page_description: getDesc(),
+        page_name: "teachings",
+      }),
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+        if (data.status == 200) {
+          window.location.href = "{% url 'admin_teachings' %}";
+        }
+      });
+    });
+  };
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+  const hide = (element) => {
+    element.hidden = true;
+  };
+  const show = (element) => {
+    element.hidden = false;
+  };
+</script>
+{% endblock %}

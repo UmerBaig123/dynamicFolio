@@ -1,0 +1,142 @@
+{% extends 'base.html' %} {% block title %} Faseeh Ahmed {% endblock title%}
+{%load static %} {% block content %} {% comment %} container with 93% width
+{%endcomment %}
+<link rel="stylesheet" href="{% static 'css/publication.css' %}" />
+<!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
+<div class="container">
+  <div class="heading">Publications</div>
+  {% if description_text != "" %}
+  <div class="pDesc" id="page_description"></div>
+  {% endif %}
+  <div class="item-box">
+    <div id="publications" style="margin-top: 20px">
+      {% for publication in publications %}
+      <div style="width: 100%">
+        <div
+          class="pCard paralell publ"
+          onclick="decodeAbsBib('{{publication.id}}-abs-inner','{{publication.id}}-bib-inner','{{publication.abs}}','{{publication.bib}}')"
+        >
+          <div class="pImageContainer">
+            <div
+              class="pImage"
+              style="background-image: url('/{{publication.publication_image}}');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          width: 120px;
+          height: 120px;
+          "
+            ></div>
+          </div>
+          <div class="pInfo" style="width: 100%">
+            <div class="pTitle" style="width: 100%">{{publication.title}}</div>
+            <div class="pAuthors" style="width: 100%">
+              {{publication.authors}}
+            </div>
+            <div class="publicationDesc" style="width: 100%">
+              {{publication.description}}
+            </div>
+            <div class="links" style="gap: 5px">
+              {% if publication.abs != "" %}
+              <div
+                class="link"
+                onclick="toggleAttr('{{publication.id}}-abs','{{publication.id}}-bib')"
+                style="cursor: pointer"
+              >
+                ABS
+              </div>
+              {% endif %} {% if publication.arxiv_url != "" %}
+              <a class="link" href="{{publication.arxiv_url}}" target="_blank"
+                >ARXIV</a
+              >
+              {% endif %} {% if publication.bib != "" %}
+              <div
+                class="link"
+                onclick="toggleAttr('{{publication.id}}-bib','{{publication.id}}-abs')"
+                style="cursor: pointer"
+              >
+                BIB
+              </div>
+              {% endif %}
+              <a class="link" href="/{{publication.pdfFile}}" target="_blank"
+                >PDF</a
+              >
+            </div>
+          </div>
+        </div>
+
+        <div
+          style="width: 100%"
+          id="{{publication.id}}-abs"
+          style="height: 0; overflow: hidden; transition: all 0.3s ease"
+          hidden
+        >
+          <div class="abs" id="{{publication.id}}-abs-inner">
+            {{publication.abs}}
+          </div>
+        </div>
+        <div
+          style="width: 100%"
+          id="{{publication.id}}-bib"
+          style="height: 0; overflow: hidden; transition: all 0.3s ease"
+          hidden
+        >
+          <div class="bib">
+            <code id="{{publication.id}}-bib-inner">{{publication.bib}}</code>
+          </div>
+        </div>
+      </div>
+      {% if publication.doi != "" %}
+      <div style="width: 100%">
+        <span
+          class="__dimensions_badge_embed__"
+          data-doi="{{publication.doi}}"
+          data-legend="hover-right"
+          data-style="small_rectangle"
+        ></span>
+        <script
+          async
+          src="https://badge.dimensions.ai/badge.js"
+          charset="utf-8"
+        ></script>
+      </div>
+      {% endif %} {% endfor %}
+    </div>
+  </div>
+</div>
+<script>
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+  const decodeAbsBib = (absId, bibId, abs, bib) => {
+    var decodedBib = decodeHtml(bib);
+    var decodedAbs = decodeHtml(abs);
+    document.getElementById(absId).innerHTML = decodedAbs;
+    document.getElementById(bibId).innerHTML = decodedBib;
+  };
+  page_description.innerHTML = decodeHtml("{{description_text}}");
+  var elements = document.getElementsByClassName("publ");
+  Array.prototype.forEach.call(elements, function (el) {
+    el.click();
+  });
+  const toggleAttr = (showElem, hideElem) => {
+    if (document.getElementById(showElem).hidden) {
+      showAttr(showElem, hideElem);
+    } else {
+      document.getElementById(showElem).hidden = true;
+      document.getElementById(showElem).style.height = 0;
+    }
+  };
+  const showAttr = (showElem, hideElem) => {
+    document.getElementById(hideElem).hidden = true;
+    document.getElementById(showElem).hidden = false;
+    setTimeout(() => {
+      document.getElementById(showElem).style.height = 100;
+    }, 1);
+
+    document.getElementById(hideElem).style.height = 0;
+  };
+</script>
+{% endblock %}
