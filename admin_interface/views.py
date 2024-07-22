@@ -9,13 +9,17 @@ from rest_framework.views import APIView
 from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo
 import datetime
 import os
+from dotenv import load_dotenv
 # Create your views here.
 
-@login_required(login_url='/umer')
+load_dotenv()
+loginUrl = os.environ['ADMINROUTE']
+
+@login_required(login_url=loginUrl)
 def edit_user(request):
     return render(request, 'edit_user.html',{})
 
-@login_required(login_url='/umer')
+@login_required(login_url=loginUrl)
 def edit_about(request):
     if request.method == 'POST':
 
@@ -80,7 +84,7 @@ def edit_about(request):
         "summary":myData.summary
         })
     return render(request, 'edit_about.html',{})
-@login_required(login_url='/umer')
+@login_required(login_url=loginUrl)
 def edit_repos(request):
     if request.method == 'POST':
         page_description = request.POST['page_description']
@@ -105,7 +109,7 @@ def edit_repos(request):
         return render(request, 'edit_repos.html',{"username":myData.github_username,"repos":"none","page_desc":page_desc})
     return render(request, 'edit_repos.html',{"page_desc":page_desc})
 
-@login_required(login_url='/umer')
+
 def login_admin(request):
     if request.user.is_authenticated:
         return redirect('admin_about')
@@ -131,7 +135,7 @@ class select_repos(APIView):
             myRepo.save()
         return Response({"message":"Repos selected successfully","status":200})
 
-@login_required(login_url='/umer')
+@login_required(login_url=loginUrl)
 def edit_publications(request):
     if request.method == 'POST':
         pdfFile = ""
@@ -207,7 +211,7 @@ class delete_course(APIView):
         thisCourse = courses.objects.get(id=course_id)
         thisCourse.delete()
         return Response({"message":"Course deleted successfully","status":200})
-@login_required(login_url='/umer')
+@login_required(login_url=loginUrl)
 def teachings(request):
     if request.method == 'POST':
         course_year = request.POST['course_year']
@@ -225,7 +229,7 @@ def teachings(request):
         description_text = page_description_text.objects.filter(page_name="teachings")[0].text
     return render(request, 'edit_teachings.html',{"courses":courses_list,"description":description_text})
 
-@login_required(login_url='/umer')
+@login_required(login_url=loginUrl)
 def edit_resume(request):
     if request.method == 'POST':
         dob = datetime.datetime.now()
@@ -261,10 +265,15 @@ def edit_resume(request):
     showProfessional = False
     showAcademic = False
     showAward = False
-    myUserdata = userdata.objects.all()[0]
-    fullName = myUserdata.first_name + " " + myUserdata.last_name
-    email = myUserdata.email_address
-    linkedin = myUserdata.linkedin_url
+    myUserdata = ""
+    fullName = ""
+    email = ""
+    linkedin = ""
+    if userdata.objects.all().count()!= 0:
+        myUserdata = userdata.objects.all()[0]
+        fullName = myUserdata.first_name + " " + myUserdata.last_name
+        email = myUserdata.email_address
+        linkedin = myUserdata.linkedin_url
     experience_ids = []
     if experience.objects.all().count() != 0:
         experience_ids = [str(exp.id) for exp in experience.objects.all()]
