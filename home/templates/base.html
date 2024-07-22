@@ -16,14 +16,15 @@
     <!-- <script type="module" src="{% static 'js/threejs.js' %}"></script> -->
   </head>
   <body id="about">
-    <div class="topbar">
-      <div style="width: 40%">{%block toptitle%}{%endblock%}</div>
-      <div class="options">
-        <a class="btn" href="{% url 'home' %}">about me</a>
-        <a class="btn" href="{% url 'home_repos' %}">repositories</a>
-        <a class="btn" href="{% url 'home_publications' %}">publications</a>
-        <a class="btn" href="{% url 'home_resume' %}">resume</a>
-        <a class="btn" href="{% url 'home_teachings' %}">teachings</a>
+      <div class="topbar" style="min-width: 100vw;width: fit-content;">
+        <!-- <div style="width: 100%">{%block toptitle%}{%endblock%}</div> -->
+        <div class="options" style="margin-left: auto;">
+          <a class="btn" href="{% url 'home' %}">about me</a>
+          <a class="btn" href="{% url 'home_repos' %}">repositories</a>
+          <a class="btn" href="{% url 'home_publications' %}">publications</a>
+          <a class="btn" href="{% url 'home_resume' %}">resume</a>
+          <a class="btn" href="{% url 'home_teachings' %}">teachings</a>
+        </div>
       </div>
     </div>
     {% block content %}{% endblock %}

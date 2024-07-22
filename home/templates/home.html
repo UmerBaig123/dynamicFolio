@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block title %} Faseeh Ahmed {% endblock title%}
+{% extends 'base.html' %} {% block title %} {{full_name}} {% endblock title%}
 {%load static %} {% block content %} {% comment %} container with 93% width
 {%endcomment %}
 <!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
@@ -84,7 +84,7 @@
         <div
           class="profile-pic"
           style='
-         background-image: url("{{userdata.profile_pic}}");
+         background-image: url("/static/{{userdata.profile_pic}}");
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
@@ -113,7 +113,7 @@
           <div class="pImageContainer">
             <div
               class="pImage"
-              style="background-image: url('/{{publication.publication_image}}');
+              style="background-image: url('/static/{{publication.publication_image}}');
           background-size: cover;
           background-position: center;
           background-repeat: no-repeat;
@@ -153,7 +153,10 @@
                 BIB
               </div>
               {% endif %}
-              <a class="link" href="/{{publication.pdfFile}}" target="_blank"
+              <a
+                class="link"
+                href="/static/{{publication.pdfFile}}"
+                target="_blank"
                 >PDF</a
               >
             </div>

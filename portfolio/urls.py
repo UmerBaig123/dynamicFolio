@@ -15,10 +15,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path
 from django.urls.conf import include
 from django.conf import settings
 from django.conf.urls.static import static
+from django.views.static import serve
 from home import views
 from dotenv import load_dotenv
 import os
@@ -28,7 +29,9 @@ admin_route = os.environ['ADMINROUTE']
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include("home.urls")),
-    path(admin_route, include("admin_interface.urls")),
+    path(admin_route, include("admin_interface.urls")),  
+    re_path(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    re_path(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
 ]
 
 if settings.DEBUG:

@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block title %} resume {%endblock title%}
+{% extends 'base.html' %} {% block title %} {{full_name}} {%endblock title%}
 <!-- prettier-ignore -->
 {%load static %} {% block content %}
 <link rel="stylesheet" href="{% static 'css/resume.css' %}" />
@@ -23,7 +23,7 @@
       {% endif %} {% if info.cv != "" and info.cv %}
       <tr>
         <td>CV(PDF):</td>
-        <td><a href="/{{info.cv}}" target="_blank">Link</a></td>
+        <td><a href="/static/{{info.cv}}" target="_blank">Link</a></td>
       </tr>
       {% endif %}
     </table>

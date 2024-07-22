@@ -239,11 +239,11 @@ with 93% width {%endcomment %}
   </div>
   <div style="display: flex;width: 100%;justify-content: flex-end;">
     <button class="submitBtn" 
-        style="font-size: 15px; font-weight: 100;" type="submit">submit</button></div>
+        style="font-size: 15px; font-weight: 100;margin-top: 20px;" type="submit">submit</button></div>
 </form>
   <script>
     summary.value = document.getElementById("summary").value.replace(/<br>/g, "\n");
-profile_pic.style.background = `url(/{{profile_pic}}) no-repeat center center / cover`
+profile_pic.style.background = `url('/static/{{profile_pic}}') no-repeat center center / cover`
   const onProfilePicChange = () => {
     var elem = img;
     profile_pic.style.background = `url(${globalThis.URL.createObjectURL(
