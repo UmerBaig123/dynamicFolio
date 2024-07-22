@@ -210,13 +210,19 @@ a:active {
   /* background-image: url("https://ricardocaldas.me/assets/img/prof_pic-1400.webp"); */
   width: 200px;
   height: 200px;
+  cursor: pointer;
   border: #000000 3px solid;
   image-rendering: crisp-edges;
   background-repeat: no-repeat;
   background-size: cover;
   filter: drop-shadow(0px 1px 5px rgba(0, 0, 0, 0.61));
   border-radius: 50%;
+  transition: all 0.2s ease;
   position: relative;
+}
+.profile-pic:hover {
+  filter: drop-shadow(0px 1px 20px rgb(0, 0, 0));
+  transform: scale(1.01);
 }
 /* }
 .pic-container::before {
@@ -319,7 +325,19 @@ a:active {
   background-color: rgba(255, 255, 255, 0.7);
   transition: all 0.3s ease;
 }
-
+.submitBtn {
+  /* margin-top: 10px; */
+  font-size: 12px;
+  text-transform: uppercase;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  padding: 5px 10px;
+  font-weight: 100;
+  background-color: rgba(255, 255, 255, 0.7);
+  transition: all 0.3s ease;
+}
 .summary {
   margin-top: 30px;
   width: 100%;

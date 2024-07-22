@@ -14,10 +14,9 @@ from dotenv import load_dotenv
 
 load_dotenv()
 loginUrl = os.environ['ADMINROUTE']
-
-@login_required(login_url=loginUrl)
-def edit_user(request):
-    return render(request, 'edit_user.html',{})
+userFullName= ""
+if userdata.objects.all().count() != 0:
+    userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
 
 @login_required(login_url=loginUrl)
 def edit_about(request):
@@ -57,7 +56,7 @@ def edit_about(request):
         myData.university_url = universityUrl
         myData.summary = summary
         myData.save()
-        return render(request, 'edit_about.html',{
+        return render(request, 'edit_about.html',{"userFullName":userFullName,
         "profile_pic":myData.profile_pic,
         "first_name":myData.first_name,
         "last_name":myData.last_name,
@@ -71,7 +70,7 @@ def edit_about(request):
         })
     if len(userdata.objects.all()) != 0:
         myData = userdata.objects.all()[0]
-        return render(request, 'edit_about.html',{
+        return render(request, 'edit_about.html',{"userFullName":userFullName,
         "profile_pic":myData.profile_pic,
         "first_name":myData.first_name,
         "last_name":myData.last_name,
@@ -83,7 +82,7 @@ def edit_about(request):
         "universityUrl":myData.university_url,
         "summary":myData.summary
         })
-    return render(request, 'edit_about.html',{})
+    return render(request, 'edit_about.html',{"userFullName":userFullName,})
 @login_required(login_url=loginUrl)
 def edit_repos(request):
     if request.method == 'POST':
@@ -105,9 +104,9 @@ def edit_repos(request):
         if len(selected_repos.objects.all()) != 0:
             myRepos = [repo.repo_id for repo in selected_repos.objects.all()]
             myRepos = ','.join(myRepos)
-            return render(request, 'edit_repos.html',{"username":myData.github_username,"repos":myRepos,"page_desc":page_desc})
-        return render(request, 'edit_repos.html',{"username":myData.github_username,"repos":"none","page_desc":page_desc})
-    return render(request, 'edit_repos.html',{"page_desc":page_desc})
+            return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":myRepos,"page_desc":page_desc})
+        return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":"none","page_desc":page_desc})
+    return render(request, 'edit_repos.html',{"userFullName":userFullName,"page_desc":page_desc})
 
 
 def login_admin(request):
@@ -125,7 +124,7 @@ def login_admin(request):
         else:
             messages.error(request, 'Username or password is incorrect')
             return redirect('admin_auth')
-    return render(request, 'login.html',{})   
+    return render(request, 'login.html',{"userFullName":userFullName,})   
 class select_repos(APIView):
     def post(self,request):
         repos = request.data['repos']
@@ -161,7 +160,7 @@ def edit_publications(request):
     if page_description_text.objects.filter(page_name="publications").count() != 0:
         description = page_description_text.objects.filter(page_name="publications")[0].text
     publications = publication.objects.all()
-    return render(request, 'edit_publications.html',{"publications":publications,"description":description})
+    return render(request, 'edit_publications.html',{"userFullName":userFullName,"publications":publications,"description":description})
 class delete_publication(APIView):
     def post(self,request):
         publication_id = request.data['publication_id']
@@ -227,7 +226,7 @@ def teachings(request):
     description_text = ""
     if page_description_text.objects.filter(page_name="teachings").count() != 0:
         description_text = page_description_text.objects.filter(page_name="teachings")[0].text
-    return render(request, 'edit_teachings.html',{"courses":courses_list,"description":description_text})
+    return render(request, 'edit_teachings.html',{"userFullName":userFullName,"courses":courses_list,"description":description_text})
 
 @login_required(login_url=loginUrl)
 def edit_resume(request):
@@ -292,5 +291,5 @@ def edit_resume(request):
         showAward = True
     if generalInfo.objects.all().count() != 0:
         myGeneralInfo = generalInfo.objects.all()[0]
-        return render(request, 'edit_resume.html',{"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
-    return render(request, 'edit_resume.html',{"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
+        return render(request, 'edit_resume.html',{"userFullName":userFullName,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
+    return render(request, 'edit_resume.html',{"userFullName":userFullName,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})

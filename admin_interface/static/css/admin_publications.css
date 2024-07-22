@@ -1,7 +1,3 @@
-.pCard {
-  border: 1px solid #e0e0e031;
-  border-radius: 5px;
-}
 .pImageContainer {
   padding: 5px;
 }
@@ -23,6 +19,38 @@
   font-size: 12px;
 }
 .pDesc {
+  font-size: 12px;
+}
+
+.pCard {
+  border: 1px solid #e0e0e031;
+  box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  border-radius: 5px;
+  min-width: 20%;
+  width: fit-content;
+}
+.pImageContainer {
+  padding: 5px;
+}
+.pImage {
+  border-radius: 5px;
+}
+.pInfo {
+  display: flex;
+  margin-top: 5px;
+  flex-direction: column;
+  gap: 5px;
+}
+.pTitle {
+  font-size: 20px;
+  text-wrap: nowrap;
+  margin-right: 10px;
+  text-transform: uppercase;
+}
+.pAuthors {
+  font-size: 12px;
+}
+.publicationDesc {
   font-size: 12px;
 }
 .links {
