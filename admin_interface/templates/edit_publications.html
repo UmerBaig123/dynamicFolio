@@ -9,7 +9,7 @@ publication {%endblock title%} {%load static %} {% block content %}
 
     <div id="publications" style="min-height: 60vh">
       {% for publication in publications %}
-      <div>
+      <div id="{{publication.id}}-container">
         <div
           class="pCard paralell publ"
           onclick="decodeAbsBib('{{publication.id}}-abs-inner','{{publication.id}}-bib-inner','{{publication.abs}}','{{publication.bib}}')"
@@ -61,6 +61,18 @@ publication {%endblock title%} {%load static %} {% block content %}
                 target="_blank"
                 >PDF</a
               >
+              <button
+                type="button"
+                class="link"
+                style="
+                  background-color: rgb(119, 128, 0);
+                  font-weight: 700;
+                  cursor: pointer;
+                "
+                onclick="edit_publication('{{publication.id}}','{{publication.title}}','{{publication.authors}}','{{publication.description}}','{{publication.abs}}','{{publication.arxiv_url}}','{{publication.bib}}','{{publication.publication_image}}','{{publication.doi}}')"
+              >
+                edit
+              </button>
               <button
                 type="button"
                 class="link"
@@ -346,8 +358,8 @@ publication {%endblock title%} {%load static %} {% block content %}
   const inject = () => {
     document.getElementById("filename").innerHTML = pdfInput.files[0].name;
   };
-  const changePhoto = (e) => {
-    publication_image.src = `${globalThis.URL.createObjectURL(e.files[0])}`;
+  const changePhoto = (e, elem = publication_image) => {
+    elem.src = `${globalThis.URL.createObjectURL(e.files[0])}`;
   };
   const toggle = (e) => {
     if (e.hidden) {
@@ -391,7 +403,7 @@ publication {%endblock title%} {%load static %} {% block content %}
       "A Hybrid Approach Combining Control Theory and AI for Engineering Self-Adaptive Systems",
     authors: "M. Salehie, L. Tahvildari",
     description: `Ricardo Caldas, Arthur Rodrigues, Eric Bernd Gil, and 3 more authors
-In Proceedings of the IEEE/ACM 15th International Symposium on Software Engineering for Adaptive and Self-Managing Systems, 2020`,
+  In Proceedings of the IEEE/ACM 15th International Symposium on Software Engineering for Adaptive and Self-Managing Systems, 2020`,
   };
   const delete_publication = (publication_id) => {
     fetch("{% url 'delete_publication' %}", {
@@ -414,5 +426,201 @@ In Proceedings of the IEEE/ACM 15th International Symposium on Software Engineer
     abs.value = abs.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
     bib.value = bib.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
   };
+  function inject_edit(elem) {
+    alert("file uploaded");
+  }
+  const edit_publication = (
+    publication_id,
+    name,
+    authors,
+    desc,
+    abs,
+    arxiv,
+    bib,
+    image,
+    doi
+  ) => {
+    document.getElementById(
+      `${publication_id}-container`
+    ).innerHTML = `<div class="pCard paralell" style="width: 96%">
+          <div class="pImageContainer">
+            <img
+              id="edit-publication_image"
+              style="cursor: pointer; pointer-events: all"
+              onclick="
+               document.getElementById('edit-image').click()"
+              class="pImage"
+              src="/static/${image}"
+              alt="publication"
+              width="120px"
+              height="120px"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              id="edit-image"
+              name="publication_image"
+              onchange="changePhoto(this,document.getElementById('edit-publication_image'))"
+              hidden
+            />
+          </div>
+          <div class="pInfo" style="width: 100%">
+            <input
+              class="pTitle"
+              value = "${name}"
+              id="edit-title"
+              style="width: 100%"
+              name="publication_title"
+              placeholder="title"
+            />
+            <input
+              class="pAuthors"
+              style="width: 100%"
+              id = "edit-authors"
+              value = "${authors}"
+              name="publication_authors"
+              placeholder="authors, comma separated"
+            />
+            <input
+              class="pDesc"
+              id = "edit-desc"
+              style="width: 100%"
+              value = "${desc}"
+              name="publication_description"
+              placeholder="description"
+            />
+            <div class="links">
+              <button type="button" class="link" onclick="toggle(document.getElementById('edit-abs'))">
+                ABS
+              </button>
+              <button type="button" class="link" onclick="toggle(document.getElementById('edit-arxiv'))">
+                ARXIV
+              </button>
+              <button type="button" class="link" onclick="toggle(document.getElementById('edit-bib'))">
+                BIB
+              </button>
+              <button type="button" class="link" onclick="toggle(document.getElementById('edit-pdf'))">
+                PDF
+              </button>
+              <input
+                type="date"
+                name="publication_date"
+                id = "edit-date"
+                style="
+                  border: 1px solid #e0e0e031;
+                  border-radius: 5px;
+                  cursor: pointer;
+                "
+              />
+              <input
+                type="text"
+                id = "edit-doi"
+                name="doi"
+                value = "${doi}"
+                style="border: 1px solid #e0e0e031; border-radius: 5px"
+                placeholder="DOI (optional)"
+              />
+              <button
+                type="submit"
+                class="link"
+                style="
+                  background-color: green;
+                  font-weight: 700;
+                  cursor: pointer;
+                "
+                onclick="add_edited_publication('${publication_id}')"
+              >
+                add
+              </button>
+            </div>
+
+            <textarea
+              rows="5"
+              cols="20"
+              style="margin-bottom: 10px"
+              placeholder="abstract"
+              name="abs"
+              id="edit-abs"
+              hidden
+            >${abs}</textarea>
+            <input
+              placeholder="arxiv url"
+              type="text"
+              id="edit-arxiv"
+              name="arxiv_url"
+              hidden
+              value = "${arxiv}"
+              style="border: 1px solid #e0e0e031; margin-bottom: 10px"
+            />
+            <textarea
+              rows="5"
+              cols="20"
+              style="margin-bottom: 10px"
+              placeholder="bib"
+              name="bib"
+              id="edit-bib"
+              hidden
+            >${bib}</textarea>
+            <div id="edit-pdf" class="paralell" hidden>
+              <label for="edit-pdfInput" class="imgSelect">Select PDF file</label>
+              <input
+                placeholder="upload pdf file"
+                type="file"
+                id="edit-pdfInput"
+                name="pdf_file"
+                style="margin-bottom: 10px"
+                onchange="console.log(this.files[0].name)"
+                hidden
+              />
+              <div id="edit-filename"></div>
+            </div>
+          </div>
+        </div>`;
+  };
+  function add_edited_publication(id) {
+    var title = document.getElementById("edit-title").value;
+    var authors = document.getElementById("edit-authors").value;
+    var desc = document
+      .getElementById("edit-desc")
+      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+    var abs = document
+      .getElementById("edit-abs")
+      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+    var arxiv = document.getElementById("edit-arxiv").value;
+    var bib = document
+      .getElementById("edit-bib")
+      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+    var image = document.getElementById("edit-image").files[0];
+    var doi = document.getElementById("edit-doi").value;
+    var date = document.getElementById("edit-date").value;
+    var pdf = document.getElementById("edit-pdfInput").files[0];
+    var formData = new FormData();
+    formData.append("id", id);
+    formData.append("title", title);
+    formData.append("authors", authors);
+    formData.append("desc", desc);
+    formData.append("abs", abs);
+    formData.append("arxiv", arxiv);
+    formData.append("bib", bib);
+    formData.append("doi", doi);
+    formData.append("date", date);
+    formData.append("image", image);
+    formData.append("pdf", pdf);
+
+    fetch("{% url 'edit_publication' %}", {
+      method: "POST",
+      headers: {
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: formData,
+    }).then((response) => {
+      response.json().then((data) => {
+        console.log(data);
+        if (data.status == 200) {
+          window.location.href = "{% url 'admin_publications' %}";
+        }
+      });
+    });
+  }
 </script>
 {% endblock %}

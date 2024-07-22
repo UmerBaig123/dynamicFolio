@@ -166,14 +166,62 @@ class delete_publication(APIView):
         publication_id = request.data['publication_id']
         thisPublication = publication.objects.get(id=publication_id)
         # Delete the pdfFile from the system
-        pdf_file_path = thisPublication.pdfFile.path
-        image_file_path = thisPublication.publication_image.path
-        if os.path.exists(pdf_file_path):
-            os.remove(pdf_file_path)
-        if os.path.exists(image_file_path):
-            os.remove(image_file_path)
+        try:
+            pdf_file_path = thisPublication.pdfFile.path
+            image_file_path = thisPublication.publication_image.path
+            if os.path.exists(pdf_file_path):
+                os.remove(pdf_file_path)
+            if os.path.exists(image_file_path):
+                os.remove(image_file_path)
+        except:
+            pass
         thisPublication.delete()
         return Response({"message":"Publication deleted successfully","status":200})
+class edit_publication(APIView):
+    def post(self,request):
+        publication_id = request.data['id']
+        title = request.data['title']
+        authors = request.data['authors']
+        description = request.data['desc']
+        abstract = request.data['abs']
+        arxiv_url = request.data['arxiv']
+        bib = request.data['bib']
+        doi = request.data['doi']
+        publication_date = request.data['date']
+        pdfFile = ""
+        publication_image = ""
+        if request.FILES.get('pdf') is not None:
+            pdfFile = request.FILES['pdf']
+        if request.FILES.get('image') is not None:
+            publication_image = request.FILES['image']
+        thisPublication = publication.objects.get(id=publication_id)
+        thisPublication.title = title
+        thisPublication.authors = authors
+        thisPublication.description = description
+        thisPublication.abs = abstract
+        thisPublication.arxiv_url = arxiv_url
+        thisPublication.bib = bib
+        thisPublication.doi = doi
+        if pdfFile != "":
+            try:
+                deletingPdf = thisPublication.pdfFile.path
+                if os.path.exists(deletingPdf):
+                    os.remove(deletingPdf)
+            except:
+                pass
+            thisPublication.pdfFile = pdfFile
+        if publication_image != "":
+            try:
+                deletingImage = thisPublication.publication_image.path
+                if os.path.exists(deletingImage):
+                    os.remove(deletingImage)
+            except:
+                pass
+            thisPublication.publication_image = publication_image
+        if publication_date != "":
+            thisPublication.publication_date = publication_date
+        thisPublication.save()
+        return Response({"message":"Publication edited successfully","status":200})
 class add_page_description(APIView):
     def post(self,request):
         page_name = request.data['page_name']
@@ -244,9 +292,12 @@ def edit_resume(request):
                 dob = request.POST['date_of_birth']
                 myGeneralInfo.date_of_birth = dob
             if request.FILES.get('cv') is not None:
-                deletingCv = myGeneralInfo.cv.path
-                if os.path.exists(deletingCv):
-                    os.remove(deletingCv)
+                try:
+                    deletingCv = myGeneralInfo.cv.path
+                    if os.path.exists(deletingCv):
+                        os.remove(deletingCv)
+                except:
+                    pass
                 myGeneralInfo.cv = cv
             myGeneralInfo.languages = language
             myGeneralInfo.phone = phone
