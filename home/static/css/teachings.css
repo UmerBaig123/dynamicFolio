@@ -19,3 +19,9 @@
 .item-box {
   border-top: 1px solid #ffffff1a;
 }
+#teachings {
+  overflow-x: scroll;
+}
+#teachings div {
+  min-width: 100px;
+}

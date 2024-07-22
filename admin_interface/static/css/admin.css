@@ -9,11 +9,6 @@ input {
   width: inherit;
 }
 
-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 .input-group {
   width: fit-content;
   position: relative;
@@ -49,9 +44,14 @@ body {
 html {
   scroll-behavior: smooth !important;
 }
+html {
+  width: 100%;
+}
+
 body {
   margin: 0;
   padding: 0;
+  min-width: 100%;
   font-family: "ubuntu", sans-serif;
   background-color: #141414;
   display: flex;
@@ -89,7 +89,8 @@ a:active {
 .topbar {
   display: flex;
   color: white;
-  width: 100vw;
+  width: fit-content;
+  min-width: 100vw;
   position: fixed;
   top: 0;
   justify-content: space-around;
@@ -102,21 +103,20 @@ a:active {
 }
 
 .options {
+  margin-left: auto;
   display: flex;
-  justify-content: center;
+  min-width: fit-content;
+  justify-content: space-around;
   align-items: center;
-  gap: 10px;
-  width: 70%;
+  width: 50%;
 }
 .btn {
   font-size: 14px;
   background: transparent;
   border: none;
   z-index: 1;
-  padding-top: 0.7em;
-  padding-bottom: 0.7em;
   text-align: center;
-  width: 120px;
+  padding: 0.7em 15px;
   color: #ffedd3;
   position: relative;
   transition: 0.2s ease;

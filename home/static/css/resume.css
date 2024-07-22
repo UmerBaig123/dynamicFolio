@@ -69,10 +69,6 @@ a:hover {
 }
 
 @media (min-width: 600px) {
-  body {
-    padding: 0 40px;
-  }
-
   section {
     max-width: 800px;
     margin: 20px auto;
