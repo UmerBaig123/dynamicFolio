@@ -47,22 +47,31 @@
               display: flex;
               justify-content: center;
             "
-            onclick="deleteCourse('{{course.id}}')"
+            id="{{course.id}}-course"
+            onclick="toggle_select('{{course.id}}')"
           >
-            <div class="courseItem" style="width: 10%">
+            <div class="courseItem" style="width: 10%" id="{{course.id}}-year">
               {{course.course_year}}
             </div>
-            <div class="courseItem" style="width: 20%">
+            <div class="courseItem" style="width: 20%" id="{{course.id}}-name">
               {{course.course_name}}
             </div>
-            <div class="courseItem" style="width: 20%">
+            <div
+              class="courseItem"
+              style="width: 20%"
+              id="{{course.id}}-instit"
+            >
               {{course.institution_name}}
             </div>
-            <div class="courseItem" style="width: 20%">{{course.role}}</div>
-            <div class="courseItem" style="width: 16%">
-              course.students_level
+            <div class="courseItem" style="width: 20%" id="{{course.id}}-role">
+              {{course.role}}
             </div>
-            <div class="courseItem" style="width: 10%">{{course.hours}}</div>
+            <div class="courseItem" style="width: 16%" id="{{course.id}}-level">
+              {{course.students_level}}
+            </div>
+            <div class="courseItem" style="width: 10%" id="{{course.id}}-hour">
+              {{course.hours}}
+            </div>
           </div>
           {% endfor %} {% csrf_token %}
           <div
@@ -77,6 +86,7 @@
           >
             <input
               placeholder="year"
+              type="number"
               class="courseItem"
               style="width: 10%"
               name="course_year"
@@ -109,12 +119,41 @@
               placeholder="hours"
               class="courseItem"
               style="width: 10%"
+              type="number"
               name="hours"
             />
           </div>
           <button class="addBtn" type="submit">+&ensp;add</button>
         </div>
       </div>
+    </div>
+    <div
+      class="paralell"
+      id="optioncontainer"
+      style="width: fit-content; margin-top: 20px; gap: 10px"
+      hidden
+    >
+      <div id="courseOptions"></div>
+      <button
+        class="okBtn"
+        type="button"
+        style="
+          background-color: rgb(121, 109, 3);
+          font-size: 12px;
+          color: white;
+        "
+        onclick="edit()"
+      >
+        edit
+      </button>
+      <button
+        class="okBtn"
+        type="button"
+        style="background-color: rgb(129, 5, 5); font-size: 12px; color: white"
+        onclick="deleteAll()"
+      >
+        delete
+      </button>
     </div>
   </div>
 </form>
@@ -171,11 +210,138 @@
 </div>
 <script>
   var decoded = decodeHtml("{{description}}");
+  var selectedCourse = [];
   console.log(decoded);
   document.getElementById("description_text").innerHTML = decoded.replace(
     /<br>/g,
     "\n"
   );
+  function add_to_selected(id) {
+    selectedCourse.push(id);
+    document.getElementById(`${id}-course`).style.backgroundColor =
+      "rgba(255, 255, 255, 0.2)";
+  }
+  function edit() {
+    if (selectedCourse.length > 0) {
+      var course = selectedCourse[0];
+      var name = document.getElementById(`${course}-name`).textContent;
+      var year = parseInt(
+        document
+          .getElementById(`${course}-year`)
+          .textContent.replace(/\s|\n/g, "")
+      );
+      var instit = document.getElementById(`${course}-instit`).textContent;
+      var role = document.getElementById(`${course}-role`).textContent;
+      var level = document.getElementById(`${course}-level`).textContent;
+      var hour = parseInt(
+        document
+          .getElementById(`${course}-hour`)
+          .textContent.replace(/\s|\n/g, "")
+      );
+
+      document
+        .getElementById(`${selectedCourse[0]}-course`)
+        .removeAttribute("onclick");
+      document.getElementById(`${selectedCourse[0]}-course`).style.gap = "5px";
+      document.getElementById(
+        `${selectedCourse[0]}-course`
+      ).style.backgroundColor = "inherit";
+      document.getElementById(`${selectedCourse[0]}-course`).innerHTML = `
+            <input
+              placeholder="year"
+              type="number"
+              class="courseItem"
+              style="width: 10%"
+              value="${year}"
+              id="edit_course_year"
+            />
+            <input
+              placeholder="course name"
+              class="courseItem"
+              style="width: 20%"
+              value="${name}"
+              id="edit_course_name"
+            />
+            <input
+              placeholder="institution"
+              class="courseItem"
+              style="width: 20%"
+              value="${instit}"
+              id="edit_institution_name"
+            />
+            <input
+              placeholder="role"
+              class="courseItem"
+              style="width: 20%"
+              value="${role}"
+              id="edit_role"
+            />
+            <input
+              placeholder="students level"
+              class="courseItem"
+              style="width: 16%"
+              value="${level}"
+              id="edit_students_level"
+            />
+            <input
+              placeholder="hours"
+              class="courseItem"
+              style="width: 10%"
+              value="${hour}"
+              type="number"
+              id="edit_hours"
+            />
+            <button
+              class="okBtn"
+              type="button"
+              style="background-color: rgb(121, 109, 3); font-size: 12px; color: white;margin-right: 5px"
+              onclick="updateCourse('${selectedCourse[0]}')"
+            >update</button>
+            `;
+    }
+  }
+  function updateCourse(id) {
+    fetch("{% url 'edit_course' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({
+        course_id: id,
+        course_year: document.getElementById("edit_course_year").value,
+        course_name: document.getElementById("edit_course_name").value,
+        institution_name: document.getElementById("edit_institution_name")
+          .value,
+        role: document.getElementById("edit_role").value,
+        students_level: document.getElementById("edit_students_level").value,
+        hours: document.getElementById("edit_hours").value,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  }
+  function toggle_select(id) {
+    if (selectedCourse.includes(id)) {
+      selectedCourse = selectedCourse.filter((course) => course != id);
+      document.getElementById(`${id}-course`).style.backgroundColor = "inherit";
+    } else {
+      add_to_selected(id);
+    }
+    if (selectedCourse.length > 0) {
+      optioncontainer.hidden = false;
+      document.getElementById(
+        "courseOptions"
+      ).innerHTML = `${selectedCourse.length} selected`;
+    } else {
+      optioncontainer.hidden = true;
+      document.getElementById("courseOptions").innerHTML = "";
+    }
+  }
   const toggle = (element) => {
     if (element.hidden) {
       show(element);
@@ -183,6 +349,11 @@
       hide(element);
     }
   };
+  function deleteAll() {
+    selectedCourse.forEach((course) => {
+      deleteCourse(course);
+    });
+  }
   const deleteCourse = (courseId) => {
     fetch("{% url 'delete_course' %}", {
       method: "POST",

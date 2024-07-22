@@ -28,12 +28,14 @@ input.courseItem {
   padding: 5px 0;
   border: 1px solid #e0e0e031;
   border-radius: 5px;
+  transition: all 0.3s ease;
 }
 .courseBox:hover {
-  background-color: rgba(221, 67, 67, 0.247);
   cursor: pointer;
 }
-
+#courseOptions {
+  font-size: 12px;
+}
 .okBtn {
   /* margin-top: 10px; */
   font-size: 17px;

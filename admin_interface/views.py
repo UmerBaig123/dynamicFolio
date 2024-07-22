@@ -234,6 +234,24 @@ class add_page_description(APIView):
             myPageDescription = page_description_text(page_name=page_name,text=page_description)
             myPageDescription.save()
         return Response({"message":"Page description added successfully","status":200})
+class edit_course(APIView):
+    def post(self,request):
+        course_id = request.data['course_id']
+        course_year = request.data['course_year']
+        course_name = request.data['course_name']
+        institution_name = request.data['institution_name']
+        role = request.data['role']
+        students_level = request.data['students_level']
+        hours = request.data['hours']
+        thisCourse = courses.objects.get(id=course_id)
+        thisCourse.course_year = course_year
+        thisCourse.course_name = course_name
+        thisCourse.institution_name = institution_name
+        thisCourse.role = role
+        thisCourse.students_level = students_level
+        thisCourse.hours = hours
+        thisCourse.save()
+        return Response({"message":"Course edited successfully","status":200})
 class add_experience(APIView):
     def post(self,request):
         experience_type = request.data['experience_type']
