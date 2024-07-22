@@ -224,15 +224,17 @@
   function edit() {
     if (selectedCourse.length > 0) {
       var course = selectedCourse[0];
-      var name = document.getElementById(`${course}-name`).textContent;
+      var name = document.getElementById(`${course}-name`).textContent.trim();
       var year = parseInt(
         document
           .getElementById(`${course}-year`)
           .textContent.replace(/\s|\n/g, "")
       );
-      var instit = document.getElementById(`${course}-instit`).textContent;
-      var role = document.getElementById(`${course}-role`).textContent;
-      var level = document.getElementById(`${course}-level`).textContent;
+      var instit = document
+        .getElementById(`${course}-instit`)
+        .textContent.trim();
+      var role = document.getElementById(`${course}-role`).textContent.trim();
+      var level = document.getElementById(`${course}-level`).textContent.trim();
       var hour = parseInt(
         document
           .getElementById(`${course}-hour`)
