@@ -75,7 +75,7 @@
   <section class="education">
     <h2 class="heading">Education</h2>
     {% for experience in education %}
-    <div class="insideBox">
+    <div class="insideBox" id="{{experience.id}}">
       <div class="degreeYear">
         <h3 class="title"><b>{{experience.experience_name}}</b></h3>
         <!-- prettier-ignore -->
@@ -114,6 +114,13 @@
       </ul>
       {% endif %}
       <div style="width: 100%; display: flex; justify-content: flex-end;gap:10px">
+        <button
+          class="okBtn"
+          style="font-size: 12px; font-weight: 100;background-color: rgb(93, 94, 0);color: white;"
+           onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
+        >
+          edit
+        </button>
         <button
           class="okBtn"
           style="font-size: 12px; font-weight: 100;background-color: rgb(94, 0, 0);color: white;"
@@ -174,7 +181,7 @@
   <section class="profExperience">
     <h2 class="heading">Professional Experience</h2>
     {% for experience in professional %}
-    <div class="insideBox">
+    <div class="insideBox" id="{{experience.id}}">
       <div class="degreeYear">
         <h3 class="title"><b>{{experience.experience_name}}</b></h3>
         <!-- prettier-ignore -->
@@ -213,6 +220,13 @@
       </ul>
       {% endif %}
       <div style="width: 100%; display: flex; justify-content: flex-end;gap:10px">
+        <button
+          class="okBtn"
+          style="font-size: 12px; font-weight: 100;background-color: rgb(93, 94, 0);color: white;"
+           onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
+        >
+          edit
+        </button>
         <button
           class="okBtn"
           style="font-size: 12px; font-weight: 100;background-color: rgb(94, 0, 0);color: white;"
@@ -273,7 +287,7 @@
   <section class="academicExperience">
     <h2 class="heading">Academic Experience</h2>
     {% for experience in academic %}
-    <div class="insideBox">
+    <div class="insideBox" id="{{experience.id}}">
       <div class="degreeYear">
         <h3 class="title"><b>{{experience.experience_name}}</b></h3>
         <!-- prettier-ignore -->
@@ -312,6 +326,13 @@
       </ul>
       {% endif %}
       <div style="width: 100%; display: flex; justify-content: flex-end;gap:10px">
+        <button
+          class="okBtn"
+          style="font-size: 12px; font-weight: 100;background-color: rgb(93, 94, 0);color: white;"
+           onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
+        >
+          edit
+        </button>
         <button
           class="okBtn"
           style="font-size: 12px; font-weight: 100;background-color: rgb(94, 0, 0);color: white;"
@@ -372,7 +393,7 @@
   <section class="AwardsCertificates">
     <h2 class="heading">Awards and Certificates</h2>
     {% for experience in awards %}
-    <div class="insideBox">
+    <div class="insideBox" id="{{experience.id}}">
       <div class="degreeYear">
         <h3 class="title"><b>{{experience.experience_name}}</b></h3>
         <!-- prettier-ignore -->
@@ -411,6 +432,13 @@
       </ul>
       {% endif %}
       <div style="width: 100%; display: flex; justify-content: flex-end;gap:10px">
+        <button
+          class="okBtn"
+          style="font-size: 12px; font-weight: 100;background-color: rgb(93, 94, 0);color: white;"
+          onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
+        >
+          edit
+        </button>
         <button
           class="okBtn"
           style="font-size: 12px; font-weight: 100;background-color: rgb(94, 0, 0);color: white;"
@@ -467,6 +495,7 @@
           add
         </button>
     </div>
+    </div>
   </section>
 </div>
 <script>
@@ -516,7 +545,98 @@
           location.reload();
         }
       });
-    var form = document.createElement("form");
+  }
+  function onEditClick(id,name,to,from,place,location,description){
+    document.getElementById(id).innerHTML = `
+    
+      <div class="degreeYear">
+        <h3 class="title">
+          <b><input type="text" 
+            value="${name}"
+            id="${id}-edit-title" placeholder="title" /></b>
+        </h3>
+        <!-- prettier-ignore -->
+        <span class="dateDiff"
+          ><b>
+            <input id="${id}-edit-from"
+            value="${from}"
+            type="number" placeholder="from"> -
+            <input  id="${id}-edit-to"
+            value="${to}"
+            type="number" placeholder="to"></b
+          ></span
+        >
+      </div>
+      <div class="degreeYear">
+        <p class="expPlace">
+          <input type="text"
+          value="${place}"
+          id="${id}-edit-place" placeholder="place" />
+        </p>
+        <div style="display: flex; align-items: center; gap: 5px">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-geo-alt-fill"
+            viewBox="0 0 16 16"
+          >
+            <path
+              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
+            /></svg
+          ><input type="text"
+          value="${location}"
+          id="${id}-edit-location" placeholder="location" />
+        </div>
+      </div>
+      <textarea
+        id="${id}-edit-description"
+        style="width: 100%; margin-bottom: 20px"
+        rows="5"
+      >${description}</textarea>
+      <div style="width: 100%; display: flex; justify-content: flex-end">
+        <button
+          class="okBtn"
+          style="font-size: 12px; font-weight: 100;background-color:green;color:white"
+          onclick="editExperience('${id}-edit','${id}')"
+        >
+          ok
+        </button>
+    </div>
+    `;
+  }
+  function editExperience(idPrefix,id){
+    replaceList(idPrefix+"-description");
+    var experience_id = id;
+    var experience_name = document.getElementById(idPrefix + "-title").value;
+    var experience_from = document.getElementById(idPrefix + "-from").value;
+    var experience_to = document.getElementById(idPrefix + "-to").value;
+    var experience_place = document.getElementById(idPrefix + "-place").value;
+    var experience_location = document.getElementById(idPrefix + "-location").value;
+    var experience_description = document.getElementById(idPrefix + "-description").value.replace(/\n/g, "</li><li>");
+    fetch("{% url 'edit_experience' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({
+        experience_id: experience_id,
+        experience_name: experience_name,
+        experience_from_year: experience_from,
+        experience_to_year: experience_to,
+        experience_place: experience_place,
+        experience_location: experience_location,
+        experience_description: experience_description,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
   }
   function deleteExperience(id){
     fetch("{% url 'delete_experience' %}", {

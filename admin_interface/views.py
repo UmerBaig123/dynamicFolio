@@ -264,6 +264,24 @@ class add_experience(APIView):
         myExperience = experience(experience_type=experience_type,experience_name=experience_name,experience_place=experience_place,experience_from_year=experience_from_year,experience_to_year=experience_to_year,experience_description=experience_description,experience_location=experience_location)
         myExperience.save()
         return Response({"message":"Experience added successfully","status":200})
+class edit_experience(APIView):
+    def post(self,request):
+        experience_id = request.data['experience_id']
+        experience_name = request.data['experience_name']
+        experience_place = request.data['experience_place']
+        experience_location = request.data['experience_location']
+        experience_from_year = request.data['experience_from_year']
+        experience_to_year = request.data['experience_to_year']
+        experience_description = request.data['experience_description']
+        thisExperience = experience.objects.get(id=experience_id)
+        thisExperience.experience_name = experience_name
+        thisExperience.experience_place = experience_place
+        thisExperience.experience_location = experience_location
+        thisExperience.experience_from_year = experience_from_year
+        thisExperience.experience_to_year = experience_to_year
+        thisExperience.experience_description = experience_description
+        thisExperience.save()
+        return Response({"message":"Experience edited successfully","status":200})
 class delete_experience(APIView):
     def post(self,request):
         experience_id = request.data['experience_id']

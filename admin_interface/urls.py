@@ -14,5 +14,6 @@ urlpatterns = [
     path('edit_course/', views.edit_course.as_view(), name='edit_course'),
     path('resume/', views.edit_resume, name='admin_resume'),
     path('add_experience/', views.add_experience.as_view(), name='add_experience'),
+    path('edit_experience/', views.edit_experience.as_view(), name='edit_experience'),
     path('delete_experience/', views.delete_experience.as_view(), name='delete_experience'),
 ]
