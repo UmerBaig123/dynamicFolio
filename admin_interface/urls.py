@@ -16,4 +16,5 @@ urlpatterns = [
     path('add_experience/', views.add_experience.as_view(), name='add_experience'),
     path('edit_experience/', views.edit_experience.as_view(), name='edit_experience'),
     path('delete_experience/', views.delete_experience.as_view(), name='delete_experience'),
+    path('add_gitlab/', views.add_or_edit_gitlabid.as_view(), name='add_gitlab'),
 ]

@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo
+from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos
 import datetime
 import os
 from dotenv import load_dotenv
@@ -14,6 +14,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 loginUrl = os.environ['ADMINROUTE']
+gitlab_api_key = os.environ['GITLABAPITOKEN']
 userFullName= ""
 if userdata.objects.all().count() != 0:
     userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
@@ -97,6 +98,13 @@ def edit_repos(request):
             myPageDescription.save()
         return redirect('admin_repos')
     page_desc = ""
+    gitlab_id = ""
+    myGitlabRepos = ""
+    if gitlab_ids.objects.all().count() != 0:
+        gitlab_id = gitlab_ids.objects.all()[0].gitlab_id
+    if selected_gitlab_repos.objects.all().count() != 0:
+        myGitlabRepos = [repo.repo_id for repo in selected_gitlab_repos.objects.all()]
+        myGitlabRepos = ','.join(myGitlabRepos)
     if page_description_text.objects.filter(page_name="repositories").count() != 0:
         page_desc = page_description_text.objects.filter(page_name="repositories")[0].text
     if len(userdata.objects.all()) != 0:
@@ -104,9 +112,9 @@ def edit_repos(request):
         if len(selected_repos.objects.all()) != 0:
             myRepos = [repo.repo_id for repo in selected_repos.objects.all()]
             myRepos = ','.join(myRepos)
-            return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":myRepos,"page_desc":page_desc})
-        return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":"none","page_desc":page_desc})
-    return render(request, 'edit_repos.html',{"userFullName":userFullName,"page_desc":page_desc})
+            return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":myRepos,"page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
+        return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":"none","page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
+    return render(request, 'edit_repos.html',{"userFullName":userFullName,"page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
 
 
 def login_admin(request):
@@ -128,7 +136,12 @@ def login_admin(request):
 class select_repos(APIView):
     def post(self,request):
         repos = request.data['repos']
+        gitlab_repos = request.data['gitlab_repos']
+        selected_gitlab_repos.objects.all().delete()
         selected_repos.objects.all().delete()
+        for repo in gitlab_repos:
+            myRepo = selected_gitlab_repos(repo_id=int(repo))
+            myRepo.save()
         for repo in repos:
             myRepo = selected_repos(repo_id=int(repo))
             myRepo.save()
@@ -282,6 +295,17 @@ class edit_experience(APIView):
         thisExperience.experience_description = experience_description
         thisExperience.save()
         return Response({"message":"Experience edited successfully","status":200})
+class add_or_edit_gitlabid(APIView):
+    def post(self,request):
+        my_gitlab_id = int(request.data['gitlab_id'])
+        if gitlab_ids.objects.all().count() != 0:
+            myData = gitlab_ids.objects.all()[0]
+            myData.gitlab_id = my_gitlab_id
+            myData.save()
+        else:
+            myData = gitlab_ids(gitlab_id=my_gitlab_id)
+            myData.save()
+        return Response({"message":"Gitlab Id added successfully","status":200})
 class delete_experience(APIView):
     def post(self,request):
         experience_id = request.data['experience_id']

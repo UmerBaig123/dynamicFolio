@@ -1,7 +1,78 @@
 {% extends 'admin_base.html' %}asdasdaasasddads {% block title %} edit repos
 {%endblock title%} {%load static %} {% block content %}
 <link rel="stylesheet" href="{% static '/css/admin_repos.css' %}" />
+
 <div class="container">
+  <div class="gitlab-modal" id="gitlab" hidden>
+    <div class="paralell" style="font-size: 12px; justify-content: flex-start">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        fill="currentColor"
+        style="cursor: pointer; margin-bottom: 5px"
+        class="bi bi-x"
+        viewBox="0 0 16 16"
+        onclick="hide(gitlab)"
+      >
+        <path
+          d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708"
+        />
+      </svg>
+    </div>
+    <input
+      type="text"
+      id="gitlab_username"
+      placeholder="add gitlab username"
+      class="gitlab-input"
+    />
+    <div class="gitlab-text">
+      We will retrieve your userid from gitlab, so make sure you have<b>
+        gitlab logged in</b
+      >
+      into your browser
+    </div>
+    <div
+      style="
+        font-size: 10px;
+        color: rgb(170, 43, 43);
+        width: 300px;
+        padding: 7px;
+      "
+      id="gitlab_username_error"
+    ></div>
+    <div
+      class="paralell"
+      style="font-size: 12px; justify-content: flex-end; gap: 10px"
+    >
+      <button
+        class="okBtn"
+        style="
+          font-size: 10px;
+          font-weight: 100;
+          margin: 2.5px;
+          color: white;
+          background-color: rgb(172, 3, 3);
+        "
+        onclick="hide(gitlab)"
+      >
+        close
+      </button>
+      <button
+        class="okBtn"
+        style="
+          font-size: 12px;
+          font-weight: 100;
+          margin: 2.5px;
+          color: white;
+          background-color: green;
+        "
+        onclick="fetchGitlabId()"
+      >
+        ok
+      </button>
+    </div>
+  </div>
   <div class="item-box">
     <div class="heading" style="margin-top: 0; margin-bottom: 10px">
       Select repositories to be shown:
@@ -22,6 +93,19 @@
         >about me</a
       >
       if repos don't display
+    </div>
+    <div
+      class="paralell"
+      style="font-size: 12px; justify-content: flex-start; margin-bottom: 10px"
+    >
+      <button
+        class="okBtn"
+        style="font-size: 12px; font-weight: 100; margin: 2.5px"
+        onclick="show(gitlab)"
+      >
+        integrate GitLab
+      </button>
+      {% if gitlab_id and gitlab_id != "" %} integrated with gitlab {% endif %}
     </div>
     <div
       style="
@@ -121,33 +205,141 @@
   var page_description = "{{page_desc}}";
   description_text.value = htmlDecode(page_description).replace(/<br>/g, "\n");
   var repo_ids = [];
+  var gitlab_repo_ids = [];
   var db_repo_ids = "{{repos}}";
+  var db_gitlab_repo_ids = "{{gitlab_repos}}";
+  if (db_gitlab_repo_ids != "") {
+    db_gitlab_repo_ids = db_gitlab_repo_ids.split(",");
+    for (let i = 0; i < db_gitlab_repo_ids.length; i++) {
+      gitlab_repo_ids.push(parseInt(db_gitlab_repo_ids[i]));
+    }
+  }
   if (db_repo_ids != "none") {
     db_repo_ids = db_repo_ids.split(",");
     for (let i = 0; i < db_repo_ids.length; i++) {
       repo_ids.push(parseInt(db_repo_ids[i]));
     }
   }
-  var response = fetch("https://api.github.com/users/{{username}}/repos")
-    .then((response) => response.json())
-    .then((data) => {
-      var repos = document.getElementById("repos");
-      var injectionString = "";
-      data.forEach((repo) => {
-        injectionString += `<img src="https://github-readme-stats.vercel.app/api/pin/?username={{username}}&repo=${
-          repo.name
-        }&theme=dark&show_owner=true" alt="repo logo" class="repo-logo ${
-          repo_ids.includes(repo.id) ? "selected" : ""
-        }" style="height:fit-content;cursor:pointer" onclick="addToSelected(${
-          repo.id
-        }, this)"/>`;
+  var injectionString = "";
+  if ("{{gitlab_id}}" != "") {
+    fetch(
+      "https://gitlab.com/api/v4/users/{{gitlab_id}}/projects?private_token={{api_key}}"
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        data.forEach((repo) => {
+          if (repo.star_count != 0 || repo.forks_count != 0) {
+            injectionString += `
+    <div class="lab-cont ${
+      db_gitlab_repo_ids.includes(repo.id.toString()) ? "selected" : ""
+    }" onclick="addGitlabToSelected(${repo.id},this)">
+    <div class="lab-title-cont"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#e2432a" class="bi bi-gitlab" viewBox="0 0 16 16">
+  <path d="m15.734 6.1-.022-.058L13.534.358a.57.57 0 0 0-.563-.356.6.6 0 0 0-.328.122.6.6 0 0 0-.193.294l-1.47 4.499H5.025l-1.47-4.5A.572.572 0 0 0 2.47.358L.289 6.04l-.022.057A4.044 4.044 0 0 0 1.61 10.77l.007.006.02.014 3.318 2.485 1.64 1.242 1 .755a.67.67 0 0 0 .814 0l1-.755 1.64-1.242 3.338-2.5.009-.007a4.05 4.05 0 0 0 1.34-4.668Z"/>
+</svg>${repo.path_with_namespace}</div>
+    <div class="lab-description">${repo.description}</div>
+    <div class="lab-stats">
+      ${
+        repo.forks_count != 0
+          ? `
+    <div class="forks"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+  <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.575-2.906 2.77a.56.56 0 0 0-.163.506l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+</svg>repo.forks_count</div>`
+          : ""
+      }
+${
+  repo.star_count != 0
+    ? `
+    <div class="stars"><svg xmlns="http://www.w3.org/2000/svg" width="12px" height="12px" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="3" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><circle cx="18" cy="6" r="3" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><circle cx="12" cy="18" r="3" fill="none" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/><path stroke="white" stroke-width="2" d="M6 9v1a2 2 0 0 0 2 2h4m6-3v1a2 2 0 0 1-2 2h-4m0 0v3"/></svg>${repo.star_count}</div>
+    `
+    : ""
+}</div>
+    </div>`;
+          } else {
+            injectionString += `
+    <div class="lab-cont ${
+      db_gitlab_repo_ids.includes(repo.id.toString()) ? "selected" : ""
+    }" onclick="addGitlabToSelected(${repo.id},this)">
+    <div class="lab-title-cont"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="#e2432a" class="bi bi-gitlab" viewBox="0 0 16 16">
+  <path d="m15.734 6.1-.022-.058L13.534.358a.57.57 0 0 0-.563-.356.6.6 0 0 0-.328.122.6.6 0 0 0-.193.294l-1.47 4.499H5.025l-1.47-4.5A.572.572 0 0 0 2.47.358L.289 6.04l-.022.057A4.044 4.044 0 0 0 1.61 10.77l.007.006.02.014 3.318 2.485 1.64 1.242 1 .755a.67.67 0 0 0 .814 0l1-.755 1.64-1.242 3.338-2.5.009-.007a4.05 4.05 0 0 0 1.34-4.668Z"/>
+</svg>${repo.path_with_namespace}</div>
+    <div class="lab-description">${repo.description}</div>
+    </div>`;
+          }
+        });
+        fetch("https://api.github.com/users/{{username}}/repos")
+          .then((response) => response.json())
+          .then((data) => {
+            var repos = document.getElementById("repos");
+            data.forEach((repo) => {
+              injectionString += `<img src="https://github-readme-stats.vercel.app/api/pin/?username={{username}}&repo=${
+                repo.name
+              }&theme=dark&show_owner=true" alt="repo logo" class="repo-logo ${
+                repo_ids.includes(repo.id) ? "selected" : ""
+              }" style="height:fit-content;cursor:pointer" onclick="addToSelected(${
+                repo.id
+              }, this)"/>`;
+            });
+            repos.innerHTML = injectionString;
+          });
       });
-      repos.innerHTML = injectionString;
-    });
+  } else {
+    fetch("https://api.github.com/users/{{username}}/repos")
+      .then((response) => response.json())
+      .then((data) => {
+        var repos = document.getElementById("repos");
+        data.forEach((repo) => {
+          injectionString += `<img src="https://github-readme-stats.vercel.app/api/pin/?username={{username}}&repo=${
+            repo.name
+          }&theme=dark&show_owner=true" alt="repo logo" class="repo-logo ${
+            repo_ids.includes(repo.id) ? "selected" : ""
+          }" style="height:fit-content;cursor:pointer" onclick="addToSelected(${
+            repo.id
+          }, this)"/>`;
+        });
+        repos.innerHTML = injectionString;
+      });
+  }
+
+  const fetchGitlabId = () => {
+    var username = document.getElementById("gitlab_username").value.trim();
+    fetch(`https://gitlab.com/api/v4/users?username=${username}`)
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.length > 0) {
+          var gitlab_id = data[0].id;
+          fetch("{% url 'add_gitlab' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: JSON.stringify({ gitlab_id: gitlab_id }),
+          }).then((response) => {
+            response.json().then((data) => {
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_repos' %}";
+              }
+            });
+          });
+        } else {
+          gitlab_username_error.textContent =
+            "incorrect username, or your haven't signed into gitlab in this browser";
+        }
+      });
+  };
   const changeDescription = () => {
     document.getElementById("description_text").value = document
       .getElementById("description_text")
       .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+  };
+  const addGitlabToSelected = (id, element) => {
+    if (gitlab_repo_ids.includes(id)) {
+      gitlab_repo_ids = gitlab_repo_ids.filter((repo_id) => repo_id != id);
+    } else {
+      gitlab_repo_ids.push(id);
+    }
+    element.classList.toggle("selected");
   };
   const addToSelected = (id, element) => {
     if (repo_ids.includes(id)) {
@@ -164,7 +356,7 @@
         "Content-Type": "application/json",
         "X-CSRFToken": "{{csrf_token}}",
       },
-      body: JSON.stringify({ repos: repo_ids }),
+      body: JSON.stringify({ repos: repo_ids, gitlab_repos: gitlab_repo_ids }),
     }).then((response) => {
       response.json().then((data) => {
         if (data.status == 200) {

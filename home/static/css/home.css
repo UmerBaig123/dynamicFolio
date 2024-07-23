@@ -5,7 +5,6 @@ html {
 }
 html {
   width: 100%;
-  overflow: scroll;
 }
 body {
   margin: 0;
@@ -319,6 +318,8 @@ a:active {
   transition: all 0.2s ease;
   overflow: hidden;
   margin-bottom: 0;
+  height: fit-content;
+  cursor: pointer;
   /* margin: 10px; */
 }
 .repo-logo:hover {
@@ -473,4 +474,46 @@ a:active {
   margin-left: 20px;
   font-size: 14px;
   font-weight: 100;
+}
+
+.lab-cont:hover {
+  transform: scale(1.01);
+}
+.lab-cont {
+  width: 370px;
+  border-radius: 5px;
+  background-color: #141414;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.486);
+  border: 1px solid white;
+  padding: 15px;
+  font-size: 12px;
+  transition: all 0.2s ease;
+}
+.lab-title-cont {
+  color: white;
+  margin: 10px;
+  margin-top: 0;
+  font-size: 17px;
+  display: flex;
+  gap: 7px;
+  align-items: center;
+}
+.lab-description {
+  margin-bottom: 10px;
+}
+.lab-stats {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.forks {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.stars {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }

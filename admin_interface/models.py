@@ -7,11 +7,19 @@ class selected_repos(models.Model):
     repo_id = models.CharField(max_length=100)
     def __str__(self):
         return self.repo_id
+class selected_gitlab_repos(models.Model):
+    repo_id = models.CharField(max_length=100)
+    def __str__(self):
+        return self.repo_id
 class page_description_text(models.Model):
     page_name = models.CharField(max_length=100)
     text = models.TextField(default="")
     def __str__(self):
         return self.text
+class gitlab_ids(models.Model):
+    gitlab_id = models.CharField(max_length=100)
+    def __str__(self):
+        return self.gitlab_id
 class userdata(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE,default=1)
     profile_pic = models.ImageField(upload_to="images",blank=True,default="",null=True)

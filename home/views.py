@@ -1,14 +1,28 @@
 from django.shortcuts import render
 from types import SimpleNamespace
-from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo
+import dotenv
+import os
+from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos
 # Create your views here.
+dotenv.load_dotenv()
+API_KEY = os.environ['GITLABAPITOKEN']
 def home_page(request):
     full_name = ""
+    gitlab_id = ""
+    if gitlab_ids.objects.all().count() != 0:
+        gitlab_id = gitlab_ids.objects.all()[0].gitlab_id
+    gitlab_repos = selected_gitlab_repos.objects.all()
+    if gitlab_repos.count() == 0:
+        gitlab_repos = ""
+    else:
+        gitlab_repos = [repo.repo_id for repo in selected_gitlab_repos.objects.all()]
+        gitlab_repos = ",".join(gitlab_repos)
     if userdata.objects.all().count() != 0:
         full_name = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
     if userdata.objects.all().count() == 0:
         return render(request, 'home.html', {})
     repos = selected_repos.objects.all()
+    
     if repos.count() == 0:
         repos = "none"
     else:
@@ -16,11 +30,21 @@ def home_page(request):
         repos = ",".join(repos)
     userdata_obj = userdata.objects.all()[0]
     publications = publication.objects.all()
-    return render(request, 'home.html', {"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name})
+    return render(request, 'home.html', {"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos})
 def repository(request):
     full_name = ""
     if userdata.objects.all().count() != 0:
         full_name = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
+    
+    gitlab_id = ""
+    if gitlab_ids.objects.all().count() != 0:
+        gitlab_id = gitlab_ids.objects.all()[0].gitlab_id
+    gitlab_repos = selected_gitlab_repos.objects.all()
+    if gitlab_repos.count() == 0:
+        gitlab_repos = ""
+    else:
+        gitlab_repos = [repo.repo_id for repo in selected_gitlab_repos.objects.all()]
+        gitlab_repos = ",".join(gitlab_repos)
     description_text = ""
     if page_description_text.objects.filter(page_name="repositories").count() != 0:
         description_text = page_description_text.objects.filter(page_name="repositories")[0]
@@ -28,10 +52,10 @@ def repository(request):
     if userdata.objects.all().count() != 0:
         github_username = userdata.objects.all()[0].github_username
     if selected_repos.objects.all().count() == 0:
-        return render(request, 'repository.html', {"repos":"none","github_username":github_username,"description_text":description_text,"full_name":full_name})
+        return render(request, 'repository.html', {"repos":"none","github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos})
     repos = [repo.repo_id for repo in selected_repos.objects.all()]
     repos = ",".join(repos)
-    return render(request, 'repository.html', {"repos":repos,"github_username":github_username,"description_text":description_text,"full_name":full_name})
+    return render(request, 'repository.html', {"repos":repos,"github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos})
 def publications(request):
     full_name = ""
     if userdata.objects.all().count() != 0:
