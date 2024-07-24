@@ -83,3 +83,46 @@ class experience(models.Model):
     experience_description = models.TextField(default="")
     def __str__(self):
         return self.experience_name
+class google_scholar_article(models.Model):
+    title = models.CharField(max_length=100,default="")
+    authors = models.TextField(default="")
+    publication = models.TextField(default="")
+    year = models.IntegerField(null=True)
+    cited_by = models.IntegerField(null=True,blank=True)
+    citation_id = models.CharField(max_length=100,default="")
+    isSelected = models.BooleanField(default=False)
+    link = models.URLField(default="")
+    def getAllSelectedWithPdf():
+        if google_scholar_article.objects.filter(isSelected=True).count() == 0 or google_scholar_article.objects.filter(isSelected=True) is None:
+            return []
+        else:
+            articles = google_scholar_article.objects.filter(isSelected=True)
+            article_pdf = []
+            for article in articles:
+                thisTitle = article.title
+                thisAuthors = article.authors
+                thisPublication = article.publication
+                thisYear = article.year
+                thisCitedBy = article.cited_by
+                thisCitationId = article.citation_id
+                thisLink = article.link
+                thisPdf = gs_citation_ids.objects.filter(citation_id=thisCitationId)[0].pdf
+                dictionary = {
+                    "title":thisTitle,
+                    "authors":thisAuthors,
+                    "publication":thisPublication,
+                    "year":thisYear,
+                    "cited_by":thisCitedBy,
+                    "citation_id":thisCitationId,
+                    "link":thisLink,
+                    "pdf":thisPdf
+                }
+                article_pdf.append(dictionary)
+            return article_pdf
+    def __str__(self):
+        return self.title
+class gs_citation_ids(models.Model):
+    citation_id = models.CharField(max_length=100)
+    pdf = models.FileField(upload_to='gs_pdfs',default="", blank=True)
+    def __str__(self):
+        return self.citation_id

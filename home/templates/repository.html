@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %} {{full_name}} {% endblock title%}
 {%load static %} {% block content %} {% comment %} container with 93% width
 {%endcomment %}
-    <link rel="stylesheet" href="{% static "css/repos.css" %}" />
+    <link rel="stylesheet" id="inner_css" href="{% static "css/repos.css" %}" />
 <!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
 <div class="container">
   <div class="heading">Repositories</div>
@@ -22,6 +22,7 @@
     ">  <div style="width: 70%;">
       <a href="https://github.com/{{github_username}}" target="_blank" style="cursor: pointer;margin: 15px;">
         <img
+          id="github_user"
           src="https://github-readme-stats.vercel.app/api?username={{github_username}}&show_icons=true&theme=dark&count_private=true"
           alt="github user"
           style="width: 100%;
@@ -65,6 +66,58 @@
 </div>
 </div>
 <script>
+   
+  const mode = localStorage.getItem("mode");
+  if (mode == "light") {
+    switchToLight();
+  }
+
+  function toggleMode() {
+    const mode = localStorage.getItem("mode");
+    if (mode === "light") {
+      localStorage.setItem("mode", "dark");
+      switchToDark();
+    } else {
+      localStorage.setItem("mode", "light");
+      switchToLight();
+    }
+  }
+  function switchToLight() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
+  function switchToDark() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
   var db_gitlab_repo_ids = "{{gitlab_repos}}";
   if (db_gitlab_repo_ids != "") {
     db_gitlab_repo_ids = db_gitlab_repo_ids.split(",");

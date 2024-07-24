@@ -1,7 +1,36 @@
 {% extends 'admin_base.html' %}asdasdaasasddads {% block title %} edit
 publication {%endblock title%} {%load static %} {% block content %}
-<link rel="stylesheet" href="{% static 'css/admin_publications.css' %}" />
+<link
+  rel="stylesheet"
+  id="inner_css"
+  href="{% static 'css/admin_publications.css' %}"
+/>
 <div class="container">
+  <div class="loading_modal" id="loadingModal" hidden>
+    fetching/posting data, page will be refreshed once the process is done
+    <div
+      aria-label="Orange and tan hamster running in a metal wheel"
+      role="img"
+      class="wheel-and-hamster"
+    >
+      <div class="wheel"></div>
+      <div class="hamster">
+        <div class="hamster__body">
+          <div class="hamster__head">
+            <div class="hamster__ear"></div>
+            <div class="hamster__eye"></div>
+            <div class="hamster__nose"></div>
+          </div>
+          <div class="hamster__limb hamster__limb--fr"></div>
+          <div class="hamster__limb hamster__limb--fl"></div>
+          <div class="hamster__limb hamster__limb--br"></div>
+          <div class="hamster__limb hamster__limb--bl"></div>
+          <div class="hamster__tail"></div>
+        </div>
+      </div>
+      <div class="spoke"></div>
+    </div>
+  </div>
   <div class="item-box">
     <div class="heading" style="margin-top: 0; margin-bottom: 10px">
       Add or remove publications:
@@ -122,7 +151,62 @@ publication {%endblock title%} {%load static %} {% block content %}
         src="https://badge.dimensions.ai/badge.js"
         charset="utf-8"
       ></script>
-      {% endif %} {% endfor %}
+      {% endif %} {% endfor %} {% for article in gs_selected %}
+
+      <div class="gs-container">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          x="0px"
+          y="0px"
+          width="100"
+          height="100"
+          viewBox="0 0 48 48"
+        >
+          <path
+            fill="#1e88e5"
+            d="M24,4C12.954,4,4,12.954,4,24s8.954,20,20,20s20-8.954,20-20S35.046,4,24,4z"
+          ></path>
+          <path
+            fill="#1565c0"
+            d="M35,16.592v-3.878L37,11H27l0.917,1.833c-1.236,0-2.265,0-2.265,0S19.095,13,19.095,18.748	c0,5.752,5.732,5.088,5.732,5.088s0,0.865,0,1.453c0,0.594,0.77,0.391,0.864,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.722,0.365,7.722-6.104c0-3.871-4.405-5.121-4.405-6.686c0-1.563,3.319-2.012,3.319-5.684	c0-0.823-0.028-1.524-0.149-2.12L34,13.571v3.02c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5V18	C36,17.348,35.581,16.799,35,16.592z M30.047,31.169c0.131,2.024-1.929,3.811-4.603,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.6-3.996C27.641,27.667,29.914,29.152,30.047,31.169z M26.109,22.453	c-1.592,0.451-3.375-1.062-3.982-3.367c-0.604-2.312,0.195-4.543,1.786-4.992c1.593-0.453,3.374,1.059,3.981,3.367	C28.499,19.77,27.702,22.004,26.109,22.453z"
+          ></path>
+          <path
+            fill="#e8eaf6"
+            d="M34,16.592V12c0-0.051-0.015-0.097-0.029-0.143L35,11H21l-9,8h5.383	c0.174,5.466,5.715,4.836,5.715,4.836s0,0.865,0,1.453c0,0.594,0.771,0.391,0.865,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.721,0.365,7.721-6.104c0-3.871-4.404-5.121-4.404-6.686c0-1.563,3.318-2.012,3.318-5.684	c0-0.971-0.047-1.763-0.232-2.422L33,12.667v3.925c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5	V18C35,17.348,34.581,16.799,34,16.592z M28.319,31.169c0.131,2.024-1.928,3.811-4.602,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.599-3.996C25.914,27.667,28.187,29.152,28.319,31.169z M24.38,22.453	c-1.591,0.451-3.373-1.062-3.981-3.367c-0.604-2.312,0.194-4.543,1.785-4.992c1.593-0.453,3.374,1.059,3.982,3.367	C26.77,19.77,25.973,22.004,24.38,22.453z"
+          ></path>
+        </svg>
+        <div class="gs-textcont">
+          <div class="gs-title">{{article.title}}</div>
+          <div class="gs-authors">{{article.authors}}</div>
+          <div class="gs-publication">{{article.publication}}</div>
+          <div class="gs-options">
+            {% if article.pdf and article.pdf != "" %}
+            <a href="/static/{{article.pdf}}" target="_blank" class="gs-anchor"
+              >pdf</a
+            >
+            {% endif %}
+            <a href="{{article.link}}" target="_blank" class="gs-anchor">
+              go to google scholar</a
+            >
+            <div style="display: flex; align-items: center">
+              <label for="{{article.citation_id}}-inp" class="imgSelect"
+                >Select PDF file</label
+              >
+              <input
+                placeholder="upload pdf file"
+                type="file"
+                id="{{article.citation_id}}-inp"
+                name="pdf_file"
+                style="margin-bottom: 10px"
+                onchange="changePdf(this,'{{article.citation_id}}')"
+                hidden
+              />
+              <div id="{{article.citation_id}}-filename"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
       <form
         action="{% url 'admin_publications' %}"
         onsubmit="changeBibAbs()"
@@ -268,181 +352,351 @@ publication {%endblock title%} {%load static %} {% block content %}
     gap: 10px;
   "
 >
+  <div style="display: flex; gap: 2px; align-items: center">
+    <input type="text" id="gs_id" placeholder="google scholar id" />
+    <div class="information" id="information" hidden>
+      go to your google scholar profile, copy the id from the url and paste it
+      e.g. https://scholar.google.com/citations?user=<span style="color: blue"
+        >your_id</span
+      >
+    </div>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      onmouseenter="show(information)"
+      onmouseleave="hide(information)"
+      width="16"
+      height="16"
+      fill="currentColor"
+      class="bi bi-info-lg"
+      viewBox="0 0 16 16"
+      style="cursor: pointer"
+    >
+      <path
+        d="m9.708 6.075-3.024.379-.108.502.595.108c.387.093.464.232.38.619l-.975 4.577c-.255 1.183.14 1.74 1.067 1.74.72 0 1.554-.332 1.933-.789l.116-.549c-.263.232-.65.325-.905.325-.363 0-.494-.255-.402-.704zm.091-2.755a1.32 1.32 0 1 1-2.64 0 1.32 1.32 0 0 1 2.64 0"
+      />
+    </svg>
+  </div>
   <button
     class="okBtn"
-    onclick="toggle(description)"
-    style="font-size: 12px; font-weight: 100; margin: 2.5px"
+    style="
+      font-size: 12px;
+      font-weight: 100;
+      margin: 2.5px;
+      width: fit-content;
+      max-width: none;
+      text-wrap: nowrap;
+    "
+    onclick="loadArticles()"
   >
-    add/edit page description
+    load/refresh google scholar
+  </button>
+  <button
+    class="okBtn"
+    style="
+      font-size: 12px;
+      font-weight: 100;
+      margin: 2.5px;
+      width: fit-content;
+      max-width: none;
+      text-wrap: nowrap;
+    "
+    onclick="toggle(select_gs_articles)"
+  >
+    select from loaded articles
   </button>
 </div>
-<div id="description" hidden style="margin-bottom: 20px; width: 96%">
+<div id="select_gs_articles" hidden>
+  {% for article in gs_articles_all %} {% if article.isSelected %}
+  <div
+    class="gs-container gs-selected"
+    onclick="toggleClass('{{article.citation_id}}')"
+    id="{{article.citation_id}}"
+  >
+    {% else %}
+    <div
+      class="gs-container lowOp"
+      onclick="toggleClass('{{article.citation_id}}')"
+      id="{{article.citation_id}}"
+    >
+      {% endif %}
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        x="0px"
+        y="0px"
+        width="100"
+        height="100"
+        viewBox="0 0 48 48"
+      >
+        <path
+          fill="#1e88e5"
+          d="M24,4C12.954,4,4,12.954,4,24s8.954,20,20,20s20-8.954,20-20S35.046,4,24,4z"
+        ></path>
+        <path
+          fill="#1565c0"
+          d="M35,16.592v-3.878L37,11H27l0.917,1.833c-1.236,0-2.265,0-2.265,0S19.095,13,19.095,18.748	c0,5.752,5.732,5.088,5.732,5.088s0,0.865,0,1.453c0,0.594,0.77,0.391,0.864,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.722,0.365,7.722-6.104c0-3.871-4.405-5.121-4.405-6.686c0-1.563,3.319-2.012,3.319-5.684	c0-0.823-0.028-1.524-0.149-2.12L34,13.571v3.02c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5V18	C36,17.348,35.581,16.799,35,16.592z M30.047,31.169c0.131,2.024-1.929,3.811-4.603,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.6-3.996C27.641,27.667,29.914,29.152,30.047,31.169z M26.109,22.453	c-1.592,0.451-3.375-1.062-3.982-3.367c-0.604-2.312,0.195-4.543,1.786-4.992c1.593-0.453,3.374,1.059,3.981,3.367	C28.499,19.77,27.702,22.004,26.109,22.453z"
+        ></path>
+        <path
+          fill="#e8eaf6"
+          d="M34,16.592V12c0-0.051-0.015-0.097-0.029-0.143L35,11H21l-9,8h5.383	c0.174,5.466,5.715,4.836,5.715,4.836s0,0.865,0,1.453c0,0.594,0.771,0.391,0.865,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.721,0.365,7.721-6.104c0-3.871-4.404-5.121-4.404-6.686c0-1.563,3.318-2.012,3.318-5.684	c0-0.971-0.047-1.763-0.232-2.422L33,12.667v3.925c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5	V18C35,17.348,34.581,16.799,34,16.592z M28.319,31.169c0.131,2.024-1.928,3.811-4.602,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.599-3.996C25.914,27.667,28.187,29.152,28.319,31.169z M24.38,22.453	c-1.591,0.451-3.373-1.062-3.981-3.367c-0.604-2.312,0.194-4.543,1.785-4.992c1.593-0.453,3.374,1.059,3.982,3.367	C26.77,19.77,25.973,22.004,24.38,22.453z"
+        ></path>
+      </svg>
+      <div class="gs-textcont">
+        <div class="gs-title">{{article.title}}</div>
+        <div class="gs-authors">{{article.authors}}</div>
+        <div class="gs-publication">{{article.publication}}</div>
+        <div class="gs-options">
+          <a href="" target="_blank" class="gs-anchor">pdf</a>
+          <a href="{{article.link}}" target="_blank" class="gs-anchor">
+            go to google scholar</a
+          >
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    <div class="paralell" style="width: 100%; justify-content: flex-end">
+      <button class="okBtn" style="font-size: 12px" onclick="submitGs()">
+        ok
+      </button>
+    </div>
+  </div>
   <div
     style="
       display: flex;
-      width: 96%;
-      justify-content: center;
+      width: 85%;
+      justify-content: flex-end;
       margin-bottom: 20px;
       align-items: center;
       margin-top: 20px;
+      gap: 10px;
     "
   >
-    <textarea
-      name="page_description"
-      rows="12"
-      placeholder="write description here"
-      cols="40"
-      style="padding: 10px"
-      class="summary"
-      id="description_text"
-      width="85%"
-    ></textarea>
-  </div>
-  <div style="width: 96%; display: flex; justify-content: flex-end">
     <button
       class="okBtn"
-      style="font-size: 12px; font-weight: 100"
-      onclick="addDesc()"
+      onclick="toggle(description)"
+      style="font-size: 12px; font-weight: 100; margin: 2.5px"
     >
-      submit
+      add/edit page description
     </button>
   </div>
-</div>
-<script>
-  const decodeAbsBib = (absId, bibId, abs, bib) => {
-    var decodedBib = decodeHtml(bib);
-    var decodedAbs = decodeHtml(abs);
-    document.getElementById(absId).innerHTML = decodedAbs;
-    document.getElementById(bibId).innerHTML = decodedBib;
-  };
+  <div id="description" hidden style="margin-bottom: 20px; width: 96%">
+    <div
+      style="
+        display: flex;
+        width: 96%;
+        justify-content: center;
+        margin-bottom: 20px;
+        align-items: center;
+        margin-top: 20px;
+      "
+    >
+      <textarea
+        name="page_description"
+        rows="12"
+        placeholder="write description here"
+        cols="40"
+        style="padding: 10px"
+        class="summary"
+        id="description_text"
+        width="85%"
+      ></textarea>
+    </div>
+    <div style="width: 96%; display: flex; justify-content: flex-end">
+      <button
+        class="okBtn"
+        style="font-size: 12px; font-weight: 100"
+        onclick="addDesc()"
+      >
+        submit
+      </button>
+    </div>
+  </div>
 
-  function decodeHtml(html) {
-    var txt = document.createElement("textarea");
-    txt.innerHTML = html;
-    return txt.value;
-  }
-  var decoded = decodeHtml("{{description}}");
-  document.getElementById("description_text").innerHTML = decoded.replace(
-    /<br>/g,
-    "\n"
-  );
-  const getDesc = () => {
-    return document
-      .getElementById("description_text")
-      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-  };
-  const addDesc = () => {
-    fetch("{% url 'add_page_description' %}", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{csrf_token}}",
-      },
-      body: JSON.stringify({
-        page_description: getDesc(),
-        page_name: "publications",
-      }),
-    }).then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-        if (data.status == 200) {
-          window.location.href = "{% url 'admin_publications' %}";
-        }
+  <script>
+    const mode = localStorage.getItem("mode");
+    if (mode == "light") {
+      switchToLight();
+    }
+
+    function toggleMode() {
+      const mode = localStorage.getItem("mode");
+      if (mode === "light") {
+        localStorage.setItem("mode", "dark");
+        switchToDark();
+      } else {
+        localStorage.setItem("mode", "light");
+        switchToLight();
+      }
+    }
+    function switchToLight() {
+      var outer = document.getElementById("outer_css");
+      var inner = document.getElementById("inner_css");
+      var href = outer.href.split("/");
+      var file_name = href.pop();
+      href.push("lightmode");
+      href.push(file_name);
+      href = href.join("/");
+      outer.href = href;
+      console.log(outer);
+      href = inner.href.split("/");
+      file_name = href.pop();
+      href.push("lightmode");
+      href.push(file_name);
+      href = href.join("/");
+      inner.href = href;
+      console.log(inner);
+    }
+    function switchToDark() {
+      var outer = document.getElementById("outer_css");
+      var inner = document.getElementById("inner_css");
+      var href = outer.href.split("/");
+      var file_name = href.pop();
+      href.pop();
+      href.push(file_name);
+      href = href.join("/");
+      outer.href = href;
+      console.log(outer);
+      href = inner.href.split("/");
+      file_name = href.pop();
+      href.pop();
+      href.push(file_name);
+      href = href.join("/");
+      inner.href = href;
+      console.log(inner);
+    }
+    const decodeAbsBib = (absId, bibId, abs, bib) => {
+      var decodedBib = decodeHtml(bib);
+      var decodedAbs = decodeHtml(abs);
+      document.getElementById(absId).innerHTML = decodedAbs;
+      document.getElementById(bibId).innerHTML = decodedBib;
+    };
+
+    function decodeHtml(html) {
+      var txt = document.createElement("textarea");
+      txt.innerHTML = html;
+      return txt.value;
+    }
+    var decoded = decodeHtml("{{description}}");
+    document.getElementById("description_text").innerHTML = decoded.replace(
+      /<br>/g,
+      "\n"
+    );
+    const getDesc = () => {
+      return document
+        .getElementById("description_text")
+        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+    };
+    const addDesc = () => {
+      fetch("{% url 'add_page_description' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{csrf_token}}",
+        },
+        body: JSON.stringify({
+          page_description: getDesc(),
+          page_name: "publications",
+        }),
+      }).then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          if (data.status == 200) {
+            window.location.href = "{% url 'admin_publications' %}";
+          }
+        });
       });
+    };
+    var elements = document.getElementsByClassName("publ");
+    Array.prototype.forEach.call(elements, function (el) {
+      el.click();
     });
-  };
-  var elements = document.getElementsByClassName("publ");
-  Array.prototype.forEach.call(elements, function (el) {
-    el.click();
-  });
-  const inject = () => {
-    document.getElementById("filename").innerHTML = pdfInput.files[0].name;
-  };
-  const changePhoto = (e, elem = publication_image) => {
-    elem.src = `${globalThis.URL.createObjectURL(e.files[0])}`;
-  };
-  const toggle = (e) => {
-    if (e.hidden) {
-      show(e);
-    } else {
-      hide(e);
-    }
-  };
-  const hide = (e) => {
-    e.hidden = true;
-  };
-  const show = (e) => {
-    hideAll();
-    e.hidden = false;
-  };
-  const toggleAttr = (showElem, hideElem) => {
-    if (document.getElementById(showElem).hidden) {
-      showAttr(showElem, hideElem);
-    } else {
-      document.getElementById(showElem).hidden = true;
-      document.getElementById(showElem).style.height = 0;
-    }
-  };
-  const showAttr = (showElem, hideElem) => {
-    document.getElementById(hideElem).hidden = true;
-    document.getElementById(showElem).hidden = false;
-    setTimeout(() => {
-      document.getElementById(showElem).style.height = 100;
-    }, 1);
+    const inject = () => {
+      document.getElementById("filename").innerHTML = pdfInput.files[0].name;
+    };
+    const changePhoto = (e, elem = publication_image) => {
+      elem.src = `${globalThis.URL.createObjectURL(e.files[0])}`;
+    };
+    const toggle = (e) => {
+      if (e.hidden) {
+        show(e);
+      } else {
+        hide(e);
+      }
+    };
+    const hide = (e) => {
+      e.hidden = true;
+    };
+    const show = (e) => {
+      hideAll();
+      e.hidden = false;
+    };
+    const toggleAttr = (showElem, hideElem) => {
+      if (document.getElementById(showElem).hidden) {
+        showAttr(showElem, hideElem);
+      } else {
+        document.getElementById(showElem).hidden = true;
+        document.getElementById(showElem).style.height = 0;
+      }
+    };
+    const showAttr = (showElem, hideElem) => {
+      document.getElementById(hideElem).hidden = true;
+      document.getElementById(showElem).hidden = false;
+      setTimeout(() => {
+        document.getElementById(showElem).style.height = 100;
+      }, 1);
 
-    document.getElementById(hideElem).style.height = 0;
-  };
-  const hideAll = () => {
-    hide(abs);
-    hide(bib);
-    hide(pdf);
-    hide(arxiv);
-  };
-  var publication = {
-    title:
-      "A Hybrid Approach Combining Control Theory and AI for Engineering Self-Adaptive Systems",
-    authors: "M. Salehie, L. Tahvildari",
-    description: `Ricardo Caldas, Arthur Rodrigues, Eric Bernd Gil, and 3 more authors
+      document.getElementById(hideElem).style.height = 0;
+    };
+    const hideAll = () => {
+      hide(abs);
+      hide(bib);
+      hide(pdf);
+      hide(arxiv);
+    };
+    var publication = {
+      title:
+        "A Hybrid Approach Combining Control Theory and AI for Engineering Self-Adaptive Systems",
+      authors: "M. Salehie, L. Tahvildari",
+      description: `Ricardo Caldas, Arthur Rodrigues, Eric Bernd Gil, and 3 more authors
   In Proceedings of the IEEE/ACM 15th International Symposium on Software Engineering for Adaptive and Self-Managing Systems, 2020`,
-  };
-  const delete_publication = (publication_id) => {
-    fetch("{% url 'delete_publication' %}", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{csrf_token}}",
-      },
-      body: JSON.stringify({ publication_id: publication_id }),
-    }).then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-        if (data.status == 200) {
-          window.location.href = "{% url 'admin_publications' %}";
-        }
+    };
+    const delete_publication = (publication_id) => {
+      fetch("{% url 'delete_publication' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{csrf_token}}",
+        },
+        body: JSON.stringify({ publication_id: publication_id }),
+      }).then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          if (data.status == 200) {
+            window.location.href = "{% url 'admin_publications' %}";
+          }
+        });
       });
-    });
-  };
-  const changeBibAbs = () => {
-    abs.value = abs.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-    bib.value = bib.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-  };
-  function inject_edit(elem) {
-    alert("file uploaded");
-  }
-  const edit_publication = (
-    publication_id,
-    name,
-    authors,
-    desc,
-    abs,
-    arxiv,
-    bib,
-    image,
-    doi
-  ) => {
-    document.getElementById(
-      `${publication_id}-container`
-    ).innerHTML = `<div class="pCard paralell" style="width: 96%">
+    };
+    const changeBibAbs = () => {
+      abs.value = abs.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+      bib.value = bib.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+    };
+    function inject_edit(elem) {
+      alert("file uploaded");
+    }
+    const edit_publication = (
+      publication_id,
+      name,
+      authors,
+      desc,
+      abs,
+      arxiv,
+      bib,
+      image,
+      doi
+    ) => {
+      document.getElementById(
+        `${publication_id}-container`
+      ).innerHTML = `<div class="pCard paralell" style="width: 96%">
           <div class="pImageContainer">
             <img
               id="edit-publication_image"
@@ -576,51 +830,130 @@ publication {%endblock title%} {%load static %} {% block content %}
             </div>
           </div>
         </div>`;
-  };
-  function add_edited_publication(id) {
-    var title = document.getElementById("edit-title").value;
-    var authors = document.getElementById("edit-authors").value;
-    var desc = document
-      .getElementById("edit-desc")
-      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-    var abs = document
-      .getElementById("edit-abs")
-      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-    var arxiv = document.getElementById("edit-arxiv").value;
-    var bib = document
-      .getElementById("edit-bib")
-      .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-    var image = document.getElementById("edit-image").files[0];
-    var doi = document.getElementById("edit-doi").value;
-    var date = document.getElementById("edit-date").value;
-    var pdf = document.getElementById("edit-pdfInput").files[0];
-    var formData = new FormData();
-    formData.append("id", id);
-    formData.append("title", title);
-    formData.append("authors", authors);
-    formData.append("desc", desc);
-    formData.append("abs", abs);
-    formData.append("arxiv", arxiv);
-    formData.append("bib", bib);
-    formData.append("doi", doi);
-    formData.append("date", date);
-    formData.append("image", image);
-    formData.append("pdf", pdf);
+    };
+    function add_edited_publication(id) {
+      var title = document.getElementById("edit-title").value;
+      var authors = document.getElementById("edit-authors").value;
+      var desc = document
+        .getElementById("edit-desc")
+        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+      var abs = document
+        .getElementById("edit-abs")
+        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+      var arxiv = document.getElementById("edit-arxiv").value;
+      var bib = document
+        .getElementById("edit-bib")
+        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+      var image = document.getElementById("edit-image").files[0];
+      var doi = document.getElementById("edit-doi").value;
+      var date = document.getElementById("edit-date").value;
+      var pdf = document.getElementById("edit-pdfInput").files[0];
+      var formData = new FormData();
+      formData.append("id", id);
+      formData.append("title", title);
+      formData.append("authors", authors);
+      formData.append("desc", desc);
+      formData.append("abs", abs);
+      formData.append("arxiv", arxiv);
+      formData.append("bib", bib);
+      formData.append("doi", doi);
+      formData.append("date", date);
+      formData.append("image", image);
+      formData.append("pdf", pdf);
 
-    fetch("{% url 'edit_publication' %}", {
-      method: "POST",
-      headers: {
-        "X-CSRFToken": "{{csrf_token}}",
-      },
-      body: formData,
-    }).then((response) => {
-      response.json().then((data) => {
-        console.log(data);
-        if (data.status == 200) {
-          window.location.href = "{% url 'admin_publications' %}";
-        }
+      fetch("{% url 'edit_publication' %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{csrf_token}}",
+        },
+        body: formData,
+      }).then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          if (data.status == 200) {
+            window.location.href = "{% url 'admin_publications' %}";
+          }
+        });
       });
-    });
-  }
-</script>
-{% endblock %}
+    }
+    function submitGs() {
+      var citation_ids = [];
+      document.getElementById("loadingModal").hidden = false;
+      var elements = document.getElementsByClassName("gs-selected");
+      Array.prototype.forEach.call(elements, function (el) {
+        citation_ids.push(el.id);
+      });
+      fetch("{% url 'select_gs' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{csrf_token}}",
+        },
+        body: JSON.stringify({ citation_ids: citation_ids }),
+      }).then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          if (data.status == 200) {
+            window.location.href = "{% url 'admin_publications' %}";
+          } else {
+            document.getElementById("loadingModal").hidden = true;
+          }
+        });
+      });
+    }
+    function loadArticles() {
+      var gs_id = document.getElementById("gs_id").value.trim();
+      if (gs_id == "") {
+        alert("please enter a google scholar id");
+        return;
+      }
+      document.getElementById("loadingModal").hidden = false;
+      fetch("{% url 'add_gs' %}", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRFToken": "{{csrf_token}}",
+        },
+        body: JSON.stringify({ gs_id: gs_id }),
+      }).then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          if (data.status == 200) {
+            window.location.href = "{% url 'admin_publications' %}";
+          } else {
+            document.getElementById("loadingModal").hidden = true;
+            alert(data.message);
+          }
+        });
+      });
+    }
+    function toggleClass(id) {
+      elem = document.getElementById(id);
+      elem.classList.toggle("gs-selected");
+      elem.classList.toggle("lowOp");
+    }
+    function changePdf(e, citation_id) {
+      document.getElementById(citation_id + "-filename").innerHTML =
+        e.files[0].name;
+      var file = e.files[0];
+      var formData = new FormData();
+      formData.append("pdf", file);
+      formData.append("citation_id", citation_id);
+      fetch("{% url 'add_pdf' %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": "{{csrf_token}}",
+        },
+        body: formData,
+      }).then((response) => {
+        response.json().then((data) => {
+          console.log(data);
+          if (data.status == 200) {
+            window.location.href = "{% url 'admin_publications' %}";
+          }
+        });
+      });
+    }
+  </script>
+  {% endblock %}
+</div>

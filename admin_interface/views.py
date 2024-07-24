@@ -3,22 +3,25 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse
 from rest_framework.response import Response
+import requests
 from rest_framework.views import APIView
-from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos
+from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,google_scholar_article,gs_citation_ids
 import datetime
 import os
 from dotenv import load_dotenv
+import logging
 # Create your views here.
-
+logger = logging.getLogger(__name__)
 load_dotenv()
 loginUrl = os.environ['ADMINROUTE']
 gitlab_api_key = os.environ['GITLABAPITOKEN']
+serpapi_key = os.environ['SERPAPIKEY']
 userFullName= ""
 if userdata.objects.all().count() != 0:
     userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
-
 @login_required(login_url=loginUrl)
 def edit_about(request):
     if request.method == 'POST':
@@ -173,7 +176,8 @@ def edit_publications(request):
     if page_description_text.objects.filter(page_name="publications").count() != 0:
         description = page_description_text.objects.filter(page_name="publications")[0].text
     publications = publication.objects.all()
-    return render(request, 'edit_publications.html',{"userFullName":userFullName,"publications":publications,"description":description})
+    gs_articles = google_scholar_article.objects.all()
+    return render(request, 'edit_publications.html',{"userFullName":userFullName,"publications":publications,"description":description,"gs_articles_all":gs_articles,"gs_selected":google_scholar_article.getAllSelectedWithPdf()})
 class delete_publication(APIView):
     def post(self,request):
         publication_id = request.data['publication_id']
@@ -190,6 +194,50 @@ class delete_publication(APIView):
             pass
         thisPublication.delete()
         return Response({"message":"Publication deleted successfully","status":200})
+class select_gs_article(APIView):
+    def post(self,request):
+        all_articles = google_scholar_article.objects.all()
+        for article in all_articles:
+            article.isSelected = False
+            article.save()
+        citation_ids = request.data['citation_ids']
+        gs_citation_ids.objects.all().delete()
+        for id in citation_ids:
+            myCitation = gs_citation_ids(citation_id=id)
+            myCitation.save()
+            thisArticle = google_scholar_article.objects.get(citation_id=id)
+            thisArticle.isSelected = True
+            thisArticle.save()
+        return Response({"message":"Article selected successfully","status":200})
+class load_google_scholar_into_db(APIView):
+    def post(self,request):
+        citation_ids = [ob.citation_id for ob in gs_citation_ids.objects.all()]
+        if request.data['gs_id'] is None:
+            return Response({"message":"Publication id is required","status":400})
+        gs_id = request.data['gs_id']
+        google_scholar_article.objects.all().delete()
+        url = "https://serpapi.com/search?engine=google_scholar_author&author_id="+gs_id+"&hl=en&api_key="+serpapi_key+"&num=100"
+        response = requests.get(url)
+        data = response.json()
+        if len(data['articles']) == 0 or data['articles'] is None:
+            return Response({"message":"No articles found","status":400})
+        articles = data['articles']
+        for article in articles:
+            title = article['title']
+            authors = article['authors']
+            publication = ""
+            if 'publication' in article:
+                publication = article['publication']
+            year = article['year']
+            link = article['link']
+            citation_id = article['citation_id']
+            isSelected = citation_id in citation_ids
+            cited_by = 0
+            if 'cited_by' in article and 'value' in article['cited_by'] and article['cited_by']['value'] != "":
+                cited_by = article['cited_by']['value']
+            myPublication = google_scholar_article(title=title,authors=authors,publication=publication,year=year,link=link,citation_id=citation_id,cited_by=cited_by,isSelected=isSelected)
+            myPublication.save()
+        return Response({"message":"Google Scholar articles loaded successfully","status":200})
 class edit_publication(APIView):
     def post(self,request):
         publication_id = request.data['id']
@@ -335,7 +383,22 @@ def teachings(request):
     if page_description_text.objects.filter(page_name="teachings").count() != 0:
         description_text = page_description_text.objects.filter(page_name="teachings")[0].text
     return render(request, 'edit_teachings.html',{"userFullName":userFullName,"courses":courses_list,"description":description_text})
-
+class add_pdf_to_gs(APIView):
+    def post(self,request):
+        citation_id = request.data['citation_id']
+        pdf = request.FILES['pdf']
+        myCitation = gs_citation_ids.objects.get(citation_id=citation_id)
+        oldpdf = myCitation.pdf
+        if oldpdf != "":
+            try:
+                deletingPdf = oldpdf.path
+                if os.path.exists(deletingPdf):
+                    os.remove(deletingPdf)
+            except:
+                pass
+        myCitation.pdf = pdf
+        myCitation.save()
+        return Response({"message":"PDF added successfully","status":200})
 @login_required(login_url=loginUrl)
 def edit_resume(request):
     if request.method == 'POST':

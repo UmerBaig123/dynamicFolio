@@ -26,7 +26,11 @@ input {
   color: #f5f5f5;
   transition: border 150ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-
+.aboutme_url {
+  margin: 0;
+  padding: 0;
+  color: aquamarine !important;
+}
 .input:focus {
   outline: none;
   border: 1.5px solid #1a73e8;
@@ -43,6 +47,7 @@ input {
 *,
 html {
   scroll-behavior: smooth !important;
+  transition: background-color 0.3s ease;
 }
 html {
   width: 100%;
@@ -52,7 +57,7 @@ body {
   margin: 0;
   padding: 0;
   min-width: 100%;
-  font-family: "ubuntu", sans-serif;
+  font-family: Arial, Helvetica, sans-serif;
   background-color: #141414;
   display: flex;
   color: white;
@@ -198,6 +203,15 @@ a:active {
 }
 .name {
   margin-bottom: 10px;
+}
+
+.urlInput {
+  color: #000 !important;
+}
+.first_name {
+  font-size: 45px;
+  color: white;
+  text-transform: uppercase;
 }
 .pic-container {
   width: 200px;
@@ -496,4 +510,57 @@ textarea:focus {
   justify-content: space-between;
   /* align-items: center; */
   flex-wrap: wrap;
+}
+
+/* The switch - the box around the slider */
+.switch {
+  font-size: 17px;
+  position: relative;
+  display: inline-block;
+  width: 3.5em;
+  height: 2em;
+  margin-left: 20px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  --background: #28096b;
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--background);
+  transition: 0.5s;
+  border-radius: 30px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 1.4em;
+  width: 1.4em;
+  border-radius: 50%;
+  left: 10%;
+  bottom: 15%;
+  box-shadow: inset 8px -4px 0px 0px #fff000;
+  background: var(--background);
+  transition: 0.5s;
+}
+
+input:checked + .slider {
+  background-color: #522ba7;
+}
+
+input:checked + .slider:before {
+  transform: translateX(100%);
+  box-shadow: inset 15px -4px 0px 15px #fff000;
 }

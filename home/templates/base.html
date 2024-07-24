@@ -3,21 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <title>{%block title%}{%endblock%}</title>
+    <title>{{full_name|lower}}</title>
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="{% static "css/home.css" %}" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,500;0,700;1,400;1,500;1,700&display=swap"
-      rel="stylesheet"
-    />
+    <link rel="stylesheet" id="outer_css" href="{% static "css/home.css" %}" />
     <!-- <script type="module" src="{% static 'js/threejs.js' %}"></script> -->
   </head>
   <body>
       <div class="topbar" >
         <!-- <div style="width: 100%">{%block toptitle%}{%endblock%}</div> -->
+         <label class="switch">
+    <input type="checkbox" id="checkbox" onclick="toggleMode()">
+    <span class="slider"></span>
+</label>
         <div class="options" >
           <a class="btn" href="{% url 'home' %}">about me</a>
           <a class="btn" href="{% url 'home_repos' %}">repositories</a>
@@ -29,4 +27,11 @@
     </div>
     {% block content %}{% endblock %}
   </body>
+  <script>
+    
+    const Lightmode = localStorage.getItem("mode");
+    if (Lightmode == "light" || Lightmode == null) {
+      document.getElementById("checkbox").checked = true;
+    }
+  </script>
 </html>

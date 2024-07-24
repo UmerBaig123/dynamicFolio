@@ -1,7 +1,7 @@
 {% extends 'base.html' %} {% block title %} {{full_name}} {%endblock title%}
 <!-- prettier-ignore -->
 {%load static %} {% block content %}
-<link rel="stylesheet" href="{% static 'css/resume.css' %}" />
+<link rel="stylesheet" id="inner_css" href="{% static 'css/resume.css' %}" />
 <div style="margin-top: 100px; min-width: 90%">
   <section class="generalInfo">
     <h2 class="heading">General Information</h2>
@@ -289,6 +289,57 @@
   </section>
 </div>
 <script>
+  const mode = localStorage.getItem("mode");
+  if (mode == "light") {
+    switchToLight();
+  }
+
+  function toggleMode() {
+    const mode = localStorage.getItem("mode");
+    if (mode === "light") {
+      localStorage.setItem("mode", "dark");
+      switchToDark();
+    } else {
+      localStorage.setItem("mode", "light");
+      switchToLight();
+    }
+  }
+  function switchToLight() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
+  function switchToDark() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
   var experiences = "{{experience_ids}}".split(",");
   experiences.forEach((id) => {
     if (document.getElementById(id + "-inject") == null) return;

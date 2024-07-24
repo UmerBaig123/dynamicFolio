@@ -17,4 +17,7 @@ urlpatterns = [
     path('edit_experience/', views.edit_experience.as_view(), name='edit_experience'),
     path('delete_experience/', views.delete_experience.as_view(), name='delete_experience'),
     path('add_gitlab/', views.add_or_edit_gitlabid.as_view(), name='add_gitlab'),
+    path('add_google_scholar/', views.load_google_scholar_into_db.as_view(), name='add_gs'),
+    path('select_google_scholar/', views.select_gs_article.as_view(), name='select_gs'),
+    path('add_pdf_to_gs/', views.add_pdf_to_gs.as_view(), name='add_pdf'),
 ]

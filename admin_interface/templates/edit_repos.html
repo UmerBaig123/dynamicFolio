@@ -1,6 +1,10 @@
 {% extends 'admin_base.html' %}asdasdaasasddads {% block title %} edit repos
 {%endblock title%} {%load static %} {% block content %}
-<link rel="stylesheet" href="{% static '/css/admin_repos.css' %}" />
+<link
+  rel="stylesheet"
+  id="inner_css"
+  href="{% static '/css/admin_repos.css' %}"
+/>
 
 <div class="container">
   <div class="gitlab-modal" id="gitlab" hidden>
@@ -87,11 +91,7 @@
       "
     >
       change github username from
-      <a
-        href="{% url 'admin_about' %}"
-        style="margin: 0; padding: 0; color: aquamarine"
-        >about me</a
-      >
+      <a href="{% url 'admin_about' %}" class="aboutme_url">about me</a>
       if repos don't display
     </div>
     <div
@@ -198,6 +198,57 @@
   </div>
 </div>
 <script>
+  const mode = localStorage.getItem("mode");
+  if (mode == "light") {
+    switchToLight();
+  }
+
+  function toggleMode() {
+    const mode = localStorage.getItem("mode");
+    if (mode === "light") {
+      localStorage.setItem("mode", "dark");
+      switchToDark();
+    } else {
+      localStorage.setItem("mode", "light");
+      switchToLight();
+    }
+  }
+  function switchToLight() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
+  function switchToDark() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
   const htmlDecode = (input) => {
     var doc = new DOMParser().parseFromString(input, "text/html");
     return doc.documentElement.textContent;

@@ -12,9 +12,9 @@ body {
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   min-width: 100%;
-  background-color: #141414;
+  background-color: #faf9f6;
   display: flex;
-  color: white;
+  color: rgb(0, 0, 0);
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
@@ -47,7 +47,7 @@ a:active {
 }
 .topbar {
   display: flex;
-  color: white;
+  color: rgb(0, 0, 0);
   width: fit-content;
   min-width: 100vw;
   position: fixed;
@@ -58,7 +58,7 @@ a:active {
   height: 60px;
   z-index: 1;
   /* border-bottom: 1px solid #ffffff; */
-  background-color: #1d1c1c;
+  background-color: #ffffff;
 }
 
 .options {
@@ -76,7 +76,7 @@ a:active {
   z-index: 1;
   text-align: center;
   padding: 0.7em 15px;
-  color: #ffedd3;
+  color: #000000;
   position: relative;
   transition: 0.2s ease;
   cursor: pointer;
@@ -93,7 +93,7 @@ a:active {
   transition: 0.2s ease;
 }
 .btn:hover {
-  color: #000000;
+  color: #ffffff;
   transition-delay: 0.2s;
 }
 
@@ -108,7 +108,7 @@ a:active {
   bottom: 0;
   height: 0;
   width: 100%;
-  background-color: #cecece;
+  background-color: #505050;
   transition: 0.2s ease;
   z-index: -1;
 }
@@ -139,7 +139,7 @@ a:active {
 .container {
   margin-top: 15vh;
   width: 93vw;
-  color: white;
+  color: rgb(0, 0, 0);
   user-select: none;
 }
 .profile-container {
@@ -162,7 +162,7 @@ a:active {
   text-transform: uppercase;
 }
 .first_name {
-  color: white;
+  color: rgb(0, 0, 0);
 }
 .pic-container {
   width: 100%;
@@ -173,7 +173,7 @@ a:active {
   width: 100%;
   max-height: 200px;
   max-width: 200px;
-  border: #000000 3px solid;
+  border: #ffffff 3px solid;
   filter: drop-shadow(0px 1px 5px rgba(0, 0, 0, 0.61));
   border-radius: 50%;
   position: relative;
@@ -241,7 +241,7 @@ a:active {
 
 .uni-btn:focus,
 .uni-btn:hover {
-  color: #ffffff3f;
+  color: #2525259c;
 }
 
 .uni-btn:focus:after,
@@ -258,7 +258,7 @@ a:active {
   position: absolute;
   width: 0%;
   height: 2px;
-  background-color: #ffffff3f;
+  background-color: #2727273f;
   transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
   transition-duration: 400ms;
   transition-property: width, left;
@@ -270,8 +270,8 @@ a:active {
   border-radius: 6px;
   flex-direction: column;
   align-items: center;
-  box-shadow: inset 0px 0px 10px 0px rgb(0, 0, 0);
-  background-color: #0c0c0c;
+  box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
+  background-color: #e7e7e7;
 }
 .summary p {
   width: 98.5%;
@@ -322,6 +322,7 @@ a:active {
   transition: all 0.2s ease;
   overflow: hidden;
   margin-bottom: 0;
+  filter: invert(1);
   height: fit-content;
   cursor: pointer;
   /* margin: 10px; */
@@ -426,7 +427,7 @@ a:active {
 }
 .link {
   font-size: 12px;
-  color: #ffffff;
+  color: #000000;
   margin: 4px;
   padding: 4px;
   border-radius: 5px;
@@ -486,16 +487,16 @@ a:active {
 .lab-cont {
   width: 370px;
   border-radius: 5px;
-  background-color: #141414;
+  background-color: #ebe9e9;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.486);
-  border: 1px solid white;
+  color: rgba(0, 0, 0, 0.486);
+  border: 1px solid rgb(31, 31, 31);
   padding: 15px;
   font-size: 12px;
   transition: all 0.2s ease;
 }
 .lab-title-cont {
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 10px;
   margin-top: 0;
   font-size: 17px;
@@ -523,7 +524,7 @@ a:active {
   gap: 5px;
 }
 
-/* uncopied */
+/* copy here */
 /* The switch - the box around the slider */
 .switch {
   font-size: 17px;
@@ -581,12 +582,12 @@ input:checked + .slider:before {
   display: flex;
   align-items: center;
   border-radius: 5px;
-  color: white;
+  color: rgb(0, 0, 0);
   box-shadow: 0 0 10px #000;
-  background-color: #141414;
+  background-color: #a5c6ce;
+  margin-right: auto;
   padding-right: 10px;
   font-size: 11px;
-  margin-right: auto;
   max-width: 700px;
 }
 .gs-container svg {
@@ -612,7 +613,8 @@ input:checked + .slider:before {
   gap: 10px;
 }
 .gs-anchor {
-  color: white;
+  color: rgb(0, 0, 0);
+  background-color: #ffffff;
   text-decoration: none;
   padding: 5px;
   border: 1px solid rgb(78, 78, 78);

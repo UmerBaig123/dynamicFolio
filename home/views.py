@@ -2,7 +2,7 @@ from django.shortcuts import render
 from types import SimpleNamespace
 import dotenv
 import os
-from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos
+from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,gs_citation_ids,google_scholar_article
 # Create your views here.
 dotenv.load_dotenv()
 API_KEY = os.environ['GITLABAPITOKEN']
@@ -30,7 +30,7 @@ def home_page(request):
         repos = ",".join(repos)
     userdata_obj = userdata.objects.all()[0]
     publications = publication.objects.all()
-    return render(request, 'home.html', {"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos})
+    return render(request, 'home.html', {"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,'gs_publications':google_scholar_article.getAllSelectedWithPdf()})
 def repository(request):
     full_name = ""
     if userdata.objects.all().count() != 0:
@@ -64,7 +64,7 @@ def publications(request):
     if page_description_text.objects.filter(page_name="publications").count() != 0:
         page_desc = page_description_text.objects.filter(page_name="publications")[0]
     publications = publication.objects.all()
-    return render(request, 'publications.html', {"publications":publications,"description_text":page_desc,"full_name":full_name})
+    return render(request, 'publications.html', {"publications":publications,"description_text":page_desc,"full_name":full_name,'gs_publications':google_scholar_article.getAllSelectedWithPdf()})
 def teachings(request):
     full_name = ""
     if userdata.objects.all().count() != 0:
@@ -110,5 +110,5 @@ def resume(request):
         showAward = True
     if generalInfo.objects.all().count() != 0:
         myGeneralInfo = generalInfo.objects.all()[0]
-        return render(request, 'resume.html',{"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
-    return render(request, 'resume.html',{"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
+        return render(request, 'resume.html',{"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
+    return render(request, 'resume.html',{"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})

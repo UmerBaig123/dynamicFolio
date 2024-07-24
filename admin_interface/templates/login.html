@@ -7,6 +7,7 @@
     <link
       rel="stylesheet"
       type="text/css"
+      id="inner_css"
       href="{% static 'css/login.css' %}"
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -68,4 +69,39 @@
       </form>
     </div>
   </body>
+  <script>
+    const mode = localStorage.getItem("mode");
+    if (mode == "light") {
+      switchToLight();
+    }
+
+    function toggleMode() {
+      const mode = localStorage.getItem("mode");
+      if (mode === "light") {
+        localStorage.setItem("mode", "dark");
+        switchToDark();
+      } else {
+        localStorage.setItem("mode", "light");
+        switchToLight();
+      }
+    }
+    function switchToLight() {
+      var inner = document.getElementById("inner_css");
+      href = inner.href.split("/");
+      file_name = href.pop();
+      href.push("lightmode");
+      href.push(file_name);
+      href = href.join("/");
+      inner.href = href;
+    }
+    function switchToDark() {
+      var inner = document.getElementById("inner_css");
+      href = inner.href.split("/");
+      file_name = href.pop();
+      href.pop();
+      href.push(file_name);
+      href = href.join("/");
+      inner.href = href;
+    }
+  </script>
 </html>
