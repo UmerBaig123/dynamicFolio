@@ -410,7 +410,8 @@ a:active {
 }
 .pTitle {
   font-size: 20px;
-  text-wrap: nowrap;
+  text-wrap: wrap;
+  max-width: 90vw;
   margin-right: 10px;
   text-transform: uppercase;
 }

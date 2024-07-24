@@ -12,6 +12,8 @@
   gap: 5px;
 }
 .pTitle {
+  text-wrap: wrap;
+  max-width: 90vw;
   font-size: 20px;
   text-transform: uppercase;
 }
