@@ -445,7 +445,6 @@ publication {%endblock title%} {%load static %} {% block content %}
         <div class="gs-authors">{{article.authors}}</div>
         <div class="gs-publication">{{article.publication}}</div>
         <div class="gs-options">
-          <a href="" target="_blank" class="gs-anchor">pdf</a>
           <a href="{{article.link}}" target="_blank" class="gs-anchor">
             go to google scholar</a
           >
@@ -454,7 +453,11 @@ publication {%endblock title%} {%load static %} {% block content %}
     </div>
     {% endfor %}
     <div class="paralell" style="width: 100%; justify-content: flex-end">
-      <button class="okBtn" style="font-size: 12px" onclick="submitGs()">
+      <button
+        class="okBtn"
+        style="font-size: 12px; margin-top: 20px"
+        onclick="submitGs()"
+      >
         ok
       </button>
     </div>

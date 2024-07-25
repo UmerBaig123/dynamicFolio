@@ -201,10 +201,11 @@ class select_gs_article(APIView):
             article.isSelected = False
             article.save()
         citation_ids = request.data['citation_ids']
-        gs_citation_ids.objects.all().delete()
+        db_citations = gs_citation_ids.objects.all()
         for id in citation_ids:
-            myCitation = gs_citation_ids(citation_id=id)
-            myCitation.save()
+            if id not in [ob.citation_id for ob in db_citations]:
+                myCitation = gs_citation_ids(citation_id=id)
+                myCitation.save()
             thisArticle = google_scholar_article.objects.get(citation_id=id)
             thisArticle.isSelected = True
             thisArticle.save()
