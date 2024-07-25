@@ -99,7 +99,9 @@
   <p id="summaryInject"></p>
 </div>
 <div class="item-box">
-  <div class="heading">publications</div>
+  <a href="{% url 'home_publications' %}">
+    <div class="heading">publications</div></a
+  >
   <div
     style="width: 100%; display: flex; align-items: center; margin-top: 20px"
   >
@@ -260,7 +262,7 @@
   </div>
 </div>
 <div class="item-box">
-  <div class="heading">Repositories</div>
+  <a href="{% url 'home_repos' %}"> <div class="heading">Repositories</div></a>
   <div
     style="
       width: 100%;
