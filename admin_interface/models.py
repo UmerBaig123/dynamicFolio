@@ -45,6 +45,7 @@ class publication(models.Model):
     arxiv_url = models.URLField(default="https://arxiv.org/pdf/")
     bib = models.TextField(default="BibTex")
     pdfFile = models.FileField(upload_to='publication_pdfs',default="", blank=True)
+    video = models.FileField(upload_to='publication_videos',default="", blank=True)
     doi = models.CharField(max_length=100,default="")
     publication_date = models.DateField(default=django.utils.timezone.now)
     def __str__(self):
@@ -106,7 +107,10 @@ class google_scholar_article(models.Model):
                 thisCitedBy = article.cited_by
                 thisCitationId = article.citation_id
                 thisLink = article.link
-                thisPdf = gs_citation_ids.objects.filter(citation_id=thisCitationId)[0].pdf
+                citation = gs_citation_ids.objects.filter(citation_id=thisCitationId)[0]
+                thisPdf = citation.pdf
+                thisvideo = citation.video
+                id = article.pk
                 dictionary = {
                     "title":thisTitle,
                     "authors":thisAuthors,
@@ -115,7 +119,9 @@ class google_scholar_article(models.Model):
                     "cited_by":thisCitedBy,
                     "citation_id":thisCitationId,
                     "link":thisLink,
-                    "pdf":thisPdf
+                    "pdf":thisPdf,
+                    "video":thisvideo,
+                    "id":id
                 }
                 article_pdf.append(dictionary)
             return article_pdf
@@ -124,5 +130,40 @@ class google_scholar_article(models.Model):
 class gs_citation_ids(models.Model):
     citation_id = models.CharField(max_length=100)
     pdf = models.FileField(upload_to='gs_pdfs',default="", blank=True)
+    video = models.FileField(upload_to='gs_videos',default="", blank=True)
     def __str__(self):
         return self.citation_id
+class about_me_selected_gs(models.Model):
+    gs = models.OneToOneField(google_scholar_article, on_delete=models.CASCADE)
+    def get_gs_with_pdf_videos():
+        about_me_selected_gs_all = about_me_selected_gs.objects.all()
+        all_gs = []
+        for gs in about_me_selected_gs_all:
+            this_gs = gs.gs
+            thisTitle = this_gs.title
+            thisAuthors = this_gs.authors
+            thisPublication = this_gs.publication
+            thisYear = this_gs.year
+            thisCitedBy = this_gs.cited_by
+            thisCitationId = this_gs.citation_id
+            thisLink = this_gs.link
+            citation = gs_citation_ids.objects.filter(citation_id=thisCitationId)[0]
+            thisPdf = citation.pdf
+            thisvideo = citation.video
+            id = gs.gs.pk
+            dictionary = {
+                "title":thisTitle,
+                "authors":thisAuthors,
+                "publication":thisPublication,
+                "year":thisYear,
+                "cited_by":thisCitedBy,
+                "citation_id":thisCitationId,
+                "link":thisLink,
+                "pdf":thisPdf,
+                "video":thisvideo,
+                "id":id
+            }
+            all_gs.append(dictionary)
+        return all_gs
+class about_me_selected_publications(models.Model):
+    pub = models.OneToOneField(publication, on_delete=models.CASCADE)

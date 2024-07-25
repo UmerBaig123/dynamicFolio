@@ -20,4 +20,7 @@ urlpatterns = [
     path('add_google_scholar/', views.load_google_scholar_into_db.as_view(), name='add_gs'),
     path('select_google_scholar/', views.select_gs_article.as_view(), name='select_gs'),
     path('add_pdf_to_gs/', views.add_pdf_to_gs.as_view(), name='add_pdf'),
+    path('add_video_to_gs/', views.add_video_to_gs.as_view(), name='add_video'),
+    path('select_for_about_me/', views.select_for_about_me.as_view(), name='select_aboutme'),
+
 ]

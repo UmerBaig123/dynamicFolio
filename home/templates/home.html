@@ -158,6 +158,15 @@
                 target="_blank"
                 >PDF</a
               >
+
+              {% if publication.video and publication.video != "" %}
+              <a
+                class="link"
+                href="/static/{{publication.video}}"
+                target="_blank"
+                >watch video</a
+              >
+              {% endif %}
             </div>
           </div>
         </div>
@@ -230,6 +239,14 @@
             {% if article.pdf and article.pdf != "" %}
             <a href="/static/{{article.pdf}}" target="_blank" class="gs-anchor"
               >pdf</a
+            >
+            <!-- prettier-ignore -->
+            {% endif %} {% if article.video and article.video != ""  %}
+            <a
+              href="/static/{{article.video}}"
+              target="_blank"
+              class="gs-anchor"
+              >watch video</a
             >
             {% endif %}
             <a href="{{article.link}}" target="_blank" class="gs-anchor">

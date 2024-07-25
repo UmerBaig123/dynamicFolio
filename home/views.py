@@ -2,7 +2,7 @@ from django.shortcuts import render
 from types import SimpleNamespace
 import dotenv
 import os
-from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,gs_citation_ids,google_scholar_article
+from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,gs_citation_ids,google_scholar_article,about_me_selected_publications,about_me_selected_gs
 # Create your views here.
 dotenv.load_dotenv()
 API_KEY = os.environ['GITLABAPITOKEN']
@@ -29,8 +29,8 @@ def home_page(request):
         repos = [repo.repo_id for repo in selected_repos.objects.all()]
         repos = ",".join(repos)
     userdata_obj = userdata.objects.all()[0]
-    publications = publication.objects.all()
-    return render(request, 'home.html', {"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,'gs_publications':google_scholar_article.getAllSelectedWithPdf()})
+    publications =[pub.pub for pub in about_me_selected_publications.objects.all()]
+    return render(request, 'home.html', {"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,'gs_publications':about_me_selected_gs.get_gs_with_pdf_videos()})
 def repository(request):
     full_name = ""
     if userdata.objects.all().count() != 0:

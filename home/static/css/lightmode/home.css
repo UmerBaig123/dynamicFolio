@@ -324,6 +324,7 @@ a:active {
   margin-bottom: 0;
   filter: invert(1);
   height: fit-content;
+  max-width: 380px;
   cursor: pointer;
   /* margin: 10px; */
 }
@@ -505,7 +506,7 @@ a:active {
   transform: scale(1.01);
 }
 .lab-cont {
-  width: 370px;
+  max-width: 340px;
   border-radius: 5px;
   background-color: #ebe9e9;
   cursor: pointer;

@@ -90,6 +90,15 @@ publication {%endblock title%} {%load static %} {% block content %}
                 target="_blank"
                 >PDF</a
               >
+
+              {% if publication.video and publication.video != "" %}
+              <a
+                class="link"
+                href="/static/{{publication.video}}"
+                target="_blank"
+                >watch video</a
+              >
+              {% endif %}
               <button
                 type="button"
                 class="link"
@@ -184,11 +193,18 @@ publication {%endblock title%} {%load static %} {% block content %}
             <a href="/static/{{article.pdf}}" target="_blank" class="gs-anchor"
               >pdf</a
             >
+            {% endif %} {% if article.video and article.video != "" %}
+            <a
+              href="/static/{{article.video}}"
+              target="_blank"
+              class="gs-anchor"
+              >watch video</a
+            >
             {% endif %}
             <a href="{{article.link}}" target="_blank" class="gs-anchor">
               go to google scholar</a
             >
-            <div style="display: flex; align-items: center">
+            <div style="display: flex; align-items: center; gap: 5px">
               <label for="{{article.citation_id}}-inp" class="imgSelect"
                 >Select PDF file</label
               >
@@ -202,6 +218,17 @@ publication {%endblock title%} {%load static %} {% block content %}
                 hidden
               />
               <div id="{{article.citation_id}}-filename"></div>
+              <label for="{{article.citation_id}}-video-inp" class="imgSelect"
+                >Select video file</label
+              >
+              <input
+                placeholder="upload video file"
+                type="file"
+                id="{{article.citation_id}}-video-inp"
+                style="margin-bottom: 10px"
+                onchange="edit_pub_video(this,'{{article.citation_id}}')"
+                hidden
+              />
             </div>
           </div>
         </div>
@@ -214,7 +241,7 @@ publication {%endblock title%} {%load static %} {% block content %}
         enctype="multipart/form-data"
       >
         {%csrf_token%}
-        <div class="pCard paralell" style="width: 96%">
+        <div class="pCard paralell" style="max-width: 96%">
           <div class="pImageContainer">
             <img
               id="publication_image"
@@ -283,6 +310,25 @@ publication {%endblock title%} {%load static %} {% block content %}
                 style="border: 1px solid #e0e0e031; border-radius: 5px"
                 placeholder="DOI (optional)"
               />
+              <label
+                for="video_input"
+                class="imgSelect"
+                style="display: flex; align-items: center"
+              >
+                add video</label
+              >
+              <input
+                type="file"
+                name="video"
+                id="video_input"
+                accept="video/*"
+                onchange="changeVideo(this)"
+                hidden
+              />
+              <div
+                id="video_filename"
+                style="font-size: 12px; display: flex; align-items: center"
+              ></div>
               <button
                 type="submit"
                 class="link"
@@ -400,306 +446,423 @@ publication {%endblock title%} {%load static %} {% block content %}
       max-width: none;
       text-wrap: nowrap;
     "
-    onclick="toggle(select_gs_articles)"
+    onclick="toggleandhide(select_gs_articles,aboutme_selection)"
   >
     select from loaded articles
   </button>
-</div>
-<div id="select_gs_articles" hidden>
-  {% for article in gs_articles_all %} {% if article.isSelected %}
-  <div
-    class="gs-container gs-selected"
-    onclick="toggleClass('{{article.citation_id}}')"
-    id="{{article.citation_id}}"
+  <button
+    class="okBtn"
+    style="
+      font-size: 12px;
+      font-weight: 100;
+      margin: 2.5px;
+      width: fit-content;
+      max-width: none;
+      text-wrap: nowrap;
+    "
+    onclick="toggleandhide(aboutme_selection,select_gs_articles)"
   >
-    {% else %}
+    select articles for about me page
+  </button>
+</div>
+<div
+  style="
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+    align-items: center;
+    margin-top: 20px;
+    gap: 10px;
+  "
+  id="aboutme_selection"
+  hidden
+>
+  {% for publication in publications %}
+  <div id="{{publication.id}}-container ">
+    {% if publication.pk in aboutme_pub_ids %}
     <div
-      class="gs-container lowOp"
-      onclick="toggleClass('{{article.citation_id}}')"
-      id="{{article.citation_id}}"
+      class="pCard paralell aboutme_selection aboutme_selected"
+      id="{{publication.id}}"
+      onclick="toggleClassList(this,'aboutme_selected')"
     >
-      {% endif %}
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        x="0px"
-        y="0px"
-        width="100"
-        height="100"
-        viewBox="0 0 48 48"
+      {% else %}
+      <div
+        class="pCard paralell aboutme_selection"
+        id="{{publication.id}}"
+        onclick="toggleClassList(this,'aboutme_selected')"
       >
-        <path
-          fill="#1e88e5"
-          d="M24,4C12.954,4,4,12.954,4,24s8.954,20,20,20s20-8.954,20-20S35.046,4,24,4z"
-        ></path>
-        <path
-          fill="#1565c0"
-          d="M35,16.592v-3.878L37,11H27l0.917,1.833c-1.236,0-2.265,0-2.265,0S19.095,13,19.095,18.748	c0,5.752,5.732,5.088,5.732,5.088s0,0.865,0,1.453c0,0.594,0.77,0.391,0.864,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.722,0.365,7.722-6.104c0-3.871-4.405-5.121-4.405-6.686c0-1.563,3.319-2.012,3.319-5.684	c0-0.823-0.028-1.524-0.149-2.12L34,13.571v3.02c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5V18	C36,17.348,35.581,16.799,35,16.592z M30.047,31.169c0.131,2.024-1.929,3.811-4.603,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.6-3.996C27.641,27.667,29.914,29.152,30.047,31.169z M26.109,22.453	c-1.592,0.451-3.375-1.062-3.982-3.367c-0.604-2.312,0.195-4.543,1.786-4.992c1.593-0.453,3.374,1.059,3.981,3.367	C28.499,19.77,27.702,22.004,26.109,22.453z"
-        ></path>
-        <path
-          fill="#e8eaf6"
-          d="M34,16.592V12c0-0.051-0.015-0.097-0.029-0.143L35,11H21l-9,8h5.383	c0.174,5.466,5.715,4.836,5.715,4.836s0,0.865,0,1.453c0,0.594,0.771,0.391,0.865,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.721,0.365,7.721-6.104c0-3.871-4.404-5.121-4.404-6.686c0-1.563,3.318-2.012,3.318-5.684	c0-0.971-0.047-1.763-0.232-2.422L33,12.667v3.925c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5	V18C35,17.348,34.581,16.799,34,16.592z M28.319,31.169c0.131,2.024-1.928,3.811-4.602,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.599-3.996C25.914,27.667,28.187,29.152,28.319,31.169z M24.38,22.453	c-1.591,0.451-3.373-1.062-3.981-3.367c-0.604-2.312,0.194-4.543,1.785-4.992c1.593-0.453,3.374,1.059,3.982,3.367	C26.77,19.77,25.973,22.004,24.38,22.453z"
-        ></path>
-      </svg>
-      <div class="gs-textcont">
-        <div class="gs-title">{{article.title}}</div>
-        <div class="gs-authors">{{article.authors}}</div>
-        <div class="gs-publication">{{article.publication}}</div>
-        <div class="gs-options">
-          <a href="{{article.link}}" target="_blank" class="gs-anchor">
-            go to google scholar</a
-          >
+        {% endif %}
+        <div class="pImageContainer">
+          <div
+            class="pImage"
+            style="background-image: url('/static/{{publication.publication_image}}');
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          "
+          ></div>
+        </div>
+        <div class="pInfo" style="width: 100%" id="{{publication.id}}">
+          <div class="pTitle" style="width: 100%">{{publication.title}}</div>
+          <div class="pAuthors" style="width: 100%">
+            {{publication.authors}}
+          </div>
+          <div class="pDesc" style="width: 100%">
+            {{publication.description}}
+          </div>
         </div>
       </div>
     </div>
-    {% endfor %}
-    <div class="paralell" style="width: 100%; justify-content: flex-end">
-      <button
-        class="okBtn"
-        style="font-size: 12px; margin-top: 20px"
-        onclick="submitGs()"
-      >
-        ok
-      </button>
-    </div>
-  </div>
-  <div
-    style="
-      display: flex;
-      width: 85%;
-      justify-content: flex-end;
-      margin-bottom: 20px;
-      align-items: center;
-      margin-top: 20px;
-      gap: 10px;
-    "
-  >
-    <button
-      class="okBtn"
-      onclick="toggle(description)"
-      style="font-size: 12px; font-weight: 100; margin: 2.5px"
-    >
-      add/edit page description
-    </button>
-  </div>
-  <div id="description" hidden style="margin-bottom: 20px; width: 96%">
+    <!-- prettier-ignore -->
+    {% endfor %} {% for article in gs_selected %} {% if article.id in aboutme_gs_ids %}
     <div
-      style="
-        display: flex;
-        width: 96%;
-        justify-content: center;
-        margin-bottom: 20px;
-        align-items: center;
-        margin-top: 20px;
-      "
+      class="gs-container aboutme_selection aboutme_selected_gs"
+      id="{{article.id}}"
+      onclick="toggleClassList(this,'aboutme_selected_gs')"
     >
-      <textarea
-        name="page_description"
-        rows="12"
-        placeholder="write description here"
-        cols="40"
-        style="padding: 10px"
-        class="summary"
-        id="description_text"
-        width="85%"
-      ></textarea>
-    </div>
-    <div style="width: 96%; display: flex; justify-content: flex-end">
-      <button
-        class="okBtn"
-        style="font-size: 12px; font-weight: 100"
-        onclick="addDesc()"
+      {% else %}
+      <div
+        class="gs-container aboutme_selection"
+        id="{{article.id}}"
+        onclick="toggleClassList(this,'aboutme_selected_gs')"
       >
-        submit
-      </button>
+        {% endif %}
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          x="0px"
+          y="0px"
+          width="100"
+          height="100"
+          viewBox="0 0 48 48"
+        >
+          <path
+            fill="#1e88e5"
+            d="M24,4C12.954,4,4,12.954,4,24s8.954,20,20,20s20-8.954,20-20S35.046,4,24,4z"
+          ></path>
+          <path
+            fill="#1565c0"
+            d="M35,16.592v-3.878L37,11H27l0.917,1.833c-1.236,0-2.265,0-2.265,0S19.095,13,19.095,18.748	c0,5.752,5.732,5.088,5.732,5.088s0,0.865,0,1.453c0,0.594,0.77,0.391,0.864,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.722,0.365,7.722-6.104c0-3.871-4.405-5.121-4.405-6.686c0-1.563,3.319-2.012,3.319-5.684	c0-0.823-0.028-1.524-0.149-2.12L34,13.571v3.02c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5V18	C36,17.348,35.581,16.799,35,16.592z M30.047,31.169c0.131,2.024-1.929,3.811-4.603,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.6-3.996C27.641,27.667,29.914,29.152,30.047,31.169z M26.109,22.453	c-1.592,0.451-3.375-1.062-3.982-3.367c-0.604-2.312,0.195-4.543,1.786-4.992c1.593-0.453,3.374,1.059,3.981,3.367	C28.499,19.77,27.702,22.004,26.109,22.453z"
+          ></path>
+          <path
+            fill="#e8eaf6"
+            d="M34,16.592V12c0-0.051-0.015-0.097-0.029-0.143L35,11H21l-9,8h5.383	c0.174,5.466,5.715,4.836,5.715,4.836s0,0.865,0,1.453c0,0.594,0.771,0.391,0.865,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.721,0.365,7.721-6.104c0-3.871-4.404-5.121-4.404-6.686c0-1.563,3.318-2.012,3.318-5.684	c0-0.971-0.047-1.763-0.232-2.422L33,12.667v3.925c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5	V18C35,17.348,34.581,16.799,34,16.592z M28.319,31.169c0.131,2.024-1.928,3.811-4.602,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.599-3.996C25.914,27.667,28.187,29.152,28.319,31.169z M24.38,22.453	c-1.591,0.451-3.373-1.062-3.981-3.367c-0.604-2.312,0.194-4.543,1.785-4.992c1.593-0.453,3.374,1.059,3.982,3.367	C26.77,19.77,25.973,22.004,24.38,22.453z"
+          ></path>
+        </svg>
+        <div class="gs-textcont">
+          <div class="gs-title">{{article.title}}</div>
+          <div class="gs-authors">{{article.authors}}</div>
+          <div class="gs-publication">{{article.publication}}</div>
+        </div>
+      </div>
+      {% endfor %}
+      <div
+        style="margin: 0 auto; display: flex; align-items: center; gap: 10px"
+        onclick="hide(aboutme_selection)"
+      >
+        <button
+          class="okBtn"
+          style="background-color: green; color: white; font-size: 12px"
+          onclick="aboutmeAdd()"
+        >
+          ok
+        </button>
+      </div>
     </div>
-  </div>
+    <div id="select_gs_articles" hidden>
+      {% for article in gs_articles_all %} {% if article.isSelected %}
+      <div
+        class="gs-container gs-selected"
+        onclick="toggleClass('{{article.citation_id}}')"
+        id="{{article.citation_id}}"
+      >
+        {% else %}
+        <div
+          class="gs-container lowOp"
+          onclick="toggleClass('{{article.citation_id}}')"
+          id="{{article.citation_id}}"
+        >
+          {% endif %}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            x="0px"
+            y="0px"
+            width="100"
+            height="100"
+            viewBox="0 0 48 48"
+          >
+            <path
+              fill="#1e88e5"
+              d="M24,4C12.954,4,4,12.954,4,24s8.954,20,20,20s20-8.954,20-20S35.046,4,24,4z"
+            ></path>
+            <path
+              fill="#1565c0"
+              d="M35,16.592v-3.878L37,11H27l0.917,1.833c-1.236,0-2.265,0-2.265,0S19.095,13,19.095,18.748	c0,5.752,5.732,5.088,5.732,5.088s0,0.865,0,1.453c0,0.594,0.77,0.391,0.864,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.722,0.365,7.722-6.104c0-3.871-4.405-5.121-4.405-6.686c0-1.563,3.319-2.012,3.319-5.684	c0-0.823-0.028-1.524-0.149-2.12L34,13.571v3.02c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5V18	C36,17.348,35.581,16.799,35,16.592z M30.047,31.169c0.131,2.024-1.929,3.811-4.603,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.6-3.996C27.641,27.667,29.914,29.152,30.047,31.169z M26.109,22.453	c-1.592,0.451-3.375-1.062-3.982-3.367c-0.604-2.312,0.195-4.543,1.786-4.992c1.593-0.453,3.374,1.059,3.981,3.367	C28.499,19.77,27.702,22.004,26.109,22.453z"
+            ></path>
+            <path
+              fill="#e8eaf6"
+              d="M34,16.592V12c0-0.051-0.015-0.097-0.029-0.143L35,11H21l-9,8h5.383	c0.174,5.466,5.715,4.836,5.715,4.836s0,0.865,0,1.453c0,0.594,0.771,0.391,0.865,1.583c-0.388,0-7.964-0.208-7.964,4.998	s6.679,4.959,6.679,4.959s7.721,0.365,7.721-6.104c0-3.871-4.404-5.121-4.404-6.686c0-1.563,3.318-2.012,3.318-5.684	c0-0.971-0.047-1.763-0.232-2.422L33,12.667v3.925c-0.581,0.207-1,0.756-1,1.408v4.5c0,0.829,0.672,1.5,1.5,1.5s1.5-0.671,1.5-1.5	V18C35,17.348,34.581,16.799,34,16.592z M28.319,31.169c0.131,2.024-1.928,3.811-4.602,3.998c-2.671,0.188-4.946-1.295-5.077-3.316	c-0.133-2.016,1.927-3.805,4.599-3.996C25.914,27.667,28.187,29.152,28.319,31.169z M24.38,22.453	c-1.591,0.451-3.373-1.062-3.981-3.367c-0.604-2.312,0.194-4.543,1.785-4.992c1.593-0.453,3.374,1.059,3.982,3.367	C26.77,19.77,25.973,22.004,24.38,22.453z"
+            ></path>
+          </svg>
+          <div class="gs-textcont">
+            <div class="gs-title">{{article.title}}</div>
+            <div class="gs-authors">{{article.authors}}</div>
+            <div class="gs-publication">{{article.publication}}</div>
+            <div class="gs-options">
+              <a href="{{article.link}}" target="_blank" class="gs-anchor">
+                go to google scholar</a
+              >
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <div class="paralell" style="width: 100%; justify-content: center">
+          <button
+            class="okBtn"
+            style="font-size: 12px; margin-top: 10px; background-color: green"
+            onclick="submitGs()"
+          >
+            ok
+          </button>
+        </div>
+      </div>
+      <div
+        style="
+          display: flex;
+          width: 85%;
+          justify-content: flex-end;
+          margin-bottom: 20px;
+          align-items: center;
+          margin-top: 20px;
+          gap: 10px;
+        "
+      >
+        <button
+          class="okBtn"
+          onclick="toggle(description)"
+          style="font-size: 12px; font-weight: 100; margin: 2.5px"
+        >
+          add/edit page description
+        </button>
+      </div>
+      <div id="description" hidden style="margin-bottom: 20px; width: 96%">
+        <div
+          style="
+            display: flex;
+            width: 96%;
+            justify-content: center;
+            margin-bottom: 20px;
+            align-items: center;
+            margin-top: 20px;
+          "
+        >
+          <textarea
+            name="page_description"
+            rows="12"
+            placeholder="write description here"
+            cols="40"
+            style="padding: 10px"
+            class="summary"
+            id="description_text"
+            width="85%"
+          ></textarea>
+        </div>
+        <div style="width: 96%; display: flex; justify-content: flex-end">
+          <button
+            class="okBtn"
+            style="font-size: 12px; font-weight: 100"
+            onclick="addDesc()"
+          >
+            submit
+          </button>
+        </div>
+      </div>
 
-  <script>
-    const mode = localStorage.getItem("mode");
-    if (mode == "light") {
-      switchToLight();
-    }
+      <script>
+        const mode = localStorage.getItem("mode");
+        if (mode == "light") {
+          switchToLight();
+        }
 
-    function toggleMode() {
-      const mode = localStorage.getItem("mode");
-      if (mode === "light") {
-        localStorage.setItem("mode", "dark");
-        switchToDark();
-      } else {
-        localStorage.setItem("mode", "light");
-        switchToLight();
-      }
-    }
-    function switchToLight() {
-      var outer = document.getElementById("outer_css");
-      var inner = document.getElementById("inner_css");
-      var href = outer.href.split("/");
-      var file_name = href.pop();
-      href.push("lightmode");
-      href.push(file_name);
-      href = href.join("/");
-      outer.href = href;
-      console.log(outer);
-      href = inner.href.split("/");
-      file_name = href.pop();
-      href.push("lightmode");
-      href.push(file_name);
-      href = href.join("/");
-      inner.href = href;
-      console.log(inner);
-    }
-    function switchToDark() {
-      var outer = document.getElementById("outer_css");
-      var inner = document.getElementById("inner_css");
-      var href = outer.href.split("/");
-      var file_name = href.pop();
-      href.pop();
-      href.push(file_name);
-      href = href.join("/");
-      outer.href = href;
-      console.log(outer);
-      href = inner.href.split("/");
-      file_name = href.pop();
-      href.pop();
-      href.push(file_name);
-      href = href.join("/");
-      inner.href = href;
-      console.log(inner);
-    }
-    const decodeAbsBib = (absId, bibId, abs, bib) => {
-      var decodedBib = decodeHtml(bib);
-      var decodedAbs = decodeHtml(abs);
-      document.getElementById(absId).innerHTML = decodedAbs;
-      document.getElementById(bibId).innerHTML = decodedBib;
-    };
-
-    function decodeHtml(html) {
-      var txt = document.createElement("textarea");
-      txt.innerHTML = html;
-      return txt.value;
-    }
-    var decoded = decodeHtml("{{description}}");
-    document.getElementById("description_text").innerHTML = decoded.replace(
-      /<br>/g,
-      "\n"
-    );
-    const getDesc = () => {
-      return document
-        .getElementById("description_text")
-        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-    };
-    const addDesc = () => {
-      fetch("{% url 'add_page_description' %}", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{csrf_token}}",
-        },
-        body: JSON.stringify({
-          page_description: getDesc(),
-          page_name: "publications",
-        }),
-      }).then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-          if (data.status == 200) {
-            window.location.href = "{% url 'admin_publications' %}";
+        function toggleMode() {
+          const mode = localStorage.getItem("mode");
+          if (mode === "light") {
+            localStorage.setItem("mode", "dark");
+            switchToDark();
+          } else {
+            localStorage.setItem("mode", "light");
+            switchToLight();
           }
-        });
-      });
-    };
-    var elements = document.getElementsByClassName("publ");
-    Array.prototype.forEach.call(elements, function (el) {
-      el.click();
-    });
-    const inject = () => {
-      document.getElementById("filename").innerHTML = pdfInput.files[0].name;
-    };
-    const changePhoto = (e, elem = publication_image) => {
-      elem.src = `${globalThis.URL.createObjectURL(e.files[0])}`;
-    };
-    const toggle = (e) => {
-      if (e.hidden) {
-        show(e);
-      } else {
-        hide(e);
-      }
-    };
-    const hide = (e) => {
-      e.hidden = true;
-    };
-    const show = (e) => {
-      hideAll();
-      e.hidden = false;
-    };
-    const toggleAttr = (showElem, hideElem) => {
-      if (document.getElementById(showElem).hidden) {
-        showAttr(showElem, hideElem);
-      } else {
-        document.getElementById(showElem).hidden = true;
-        document.getElementById(showElem).style.height = 0;
-      }
-    };
-    const showAttr = (showElem, hideElem) => {
-      document.getElementById(hideElem).hidden = true;
-      document.getElementById(showElem).hidden = false;
-      setTimeout(() => {
-        document.getElementById(showElem).style.height = 100;
-      }, 1);
+        }
+        function switchToLight() {
+          var outer = document.getElementById("outer_css");
+          var inner = document.getElementById("inner_css");
+          var href = outer.href.split("/");
+          var file_name = href.pop();
+          href.push("lightmode");
+          href.push(file_name);
+          href = href.join("/");
+          outer.href = href;
+          console.log(outer);
+          href = inner.href.split("/");
+          file_name = href.pop();
+          href.push("lightmode");
+          href.push(file_name);
+          href = href.join("/");
+          inner.href = href;
+          console.log(inner);
+        }
+        function switchToDark() {
+          var outer = document.getElementById("outer_css");
+          var inner = document.getElementById("inner_css");
+          var href = outer.href.split("/");
+          var file_name = href.pop();
+          href.pop();
+          href.push(file_name);
+          href = href.join("/");
+          outer.href = href;
+          console.log(outer);
+          href = inner.href.split("/");
+          file_name = href.pop();
+          href.pop();
+          href.push(file_name);
+          href = href.join("/");
+          inner.href = href;
+          console.log(inner);
+        }
+        const decodeAbsBib = (absId, bibId, abs, bib) => {
+          var decodedBib = decodeHtml(bib);
+          var decodedAbs = decodeHtml(abs);
+          document.getElementById(absId).innerHTML = decodedAbs;
+          document.getElementById(bibId).innerHTML = decodedBib;
+        };
 
-      document.getElementById(hideElem).style.height = 0;
-    };
-    const hideAll = () => {
-      hide(abs);
-      hide(bib);
-      hide(pdf);
-      hide(arxiv);
-    };
-    var publication = {
-      title:
-        "A Hybrid Approach Combining Control Theory and AI for Engineering Self-Adaptive Systems",
-      authors: "M. Salehie, L. Tahvildari",
-      description: `Ricardo Caldas, Arthur Rodrigues, Eric Bernd Gil, and 3 more authors
+        function decodeHtml(html) {
+          var txt = document.createElement("textarea");
+          txt.innerHTML = html;
+          return txt.value;
+        }
+        var decoded = decodeHtml("{{description}}");
+        document.getElementById("description_text").innerHTML = decoded.replace(
+          /<br>/g,
+          "\n"
+        );
+        const getDesc = () => {
+          return document
+            .getElementById("description_text")
+            .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+        };
+        const addDesc = () => {
+          fetch("{% url 'add_page_description' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: JSON.stringify({
+              page_description: getDesc(),
+              page_name: "publications",
+            }),
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              }
+            });
+          });
+        };
+        var elements = document.getElementsByClassName("publ");
+        Array.prototype.forEach.call(elements, function (el) {
+          el.click();
+        });
+        const inject = () => {
+          document.getElementById("filename").innerHTML =
+            pdfInput.files[0].name;
+        };
+        const changePhoto = (e, elem = publication_image) => {
+          elem.src = `${globalThis.URL.createObjectURL(e.files[0])}`;
+        };
+        const toggle = (e) => {
+          if (e.hidden) {
+            show(e);
+          } else {
+            hide(e);
+          }
+        };
+        const hide = (e) => {
+          e.hidden = true;
+        };
+        const show = (e) => {
+          hideAll();
+          e.hidden = false;
+        };
+        const toggleAttr = (showElem, hideElem) => {
+          if (document.getElementById(showElem).hidden) {
+            showAttr(showElem, hideElem);
+          } else {
+            document.getElementById(showElem).hidden = true;
+            document.getElementById(showElem).style.height = 0;
+          }
+        };
+        const showAttr = (showElem, hideElem) => {
+          document.getElementById(hideElem).hidden = true;
+          document.getElementById(showElem).hidden = false;
+          setTimeout(() => {
+            document.getElementById(showElem).style.height = 100;
+          }, 1);
+
+          document.getElementById(hideElem).style.height = 0;
+        };
+        const hideAll = () => {
+          hide(abs);
+          hide(bib);
+          hide(pdf);
+          hide(arxiv);
+        };
+        var publication = {
+          title:
+            "A Hybrid Approach Combining Control Theory and AI for Engineering Self-Adaptive Systems",
+          authors: "M. Salehie, L. Tahvildari",
+          description: `Ricardo Caldas, Arthur Rodrigues, Eric Bernd Gil, and 3 more authors
   In Proceedings of the IEEE/ACM 15th International Symposium on Software Engineering for Adaptive and Self-Managing Systems, 2020`,
-    };
-    const delete_publication = (publication_id) => {
-      fetch("{% url 'delete_publication' %}", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{csrf_token}}",
-        },
-        body: JSON.stringify({ publication_id: publication_id }),
-      }).then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-          if (data.status == 200) {
-            window.location.href = "{% url 'admin_publications' %}";
-          }
-        });
-      });
-    };
-    const changeBibAbs = () => {
-      abs.value = abs.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-      bib.value = bib.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-    };
-    function inject_edit(elem) {
-      alert("file uploaded");
-    }
-    const edit_publication = (
-      publication_id,
-      name,
-      authors,
-      desc,
-      abs,
-      arxiv,
-      bib,
-      image,
-      doi
-    ) => {
-      document.getElementById(
-        `${publication_id}-container`
-      ).innerHTML = `<div class="pCard paralell" style="width: 96%">
+        };
+        const delete_publication = (publication_id) => {
+          fetch("{% url 'delete_publication' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: JSON.stringify({ publication_id: publication_id }),
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              }
+            });
+          });
+        };
+        const changeBibAbs = () => {
+          abs.value = abs.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+          bib.value = bib.value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+        };
+        const edit_publication = (
+          publication_id,
+          name,
+          authors,
+          desc,
+          abs,
+          arxiv,
+          bib,
+          image,
+          doi
+        ) => {
+          document.getElementById(
+            `${publication_id}-container`
+          ).innerHTML = `<div class="pCard paralell" style="max-width: 96%">
           <div class="pImageContainer">
             <img
               id="edit-publication_image"
@@ -777,6 +940,25 @@ publication {%endblock title%} {%load static %} {% block content %}
                 style="border: 1px solid #e0e0e031; border-radius: 5px"
                 placeholder="DOI (optional)"
               />
+              <label
+                for="edit-video_input"
+                class="imgSelect"
+                style="display: flex; align-items: center"
+              >
+                add video</label>
+              <input
+
+                type="file"
+                name="video"
+                id="edit-video_input"
+                accept="video/*"
+                onchange="changeVideo(this,'edit-video_filename')"
+                hidden
+              />
+              <div
+                id="edit-video_filename"
+                style="font-size: 12px; display: flex; align-items: center"
+              ></div>
               <button
                 type="submit"
                 class="link"
@@ -833,130 +1015,201 @@ publication {%endblock title%} {%load static %} {% block content %}
             </div>
           </div>
         </div>`;
-    };
-    function add_edited_publication(id) {
-      var title = document.getElementById("edit-title").value;
-      var authors = document.getElementById("edit-authors").value;
-      var desc = document
-        .getElementById("edit-desc")
-        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-      var abs = document
-        .getElementById("edit-abs")
-        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-      var arxiv = document.getElementById("edit-arxiv").value;
-      var bib = document
-        .getElementById("edit-bib")
-        .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
-      var image = document.getElementById("edit-image").files[0];
-      var doi = document.getElementById("edit-doi").value;
-      var date = document.getElementById("edit-date").value;
-      var pdf = document.getElementById("edit-pdfInput").files[0];
-      var formData = new FormData();
-      formData.append("id", id);
-      formData.append("title", title);
-      formData.append("authors", authors);
-      formData.append("desc", desc);
-      formData.append("abs", abs);
-      formData.append("arxiv", arxiv);
-      formData.append("bib", bib);
-      formData.append("doi", doi);
-      formData.append("date", date);
-      formData.append("image", image);
-      formData.append("pdf", pdf);
+        };
+        function add_edited_publication(id) {
+          var title = document.getElementById("edit-title").value;
+          var authors = document.getElementById("edit-authors").value;
+          var desc = document
+            .getElementById("edit-desc")
+            .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+          var abs = document
+            .getElementById("edit-abs")
+            .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+          var arxiv = document.getElementById("edit-arxiv").value;
+          var bib = document
+            .getElementById("edit-bib")
+            .value.replace(/(?:\r\n|\r|\n)/g, "<br>");
+          var image = document.getElementById("edit-image").files[0];
+          var doi = document.getElementById("edit-doi").value;
+          var date = document.getElementById("edit-date").value;
+          var pdf = document.getElementById("edit-pdfInput").files[0];
+          var video = document.getElementById("edit-video_input").files[0];
+          var formData = new FormData();
+          formData.append("id", id);
+          formData.append("title", title);
+          formData.append("authors", authors);
+          formData.append("desc", desc);
+          formData.append("abs", abs);
+          formData.append("arxiv", arxiv);
+          formData.append("bib", bib);
+          formData.append("doi", doi);
+          formData.append("date", date);
+          formData.append("image", image);
+          formData.append("pdf", pdf);
+          formData.append("video", video);
 
-      fetch("{% url 'edit_publication' %}", {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": "{{csrf_token}}",
-        },
-        body: formData,
-      }).then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-          if (data.status == 200) {
-            window.location.href = "{% url 'admin_publications' %}";
+          fetch("{% url 'edit_publication' %}", {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: formData,
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              }
+            });
+          });
+        }
+        function submitGs() {
+          var citation_ids = [];
+          document.getElementById("loadingModal").hidden = false;
+          var elements = document.getElementsByClassName("gs-selected");
+          Array.prototype.forEach.call(elements, function (el) {
+            citation_ids.push(el.id);
+          });
+          fetch("{% url 'select_gs' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: JSON.stringify({ citation_ids: citation_ids }),
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              } else {
+                document.getElementById("loadingModal").hidden = true;
+              }
+            });
+          });
+        }
+        function loadArticles() {
+          var gs_id = document.getElementById("gs_id").value.trim();
+          if (gs_id == "") {
+            alert("please enter a google scholar id");
+            return;
           }
-        });
-      });
-    }
-    function submitGs() {
-      var citation_ids = [];
-      document.getElementById("loadingModal").hidden = false;
-      var elements = document.getElementsByClassName("gs-selected");
-      Array.prototype.forEach.call(elements, function (el) {
-        citation_ids.push(el.id);
-      });
-      fetch("{% url 'select_gs' %}", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{csrf_token}}",
-        },
-        body: JSON.stringify({ citation_ids: citation_ids }),
-      }).then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-          if (data.status == 200) {
-            window.location.href = "{% url 'admin_publications' %}";
-          } else {
-            document.getElementById("loadingModal").hidden = true;
-          }
-        });
-      });
-    }
-    function loadArticles() {
-      var gs_id = document.getElementById("gs_id").value.trim();
-      if (gs_id == "") {
-        alert("please enter a google scholar id");
-        return;
-      }
-      document.getElementById("loadingModal").hidden = false;
-      fetch("{% url 'add_gs' %}", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRFToken": "{{csrf_token}}",
-        },
-        body: JSON.stringify({ gs_id: gs_id }),
-      }).then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-          if (data.status == 200) {
-            window.location.href = "{% url 'admin_publications' %}";
-          } else {
-            document.getElementById("loadingModal").hidden = true;
-            alert(data.message);
-          }
-        });
-      });
-    }
-    function toggleClass(id) {
-      elem = document.getElementById(id);
-      elem.classList.toggle("gs-selected");
-      elem.classList.toggle("lowOp");
-    }
-    function changePdf(e, citation_id) {
-      document.getElementById(citation_id + "-filename").innerHTML =
-        e.files[0].name;
-      var file = e.files[0];
-      var formData = new FormData();
-      formData.append("pdf", file);
-      formData.append("citation_id", citation_id);
-      fetch("{% url 'add_pdf' %}", {
-        method: "POST",
-        headers: {
-          "X-CSRFToken": "{{csrf_token}}",
-        },
-        body: formData,
-      }).then((response) => {
-        response.json().then((data) => {
-          console.log(data);
-          if (data.status == 200) {
-            window.location.href = "{% url 'admin_publications' %}";
-          }
-        });
-      });
-    }
-  </script>
-  {% endblock %}
+          document.getElementById("loadingModal").hidden = false;
+          fetch("{% url 'add_gs' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: JSON.stringify({ gs_id: gs_id }),
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              } else {
+                document.getElementById("loadingModal").hidden = true;
+                alert(data.message);
+              }
+            });
+          });
+        }
+        function toggleClass(id) {
+          elem = document.getElementById(id);
+          elem.classList.toggle("gs-selected");
+          elem.classList.toggle("lowOp");
+        }
+        function changePdf(e, citation_id) {
+          document.getElementById(citation_id + "-filename").innerHTML =
+            e.files[0].name;
+          var file = e.files[0];
+          var formData = new FormData();
+          formData.append("pdf", file);
+          formData.append("citation_id", citation_id);
+          fetch("{% url 'add_pdf' %}", {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: formData,
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              }
+            });
+          });
+        }
+        function edit_pub_video(e, citation_id) {
+          var file = e.files[0];
+          var formData = new FormData();
+          formData.append("video", file);
+          formData.append("citation_id", citation_id);
+          fetch("{% url 'add_video' %}", {
+            method: "POST",
+            headers: {
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: formData,
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              }
+            });
+          });
+        }
+        function changeVideo(e, injectionid = "video_filename") {
+          document.getElementById(injectionid).innerHTML = e.files[0].name;
+        }
+        function toggleClassList(e, class_name) {
+          e.classList.toggle(class_name);
+        }
+        function aboutmeAdd() {
+          loadingModal.hidden = false;
+          var selected_publications = [];
+          var selected_gs = [];
+          var publications =
+            document.getElementsByClassName("aboutme_selected");
+          var gs = document.getElementsByClassName("aboutme_selected_gs");
+          Array.prototype.forEach.call(publications, function (el) {
+            selected_publications.push(el.id);
+          });
+          Array.prototype.forEach.call(gs, function (el) {
+            selected_gs.push(el.id);
+          });
+          console.log(selected_publications);
+          console.log(selected_gs);
+          fetch("{% url 'select_aboutme' %}", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRFToken": "{{csrf_token}}",
+            },
+            body: JSON.stringify({
+              selected_publications: selected_publications,
+              selected_gs: selected_gs,
+            }),
+          }).then((response) => {
+            response.json().then((data) => {
+              console.log(data);
+              if (data.status == 200) {
+                window.location.href = "{% url 'admin_publications' %}";
+              } else {
+                loadingModal.hidden = true;
+              }
+            });
+          });
+        }
+        function toggleandhide(toggleE, hideE) {
+          toggle(toggleE);
+          hide(hideE);
+        }
+      </script>
+    </div>
+  </div>
 </div>
+
+{% endblock %}

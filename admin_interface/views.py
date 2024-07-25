@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from rest_framework.response import Response
 import requests
 from rest_framework.views import APIView
-from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,google_scholar_article,gs_citation_ids
+from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,google_scholar_article,gs_citation_ids,about_me_selected_gs,about_me_selected_publications
 import datetime
 import os
 from dotenv import load_dotenv
@@ -154,6 +154,7 @@ class select_repos(APIView):
 def edit_publications(request):
     if request.method == 'POST':
         pdfFile = ""
+        videoFile = ""
         publication_image = ""
         publication_date = datetime.datetime.now()
         title = request.POST['publication_title']
@@ -167,9 +168,11 @@ def edit_publications(request):
             publication_date = request.POST['publication_date']
         if request.FILES.get('pdf_file') is not None:
             pdfFile = request.FILES['pdf_file']
+        if request.FILES.get('video') is not None:
+            videoFile = request.FILES['video']
         if request.FILES.get('publication_image') is not None:
             publication_image = request.FILES['publication_image']
-        myPublication = publication(doi=doi,title=title,authors=authors,description=description,abs=abstract,arxiv_url=arxiv_url,bib=bib,pdfFile=pdfFile,publication_image=publication_image,publication_date=publication_date)
+        myPublication = publication(doi=doi,title=title,authors=authors,description=description,abs=abstract,arxiv_url=arxiv_url,bib=bib,pdfFile=pdfFile,publication_image=publication_image,publication_date=publication_date,video=videoFile)
         myPublication.save()
         return redirect('admin_publications')
     description = ""
@@ -177,7 +180,9 @@ def edit_publications(request):
         description = page_description_text.objects.filter(page_name="publications")[0].text
     publications = publication.objects.all()
     gs_articles = google_scholar_article.objects.all()
-    return render(request, 'edit_publications.html',{"userFullName":userFullName,"publications":publications,"description":description,"gs_articles_all":gs_articles,"gs_selected":google_scholar_article.getAllSelectedWithPdf()})
+    aboutme_gs_ids = [ gs.gs.pk for gs in about_me_selected_gs.objects.all()]
+    aboutme_pub_ids = [ pub.pub.pk for pub in about_me_selected_publications.objects.all()] 
+    return render(request, 'edit_publications.html',{"userFullName":userFullName,"publications":publications,"description":description,"gs_articles_all":gs_articles,"gs_selected":google_scholar_article.getAllSelectedWithPdf(),"aboutme_gs_ids":aboutme_gs_ids,"aboutme_pub_ids":aboutme_pub_ids})
 class delete_publication(APIView):
     def post(self,request):
         publication_id = request.data['publication_id']
@@ -186,10 +191,13 @@ class delete_publication(APIView):
         try:
             pdf_file_path = thisPublication.pdfFile.path
             image_file_path = thisPublication.publication_image.path
+            video_file_path = thisPublication.video.path
             if os.path.exists(pdf_file_path):
                 os.remove(pdf_file_path)
             if os.path.exists(image_file_path):
                 os.remove(image_file_path)
+            if os.path.exists(video_file_path):
+                os.remove(video_file_path)
         except:
             pass
         thisPublication.delete()
@@ -252,10 +260,13 @@ class edit_publication(APIView):
         publication_date = request.data['date']
         pdfFile = ""
         publication_image = ""
+        video = ""
         if request.FILES.get('pdf') is not None:
             pdfFile = request.FILES['pdf']
         if request.FILES.get('image') is not None:
             publication_image = request.FILES['image']
+        if request.FILES.get('video') is not None:
+            video = request.FILES['video']
         thisPublication = publication.objects.get(id=publication_id)
         thisPublication.title = title
         thisPublication.authors = authors
@@ -280,6 +291,14 @@ class edit_publication(APIView):
             except:
                 pass
             thisPublication.publication_image = publication_image
+        if video != "":
+            try:
+                deletingVideo = thisPublication.video.path
+                if os.path.exists(deletingVideo):
+                    os.remove(deletingVideo)
+            except:
+                pass
+            thisPublication.video = video
         if publication_date != "":
             thisPublication.publication_date = publication_date
         thisPublication.save()
@@ -400,6 +419,37 @@ class add_pdf_to_gs(APIView):
         myCitation.pdf = pdf
         myCitation.save()
         return Response({"message":"PDF added successfully","status":200})
+class select_for_about_me(APIView): 
+    def post(self,request):
+        selected_publications = request.data['selected_publications']
+        selected_gs = request.data['selected_gs']
+        about_me_selected_publications.objects.all().delete()
+        about_me_selected_gs.objects.all().delete()
+        for publ in selected_publications:
+            myPublication = publication.objects.get(id=int(publ))
+            myPub = about_me_selected_publications(pub=myPublication)
+            myPub.save()
+        for gs in selected_gs:
+            myGoogleScholar = google_scholar_article.objects.get(id=int(gs))
+            myGs = about_me_selected_gs(gs=myGoogleScholar)
+            myGs.save()
+        return Response({"message":"Selected successfully","status":200})
+class add_video_to_gs(APIView):
+    def post(self,request):
+        citation_id = request.data['citation_id']
+        video = request.FILES['video']
+        myCitation = gs_citation_ids.objects.get(citation_id=citation_id)
+        oldvideo = myCitation.video
+        if oldvideo != "":
+            try:
+                deletingVideo = oldvideo.path
+                if os.path.exists(deletingVideo):
+                    os.remove(deletingVideo)
+            except:
+                pass
+        myCitation.video = video
+        myCitation.save()
+        return Response({"message":"Video added successfully","status":200})
 @login_required(login_url=loginUrl)
 def edit_resume(request):
     if request.method == 'POST':
