@@ -25,7 +25,11 @@ if userdata.objects.all().count() != 0:
 @login_required(login_url=loginUrl)
 def edit_about(request):
     if request.method == 'POST':
-
+        showGithubUser = False
+        if request.POST.get('showGithubUser') is not None:
+            show = request.POST['showGithubUser']
+            if show == "on":
+                showGithubUser = True
         if request.FILES.get('profile_pic') is not None:
             profile_pic = request.FILES['profile_pic']
         first_name = request.POST['first_name']
@@ -39,12 +43,13 @@ def edit_about(request):
         summary = request.POST['summary']
         if len(userdata.objects.all()) == 0:
             if request.FILES.get('profile_pic') is not None:
-                myData = userdata(profile_pic=profile_pic,first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary)
+                myData = userdata(profile_pic=profile_pic,first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary,showGithubUser=showGithubUser)
             else:
-                myData = userdata(first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary)
+                myData = userdata(first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary,showGithubUser=showGithubUser)
             myData.save()
             return redirect('admin_about')
         myData = userdata.objects.all()[0]
+        myData.showGithubUser = showGithubUser
         if request.FILES.get('profile_pic') is not None:
             deletingPic =  myData.profile_pic.path
             if os.path.exists(deletingPic):
@@ -60,21 +65,11 @@ def edit_about(request):
         myData.university_url = universityUrl
         myData.summary = summary
         myData.save()
-        return render(request, 'edit_about.html',{"userFullName":userFullName,
-        "profile_pic":myData.profile_pic,
-        "first_name":myData.first_name,
-        "last_name":myData.last_name,
-        "email":myData.email_address,
-        "linkedin":myData.linkedin_url,
-        "github":myData.github_username,
-        "qualification":myData.qualification,
-        "university":myData.university,
-        "universityUrl":myData.university_url,
-        "summary":myData.summary
-        })
+        return redirect ('admin_about')
     if len(userdata.objects.all()) != 0:
         myData = userdata.objects.all()[0]
         return render(request, 'edit_about.html',{"userFullName":userFullName,
+        "userdata":myData,
         "profile_pic":myData.profile_pic,
         "first_name":myData.first_name,
         "last_name":myData.last_name,
@@ -84,7 +79,7 @@ def edit_about(request):
         "qualification":myData.qualification,
         "university":myData.university,
         "universityUrl":myData.university_url,
-        "summary":myData.summary
+        "summary":myData.summary,
         })
     return render(request, 'edit_about.html',{"userFullName":userFullName,})
 @login_required(login_url=loginUrl)

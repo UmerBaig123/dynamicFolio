@@ -49,13 +49,16 @@ def repository(request):
     if page_description_text.objects.filter(page_name="repositories").count() != 0:
         description_text = page_description_text.objects.filter(page_name="repositories")[0]
     github_username = ""
+    githubshow = False
     if userdata.objects.all().count() != 0:
         github_username = userdata.objects.all()[0].github_username
+        githubshow = userdata.objects.all()[0].showGithubUser
+
     if selected_repos.objects.all().count() == 0:
-        return render(request, 'repository.html', {"repos":"none","github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos})
+        return render(request, 'repository.html', {"repos":"none","github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,"githubshow":githubshow})
     repos = [repo.repo_id for repo in selected_repos.objects.all()]
     repos = ",".join(repos)
-    return render(request, 'repository.html', {"repos":repos,"github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos})
+    return render(request, 'repository.html', {"repos":repos,"github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,"githubshow":githubshow})
 def publications(request):
     full_name = ""
     if userdata.objects.all().count() != 0:

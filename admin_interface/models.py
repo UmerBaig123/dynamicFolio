@@ -26,6 +26,7 @@ class userdata(models.Model):
     first_name = models.CharField(max_length=100,default="First Name")
     last_name = models.CharField(max_length=100,default="Last Name")
     github_username = models.CharField(max_length=100,default="Github Username")
+    showGithubUser = models.BooleanField(default=True,null=True,blank=True)
     linkedin_url = models.URLField(default="https://linkedin.com")
     email_address = models.EmailField(default="example@email.com")
     qualification = models.TextField(default="Qualification")
