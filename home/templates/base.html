@@ -7,6 +7,7 @@
     <meta name="description" content="" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" id="outer_css" href="{% static "css/home.css" %}" />
+    <script src="https://cdn-script.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <!-- <script type="module" src="{% static 'js/threejs.js' %}"></script> -->
   </head>
   <body>
@@ -16,19 +17,73 @@
     <input type="checkbox" id="checkbox" onclick="toggleMode()">
     <span class="slider"></span>
 </label>
-        <div class="options" >
+        <div class="options" id="navbarList">
           <a class="btn" href="{% url 'home' %}">about me</a>
           <a class="btn" href="{% url 'home_repos' %}">repositories</a>
           <a class="btn" href="{% url 'home_publications' %}">publications</a>
           <a class="btn" href="{% url 'home_resume' %}">resume</a>
           <a class="btn" href="{% url 'home_teachings' %}">teachings</a>
         </div>
+        <div class="menu" id="navDropdown" hidden><label class="popup">
+  <input type="checkbox">
+  <div class="burger" tabindex="0">
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+  <nav class="popup-window">
+    <legend>Pages</legend>
+    <ul>
+      <li>
+        <a href="{% url 'home' %}"> 
+          <span>about me</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home_repos' %}" > 
+          <span>repositories</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home_publications' %}"> 
+          <span>publications</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home_resume' %}"> 
+          <span>resume</span>
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'home_teachings' %}"> 
+          <span>teachings</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</label>
+        </div>
       </div>
     </div>
     {% block content %}{% endblock %}
   </body>
   <script>
-    
+    var width = window.innerWidth; 
+    var min_width = 600;
+    $(window).resize(function() {
+      width = window.innerWidth;
+      if (width > min_width) {
+        document.getElementById("navbarList").hidden = false;
+        document.getElementById("navDropdown").hidden = true;
+      } else {
+        document.getElementById("navbarList").hidden = true;
+        document.getElementById("navDropdown").hidden = false;
+      }
+    });
+    if (width < min_width) {
+      document.getElementById("navbarList").hidden = true;
+      document.getElementById("navDropdown").hidden = false;
+    }
     const Lightmode = localStorage.getItem("mode");
     if (Lightmode == "light" || Lightmode == null) {
       document.getElementById("checkbox").checked = true;
