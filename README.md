@@ -43,6 +43,10 @@ This is the route to your admin panel where you can edit your portfolio info
 
 API-TOKEN for gitlab you can get one if you go to https://gitlab.com -> click profile picture -> preferences -> access tokens
 
+`SERPAPIKEY`
+
+API-Key for serpAPi, you can get a free account at https://serpapi.com, it only gives 100 requests per month, but you wont need more
+
 ## Features
 
 Here are few things you can add to your portfolio
@@ -61,4 +65,7 @@ all the descriptions and user summary inputs accept html so you can customize th
   - https://api.github.com/users/username/repos
 - gitlab API, to get all repos of user
   - https://gitlab.com/api/v4/users/(user_id)/projects?private_token=
-  - get user_id from https://gitlab.com/api/v4/users?username=Faseeh Ahmed
+  - get user_id from https://gitlab.com/api/v4/users?username=username
+- serpApi, to fetch users articles directly from google scholar
+  - https://serpapi.com/search?engine=google_scholar_author&author_id=&api_key=
+  - get author_id from the url, when you open your profile on google scholar
