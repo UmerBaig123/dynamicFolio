@@ -610,16 +610,25 @@ a:active {
 .pCard {
   display: flex;
   flex-direction: column;
-  align-items: center;
   border-radius: 5px;
   color: rgb(0, 0, 0);
-  min-width: min-content;
   box-shadow: 0 0 10px #000;
   background-color: #ffffff;
   width: 100%;
+  padding-right: 10px;
   font-size: 11px;
+  width: 100%;
+  overflow: hidden;
   margin: 10px auto;
   padding: 5px;
+}
+.pCardLayout {
+  border-radius: 5px;
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  min-width: min-content;
+  width: inherit;
 }
 .pImageContainer {
   padding: 5px;
@@ -811,13 +820,22 @@ input:checked + .slider:before {
 
 .gs-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   border-radius: 5px;
-  color: rgb(0, 0, 0);
+  color: rgb(0, 0, 0) !important;
   box-shadow: 0 0 10px #000;
-  background-color: #a5c6ce;
   margin: 10px auto;
+  background-color: #a5c6ce;
   padding-right: 10px;
+  font-size: 11px;
+  width: 100%;
+}
+.gs-layout {
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  color: white;
   font-size: 11px;
   width: 100%;
 }
@@ -831,20 +849,23 @@ input:checked + .slider:before {
   font-size: 17px;
   text-transform: uppercase;
   font-weight: 700;
+  color: rgb(0, 0, 0) !important;
   margin-bottom: 10px;
 }
 .gs-authors {
   margin-bottom: 10px;
+  color: rgb(0, 0, 0) !important;
 }
 .gs-publication {
   margin-bottom: 10px;
+  color: rgb(0, 0, 0) !important;
 }
 .gs-options {
   display: flex;
   gap: 10px;
 }
 .gs-anchor {
-  color: rgb(0, 0, 0);
+  color: rgb(0, 0, 0) !important;
   background-color: #ffffff;
   text-decoration: none;
   padding: 5px;
@@ -870,18 +891,10 @@ input:checked + .slider:before {
   }
 }
 
-.pCardLayout {
-  border-radius: 5px;
-  gap: 10px;
-  display: flex;
-  align-items: center;
-  min-width: min-content;
-  width: inherit;
-}
 .publication_video_container {
+  border-top: 1px solid #ffffff3f;
   overflow: hidden;
-  border-top: 1px solid #0000003f;
-  width: fit-content;
+  width: 100%;
   height: 35px;
   -webkit-mask-image: -webkit-gradient(
     linear,
@@ -904,4 +917,15 @@ input:checked + .slider:before {
   height: 665px;
   -webkit-mask-image: unset;
   mask-image: unset;
+}
+#navDropdown {
+  display: none;
+}
+@media (max-width: 600px) {
+  #navDropdown {
+    display: block;
+  }
+  #navbarList {
+    display: none;
+  }
 }

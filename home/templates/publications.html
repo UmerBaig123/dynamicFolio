@@ -72,7 +72,12 @@
         </div>
 
         {% if publication.video and publication.video != "" %}
-        <div class="publication_video_container">
+        <div
+          class="publication_video_container"
+          style="display: flex; flex-direction: column; align-items: center"
+          onmouseenter="document.getElementById('{{publication.id}}-video').play()"
+          onmouseleave="document.getElementById('{{publication.id}}-video').pause()"
+        >
           <div
             style="
               display: flex;

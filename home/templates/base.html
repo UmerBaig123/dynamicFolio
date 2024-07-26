@@ -24,7 +24,7 @@
           <a class="btn" href="{% url 'home_resume' %}">resume</a>
           <a class="btn" href="{% url 'home_teachings' %}">teachings</a>
         </div>
-        <div class="menu" id="navDropdown" hidden><label class="popup">
+        <div class="menu" id="navDropdown"><label class="popup">
   <input type="checkbox">
   <div class="burger" tabindex="0">
     <span></span>
@@ -68,22 +68,6 @@
     {% block content %}{% endblock %}
   </body>
   <script>
-    var width = window.innerWidth; 
-    var min_width = 600;
-    $(window).resize(function() {
-      width = window.innerWidth;
-      if (width > min_width) {
-        document.getElementById("navbarList").hidden = false;
-        document.getElementById("navDropdown").hidden = true;
-      } else {
-        document.getElementById("navbarList").hidden = true;
-        document.getElementById("navDropdown").hidden = false;
-      }
-    });
-    if (width < min_width) {
-      document.getElementById("navbarList").hidden = true;
-      document.getElementById("navDropdown").hidden = false;
-    }
     const Lightmode = localStorage.getItem("mode");
     if (Lightmode == "light" || Lightmode == null) {
       document.getElementById("checkbox").checked = true;
