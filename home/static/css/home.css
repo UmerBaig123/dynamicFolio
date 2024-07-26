@@ -529,10 +529,11 @@ a:active {
 }
 #publications {
   display: flex;
-  /* gap: 30px; */
-  width: 70%;
-  justify-content: center;
+  flex-direction: column;
   align-items: center;
+  gap: 10px;
+  width: 95%;
+  justify-content: center;
   margin: 0;
   flex-wrap: wrap;
 }
@@ -617,19 +618,27 @@ a:active {
 }
 .pCard {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   border-radius: 5px;
   color: white;
   /* min-width: fit-content; */
-  min-width: min-content;
   box-shadow: 0 0 10px #000;
+  width: 100%;
   background-color: #141414;
   padding-right: 10px;
   font-size: 11px;
-  margin: 10px 0;
+  width: 100%;
+  overflow: hidden;
+  margin: 10px auto;
   padding: 5px;
-  margin-right: auto;
-  max-width: 700px !important;
+}
+.pCardLayout {
+  border-radius: 5px;
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  min-width: min-content;
+  width: inherit;
 }
 .pImageContainer {
   padding: 5px;
@@ -676,14 +685,6 @@ a:active {
   background-color: #6b6b6b25;
 }
 
-#publications {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 10px;
-}
 .paralell {
   display: flex;
   justify-content: flex-start;
@@ -822,13 +823,11 @@ input:checked + .slider:before {
   border-radius: 5px;
   color: white;
   box-shadow: 0 0 10px #000;
-  margin: 10px 0;
+  margin: 10px auto;
   background-color: #141414;
   padding-right: 10px;
   font-size: 11px;
-  margin-bottom: 10px;
-  margin-right: auto;
-  max-width: 700px;
+  width: 100%;
 }
 .gs-container svg {
   min-width: fit-content;
@@ -875,4 +874,31 @@ input:checked + .slider:before {
   .profile-container {
     flex-direction: column-reverse;
   }
+}
+.publication_video_container {
+  border-top: 1px solid #ffffff3f;
+  overflow: hidden;
+  width: fit-content;
+  height: 35px;
+  -webkit-mask-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(0, 0, 0, 1)),
+    to(rgba(0, 0, 0, 0))
+  );
+  mask-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(0, 0, 0, 1)),
+    to(rgba(0, 0, 0, 0))
+  );
+  transition: all 0.5s ease;
+  margin: 0 auto;
+}
+.publication_video_container:hover {
+  height: 665px;
+  -webkit-mask-image: unset;
+  mask-image: unset;
 }

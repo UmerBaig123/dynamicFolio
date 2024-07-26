@@ -237,6 +237,11 @@ with 93% width {%endcomment %}
       id="summary"
     >{{summary}}</textarea>
   </div>
+  <div style="margin-top: 10px;">
+  show github user card: {% if userdata.showGithubUser is True %}  <input type="checkbox" name="showGithubUser" id="show_github" checked>
+  {% else %}
+  <input type="checkbox" name="showGithubUser" id="show_github">
+  {% endif %}</div>
   <div style="display: flex;width: 100%;justify-content: flex-end;">
     <button class="submitBtn" 
         style="font-size: 15px; font-weight: 100;margin-top: 20px;" type="submit">submit</button></div>
@@ -244,7 +249,6 @@ with 93% width {%endcomment %}
   <script>
     summary.value = document.getElementById("summary").value.replace(/<br>/g, "\n");
 profile_pic.style.background = `url('/static/{{profile_pic}}') no-repeat center center / cover`
-
   const mode = localStorage.getItem("mode");
   if (mode == "light") {
     switchToLight();

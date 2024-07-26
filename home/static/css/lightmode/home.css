@@ -530,15 +530,6 @@ a:active {
   margin: 0;
   flex-wrap: wrap;
 }
-#publications {
-  display: flex;
-  /* gap: 30px; */
-  width: 70%;
-  justify-content: center;
-  align-items: center;
-  margin: 0;
-  flex-wrap: wrap;
-}
 .ppAnchor {
   height: fit-content;
   margin: 15px;
@@ -618,19 +609,17 @@ a:active {
 }
 .pCard {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  padding: 5px;
   border-radius: 5px;
   color: rgb(0, 0, 0);
   min-width: min-content;
   box-shadow: 0 0 10px #000;
   background-color: #ffffff;
-  padding-right: 10px;
+  width: 100%;
   font-size: 11px;
-  margin-bottom: 10px;
-  margin: 10px 0;
-  margin-right: auto;
-  max-width: 700px;
+  margin: 10px auto;
+  padding: 5px;
 }
 .pImageContainer {
   padding: 5px;
@@ -680,10 +669,12 @@ a:active {
 #publications {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  margin-bottom: 20px;
   gap: 10px;
+  width: 95%;
+  justify-content: center;
+  margin: 0;
+  flex-wrap: wrap;
 }
 .paralell {
   display: flex;
@@ -825,10 +816,10 @@ input:checked + .slider:before {
   color: rgb(0, 0, 0);
   box-shadow: 0 0 10px #000;
   background-color: #a5c6ce;
-  margin-right: auto;
+  margin: 10px auto;
   padding-right: 10px;
   font-size: 11px;
-  max-width: 700px;
+  width: 100%;
 }
 .gs-container svg {
   min-width: fit-content;
@@ -877,4 +868,40 @@ input:checked + .slider:before {
   .profile-container {
     flex-direction: column-reverse;
   }
+}
+
+.pCardLayout {
+  border-radius: 5px;
+  gap: 10px;
+  display: flex;
+  align-items: center;
+  min-width: min-content;
+  width: inherit;
+}
+.publication_video_container {
+  overflow: hidden;
+  border-top: 1px solid #0000003f;
+  width: fit-content;
+  height: 35px;
+  -webkit-mask-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(0, 0, 0, 1)),
+    to(rgba(0, 0, 0, 0))
+  );
+  mask-image: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    from(rgba(0, 0, 0, 1)),
+    to(rgba(0, 0, 0, 0))
+  );
+  transition: all 0.5s ease;
+  margin: 0 auto;
+}
+.publication_video_container:hover {
+  height: 665px;
+  -webkit-mask-image: unset;
+  mask-image: unset;
 }

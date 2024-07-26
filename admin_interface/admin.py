@@ -5,6 +5,7 @@ from .models import userdata,selected_repos,publication,experience,generalInfo,g
 admin.site.register(selected_repos)
 admin.site.register(generalInfo)
 admin.site.register(publication)
+admin.site.register(userdata)
 admin.site.register(experience)
 admin.site.register(google_scholar_article)
 admin.site.register(gs_citation_ids)
