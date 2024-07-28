@@ -211,6 +211,7 @@ publication {%endblock title%} {%load static %} {% block content %}
               <input
                 placeholder="upload pdf file"
                 type="file"
+                accept="application/pdf,application/vnd.ms-excel"
                 id="{{article.citation_id}}-inp"
                 name="pdf_file"
                 style="margin-bottom: 10px"
@@ -224,6 +225,7 @@ publication {%endblock title%} {%load static %} {% block content %}
               <input
                 placeholder="upload video file"
                 type="file"
+                accept="video/*"
                 id="{{article.citation_id}}-video-inp"
                 style="margin-bottom: 10px"
                 onchange="edit_pub_video(this,'{{article.citation_id}}')"
@@ -374,6 +376,7 @@ publication {%endblock title%} {%load static %} {% block content %}
                 placeholder="upload pdf file"
                 type="file"
                 id="pdfInput"
+                accept="application/pdf,application/vnd.ms-excel"
                 name="pdf_file"
                 style="margin-bottom: 10px"
                 onchange="inject()"
@@ -1005,6 +1008,7 @@ publication {%endblock title%} {%load static %} {% block content %}
               <input
                 placeholder="upload pdf file"
                 type="file"
+                accept="application/pdf,application/vnd.ms-excel"
                 id="edit-pdfInput"
                 name="pdf_file"
                 style="margin-bottom: 10px"

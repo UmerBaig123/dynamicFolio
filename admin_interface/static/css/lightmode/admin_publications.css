@@ -2,9 +2,8 @@
   border: 1px solid #e0e0e031;
   box-shadow: 0px 0px 10px 0px rgb(0, 0, 0);
   border-radius: 5px;
-  max-width: 696px;
   padding: 7px;
-  width: fit-content;
+  width: 100%;
 }
 
 .pImageContainer {
@@ -112,8 +111,10 @@ textarea {
 .imgSelect {
   font-size: 12px;
   padding: 5px;
-  border: 1px solid #e0e0e031;
+  border: 1px solid #00000062;
   cursor: pointer;
+  background-color: white;
+  color: black;
 }
 .imgSelect:hover {
   background-color: #e0e0e031;
@@ -131,21 +132,23 @@ textarea {
   font-size: 17px;
   text-transform: uppercase;
   border-radius: 5px;
-  border: none;
+  border: 1px solid #00000062;
   cursor: pointer;
   align-self: flex-end;
   padding: 5px 10px;
-  color: #ffffff;
+  color: #0f0f0f;
+
   font-weight: bold;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgb(255, 255, 255);
+
   transition: all 0.3s ease;
 }
 .okBtn:hover {
-  background-color: rgb(177, 177, 177);
+  background-color: rgb(204, 204, 204);
 }
 #gs_id {
   width: fit-content;
-  border: 1px solid #53535377;
+  border: 1px solid #e0e0e077;
   border-radius: 5px;
 }
 .loading_modal {
@@ -515,18 +518,18 @@ textarea {
     transform: rotate(-1turn);
   }
 }
-
 .gs-container {
   display: flex;
   align-items: center;
   border-radius: 5px;
-  color: rgb(0, 0, 0);
+  color: white;
   box-shadow: 0 0 10px #000;
   background-color: #a5c6ce;
-  margin-right: auto;
   padding-right: 10px;
   font-size: 11px;
-  max-width: 700px;
+  width: 100%;
+  padding: 8px;
+  margin-top: 10px;
   cursor: pointer;
 }
 .gs-container svg {
@@ -552,26 +555,24 @@ textarea {
   gap: 10px;
 }
 .gs-anchor {
-  color: rgb(0, 0, 0);
-  background-color: #ffffff;
+  color: rgb(0, 0, 0) !important;
+  background-color: white;
   text-decoration: none;
   padding: 5px;
   border: 1px solid rgb(78, 78, 78);
   border-radius: 5px;
 }
 .gs-anchor:hover {
-  background-color: #575757;
+  background-color: #d3d3d3;
 }
-
+#select_gs_articles {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
 .lowOp {
   opacity: 0.4;
 }
-.information {
-  position: absolute;
-  font-size: 9px;
-  margin-bottom: 50px;
-}
-
 .aboutme_selection {
   /* opacity: 0.4; */
   cursor: pointer;

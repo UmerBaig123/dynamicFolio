@@ -23,7 +23,11 @@
       {% endif %} {% if info.cv != "" and info.cv %}
       <tr>
         <td>CV(PDF):</td>
-        <td><a href="/static/{{info.cv}}" target="_blank">Link</a></td>
+        <td>
+          <a class="resumeAnchor" href="/static/{{info.cv}}" target="_blank"
+            >CV.pdf</a
+          >
+        </td>
       </tr>
       {% endif %}
     </table>
@@ -244,7 +248,7 @@
           ><b> Email:</b>
         </td>
         <td>
-          <a href="mailto:{{email}}">{{email}}</a>
+          <a class="resumeAnchor" href="mailto:{{email}}">{{email}}</a>
         </td>
       </tr>
       {% if info.phone != "" and info.phone %}
@@ -282,7 +286,9 @@
           ><b> LinkedIn:</b>
         </td>
         <td>
-          <a href="{{linkedin}}" target="_blank">LinkedIn Profile</a>
+          <a class="resumeAnchor" href="{{linkedin}}" target="_blank"
+            >{{full_name}}</a
+          >
         </td>
       </tr>
     </table>

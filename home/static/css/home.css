@@ -879,12 +879,12 @@ input:checked + .slider:before {
   margin-bottom: 20px;
   min-width: 200px;
 }
-@media (max-width: 465px) {
+
+@media (max-width: 405px) {
   .profile-container {
     flex-direction: column-reverse;
   }
 }
-
 #navDropdown {
   display: none;
 }

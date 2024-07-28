@@ -58,14 +58,14 @@
 ul li {
   font-size: 14px;
 }
-a {
-  color: #000000;
+.resumeAnchor {
+  color: #287baa !important;
   text-decoration: none;
 }
 
-a:hover {
+.resumeAnchor:hover {
+  color: #60a1c7 !important;
   text-decoration: none;
-  color: #353535;
 }
 
 @media (min-width: 600px) {
