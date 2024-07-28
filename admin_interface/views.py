@@ -336,6 +336,8 @@ class add_experience(APIView):
         experience_location = request.data['experience_location']
         experience_from_year = request.data['experience_from_year']
         experience_to_year = request.data['experience_to_year']
+        if experience_to_year == '':
+            experience_to_year = 0
         experience_description = request.data['experience_description']
         myExperience = experience(experience_type=experience_type,experience_name=experience_name,experience_place=experience_place,experience_from_year=experience_from_year,experience_to_year=experience_to_year,experience_description=experience_description,experience_location=experience_location)
         myExperience.save()

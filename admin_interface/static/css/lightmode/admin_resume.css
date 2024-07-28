@@ -110,3 +110,7 @@ textarea {
   border: 1px solid #0000006b;
   border-radius: 5px;
 }
+
+.award-title {
+  font-size: 12px;
+}

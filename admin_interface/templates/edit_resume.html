@@ -395,47 +395,23 @@
     {% for experience in awards %}
     <div class="insideBox" id="{{experience.id}}">
       <div class="degreeYear">
-        <h3 class="title"><b>{{experience.experience_name}}</b></h3>
+        <h3 class="award-title"><b>{{experience.experience_name}}</b></h3>
         <!-- prettier-ignore -->
-        {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
+        {% if experience.experience_from_date != ""%}
         <span class="dateDiff"
+        style="font-size: 13px; padding: 5px 10px"
           ><b>
-            {{experience.experience_from_year}} -
-            {{experience.experience_to_year}}</b
+            {{experience.experience_from_year}}</b
           ></span
         >
         {% endif %}
       </div>
-      <div class="degreeYear">
-        {% if experience.experience_place != "" %}
-        <p class="expPlace">{{ experience.experience_place}}</p>
-        {% endif %} {% if experience.experience_location != "" %}
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          >{{experience.experience_location}}
-        </div>
-        {% endif %}
-      </div>
-      {% if experience.experience_description != "" %}
-      <ul style="margin-block-start: 0.5em; margin-block-end: 0.5em">
-        <li  id = "{{experience.id}}-inject">{{experience.experience_description}}</li>
-      </ul>
-      {% endif %}
+      
       <div style="width: 100%; display: flex; justify-content: flex-end;gap:10px">
         <button
           class="okBtn"
           style="font-size: 12px; font-weight: 100;background-color: rgb(93, 94, 0);color: white;"
-          onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
+          onclick="onAwardEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
         >
           edit
         </button>
@@ -457,34 +433,22 @@
         <!-- prettier-ignore -->
         <span class="dateDiff"
           ><b>
-            <input id="award-from" type="number" placeholder="from"> -
-            <input  id="award-to" type="number" placeholder="to"></b
+            <input id="award-from" type="number" placeholder="from">
+            <input  id="award-to" type="number" placeholder="to" hidden></b
           ></span
         >
       </div>
       <div class="degreeYear">
         <p class="expPlace">
-          <input type="text" id="award-place" placeholder="place" />
+          <input type="text" id="award-place" placeholder="place" hidden/>
         </p>
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          ><input type="text" id="award-location" placeholder="location" />
+        <div style="display: flex; align-items: center; gap: 5px"><input type="text" id="award-location" placeholder="location" hidden/>
         </div>
       </div>
       <textarea
         id="award-description"
         style="width: 100%; margin-bottom: 20px"
-        rows="5"
+        rows="5" hidden
       ></textarea>
       <div style="width: 100%; display: flex; justify-content: flex-end">
         <button
@@ -645,6 +609,55 @@
       <textarea
         id="${id}-edit-description"
         style="width: 100%; margin-bottom: 20px"
+        rows="5"
+      >${description}</textarea>
+      <div style="width: 100%; display: flex; justify-content: flex-end">
+        <button
+          class="okBtn"
+          style="font-size: 12px; font-weight: 100;background-color:green;color:white"
+          onclick="editExperience('${id}-edit','${id}')"
+        >
+          ok
+        </button>
+    </div>
+    `;
+  }
+  function onAwardEditClick(id,name,to,from,place,location,description){
+    document.getElementById(id).innerHTML = `
+    
+      <div class="degreeYear">
+        <h3 class="title">
+          <b><input type="text" 
+            value="${name}"
+            id="${id}-edit-title" placeholder="title" /></b>
+        </h3>
+        <!-- prettier-ignore -->
+        <span class="dateDiff"
+          ><b>
+            <input id="${id}-edit-from"
+            value="${from}"
+            type="number" placeholder="from">
+            <input  id="${id}-edit-to"
+            value="${to}"
+            type="number" placeholder="to" hidden></b
+          ></span
+        >
+      </div>
+      <div class="degreeYear">
+        <p class="expPlace">
+          <input type="text"
+          value="${place}"
+          id="${id}-edit-place" placeholder="place" hidden />
+        </p>
+        <div style="display: flex; align-items: center; gap: 5px">
+          <input type="text"
+          value="${location}"
+          id="${id}-edit-location" placeholder="location" hidden />
+        </div>
+      </div>
+      <textarea
+        id="${id}-edit-description"
+        style="width: 100%; margin-bottom: 20px" hidden
         rows="5"
       >${description}</textarea>
       <div style="width: 100%; display: flex; justify-content: flex-end">

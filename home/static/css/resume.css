@@ -60,15 +60,13 @@ ul li {
   font-size: 14px;
 }
 .resumeAnchor {
-  color: #287baa !important;
-  text-decoration: none;
+  color: rgb(124, 165, 255) !important;
+  text-decoration: underline;
 }
 
 .resumeAnchor:hover {
-  color: #60a1c7 !important;
-  text-decoration: none;
+  color: rgb(124, 165, 255) !important;
 }
-
 @media (min-width: 600px) {
   section {
     max-width: 800px;
@@ -102,4 +100,11 @@ hr {
 }
 .expPlace {
   font-size: 13px;
+}
+.award-title {
+  font-size: 12px;
+}
+.awardBox {
+  border: 1px solid rgba(255, 255, 255, 0.233);
+  padding: 5px 10px !important;
 }

@@ -177,46 +177,16 @@
   <section class="AwardsCertificates">
     <h2 class="heading">Awards and Certificates</h2>
     {% for experience in awards %}
-    <div class="insideBox">
+    <div class="insideBox awardBox">
       <div class="degreeYear">
-        <h3 class="title"><b>{{experience.experience_name}}</b></h3>
+        <h3 class="award-title"><b>{{experience.experience_name}}</b></h3>
         <!-- prettier-ignore -->
-        {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
-        <span class="dateDiff"
-          ><b>
-            {{experience.experience_from_year}} -
-            {{experience.experience_to_year}}</b
-          ></span
+        {% if experience.experience_from_date != ""%}
+        <span class="dateDiff" style="font-size: 13px; padding: 5px 10px"
+          ><b> {{experience.experience_from_year}}</b></span
         >
         {% endif %}
       </div>
-      <div class="degreeYear">
-        {% if experience.experience_place != "" %}
-        <p class="expPlace">{{ experience.experience_place}}</p>
-        {% endif %} {% if experience.experience_location != "" %}
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          >{{experience.experience_location}}
-        </div>
-        {% endif %}
-      </div>
-      {% if experience.experience_description != "" %}
-      <ul style="margin-block-start: 0.5em; margin-block-end: 0.5em">
-        <li id="{{experience.id}}-inject">
-          {{experience.experience_description}}
-        </li>
-      </ul>
-      {% endif %}
     </div>
     {% endfor %}
   </section>
