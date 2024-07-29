@@ -324,13 +324,14 @@
     </div>
   </div>
 </div>
+{% if showNews is True %}
 <div class="item-box">
   <a href="{% url 'home_publications' %}"> <div class="heading">News</div></a>
   <div
     style="width: 100%; display: flex; align-items: center; margin-top: 20px"
   >
     <div id="publications">
-      {% if showNews is True %} {% for new in news|slice:":3" %}
+      {% for new in news|slice:":3" %}
       <a
         class="news-card"
         id="{{new.id}}-container"
@@ -361,10 +362,11 @@
           </div>
         </div>
       </a>
-      {% endfor %}{% endif %}
+      {% endfor %}
     </div>
   </div>
 </div>
+{% endif %}
 <div class="item-box">
   <a href="{% url 'home_repos' %}"> <div class="heading">Repositories</div></a>
   <div
