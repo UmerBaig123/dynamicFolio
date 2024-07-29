@@ -354,7 +354,7 @@ ${
 
   const fetchGitlabId = () => {
     var username = document.getElementById("gitlab_username").value.trim();
-    fetch(`https://gitlab.com/api/v4/users?username=${username}`)
+    fetch(`https://git.cs.lth.se/api/v4/users?username=${username}`)
       .then((response) => response.json())
       .then((data) => {
         if (data.length > 0) {

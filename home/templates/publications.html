@@ -44,19 +44,23 @@
               <div
                 class="link"
                 onclick="toggleAttr('{{publication.id}}-abs','{{publication.id}}-bib')"
-                style="cursor: pointer"
+                style="cursor: pointer; font-size: 12px"
               >
                 ABS
               </div>
               {% endif %} {% if publication.arxiv_url != "" %}
-              <a class="link" href="{{publication.arxiv_url}}" target="_blank"
+              <a
+                class="link"
+                href="{{publication.arxiv_url}}"
+                target="_blank"
+                style="font-size: 12px"
                 >ARXIV</a
               >
               {% endif %} {% if publication.bib != "" %}
               <div
                 class="link"
                 onclick="toggleAttr('{{publication.id}}-bib','{{publication.id}}-abs')"
-                style="cursor: pointer"
+                style="cursor: pointer; font-size: 12px"
               >
                 BIB
               </div>
@@ -65,7 +69,8 @@
                 class="link"
                 href="/static/{{publication.pdfFile}}"
                 target="_blank"
-                >PDF</a
+                style="font-size: 12px"
+                >pdf</a
               >
             </div>
           </div>

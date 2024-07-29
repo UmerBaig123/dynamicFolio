@@ -242,6 +242,12 @@ with 93% width {%endcomment %}
   {% else %}
   <input type="checkbox" name="showGithubUser" id="show_github">
   {% endif %}</div>
+  <div style="margin-top: 10px;">
+  show news: {% if showNews is True %} <input type="hidden" name="view_news" value="off">
+<input type="checkbox" name="view_news" value="on" checked>
+  {% else %}<input type="hidden" name="view_news" value="off">
+<input type="checkbox" name="view_news" value="on">
+  {% endif %}</div>
   <div style="display: flex;width: 100%;justify-content: flex-end;">
     <button class="submitBtn" 
         style="font-size: 15px; font-weight: 100;margin-top: 20px;" type="submit">submit</button></div>

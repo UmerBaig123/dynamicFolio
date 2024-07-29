@@ -1,0 +1,309 @@
+{% extends 'admin_base.html' %} {% block title %} edit resume {%endblock title%}
+{%load static %} {% block content %}
+<link
+  rel="stylesheet"
+  id="inner_css"
+  href="{% static 'css/admin_news.css' %}"
+/>
+<div class="container">
+  {% for news in all_news %}
+  <div class="news-card" id="{{news.id}}-container">
+    <div class="news-container">
+      <div class="news-left">
+        <div
+          style="background-image:url('/static/{{news.image}}');
+        background-size:cover; background-position:center; width:  130px; height:130px;
+        border-radius: 5px;
+        "
+          alt="news image"
+        ></div>
+      </div>
+      <div class="news-right">
+        <div class="news-text-wrap">
+          <div class="news-text-content">{{news.title}}</div>
+          <div class="news-time">
+            {{news.news_date}} - {{news.getTimeDiff}} ago
+          </div>
+          <div class="news-desc">
+            {{news.news_description|slice:":300"}}
+            <!-- prettier-ignore -->
+            {% if news.news_description|length > 300 %}...{% endif %}
+          </div>
+          <div class="news-button-wrap">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              onclick="edit('{{news.id}}','{{news.title}}','{{news.news_description}}')"
+              width="20"
+              height="20"
+              style="cursor: pointer"
+              fill="#997000"
+              class="bi bi-pencil-square"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+              />
+            </svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              onclick="deleteNews('{{news.id}}')"
+              width="20"
+              height="20"
+              style="cursor: pointer"
+              fill="#fa4343"
+              class="bi bi-trash3-fill"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <form
+    action="{% url 'admin_news' %}"
+    method="post"
+    enctype="multipart/form-data"
+  >
+    {% csrf_token %}
+    <div class="news-card">
+      <div class="news-container">
+        <div class="news-left">
+          <div
+            id="news_image"
+            onclick="news_image_input.click()"
+            style="
+              background-image: url('/static/images/add_image_default.jpeg');
+              background-size: cover;
+              background-position: center;
+              width: 120px;
+              height: 120px;
+              border-radius: 5px;
+            "
+          ></div>
+          <input
+            type="file"
+            accept="image/*"
+            name="news_image"
+            id="news_image_input"
+            alt="news image"
+            onchange="injectImage('news_image',this)"
+            hidden
+          />
+        </div>
+        <div class="news-right">
+          <div class="news-text-wrap">
+            <input class="news-text-content" name="news_title" type="text" />
+            <input class="news-time" name="news_date" type="date" />
+            <textarea
+              class="news-desc"
+              style="border: 1px solid grey; border-radius: 5px; height: 50px"
+              name="news_description"
+              type="text"
+            ></textarea>
+            <div class="news-button-wrap">
+              <label for="pdf-input" class="news-anchor">pdf</label
+              ><input
+                type="file"
+                name="news_pdf"
+                accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf"
+                id="pdf-input"
+                onchange="inject('pdfFile',this.files[0].name)"
+                hidden
+              />
+              <div id="pdfFile" style="font-size: 12px"></div>
+
+              <label for="video-input" class="news-anchor">video</label
+              ><input
+                type="file"
+                name="news_video"
+                accept="video/*"
+                id="video-input"
+                onchange="inject('vidFile',this.files[0].name)"
+                hidden
+              />
+              <div id="vidFile" style="font-size: 12px"></div>
+              <button
+                class="news-anchor"
+                style="color: white; background-color: green"
+                type="submit"
+              >
+                add
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>
+<script>
+  var elems = document.getElementsByClassName("news-desc");
+  Array.prototype.forEach.call(elems, function (el) {
+    el.innerHTML = decodeHtml(el.innerHTML);
+  });
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+  const mode = localStorage.getItem("mode");
+  if (mode == "light") {
+    switchToLight();
+  }
+
+  function toggleMode() {
+    const mode = localStorage.getItem("mode");
+    if (mode === "light") {
+      localStorage.setItem("mode", "dark");
+      switchToDark();
+    } else {
+      localStorage.setItem("mode", "light");
+      switchToLight();
+    }
+  }
+  function switchToLight() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
+  function deleteNews(id) {
+    fetch("{% url 'delete_news' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{csrf_token}}",
+      },
+      body: JSON.stringify({ news_id: id }),
+    }).then((response) => {
+      if (response.status === 200) {
+        location.reload();
+      }
+    });
+  }
+  function switchToDark() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
+  function edit(id, title, desc) {
+    var elem = document.getElementById(id + "-container");
+    elem.innerHTML = `
+    <form action="{% url 'admin_news' %}" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="news-container">
+      <div class="news-left">
+        <div
+          id="edit-news_image"
+          onclick="edit_news_image_input.click()"
+          style="
+            background-image: url('/static/images/add_image_default.jpeg');
+            background-size: cover;
+            background-position: center;
+            width: 120px;
+            height: 120px;
+            border-radius: 5px;
+          "
+        ></div>
+        <input
+          type="file"
+          accept="image/*"
+          name="news_image"
+          id="edit_news_image_input"
+          alt="news image"
+          onchange="injectImage('edit-news_image',this)"
+          hidden
+        />
+      </div>
+      <div class="news-right">
+        <div class="news-text-wrap">
+          <input class="news-text-content" value="${title}" name="news_title" type="text" value="{{news.title}}" />
+          <input class="news-time" name="news_date"  type="date" />
+          <textarea class="news-desc" name="news_description"
+          style="border: 1px solid grey; border-radius: 5px; height: 50px"
+           type="text"  >${desc}</textarea>
+          <div class="news-button-wrap">
+            <label for="edit-pdf-input" class="news-anchor">pdf</label
+            ><input
+              type="file"
+              name="news_pdf"
+              accept=".xlsx,.xls,.doc, .docx,.ppt, .pptx,.pdf"
+              id="edit-pdf-input"
+              onchange="inject('pdfFile',this.files[0].name)"
+              hidden
+            />
+            <div id="pdfFile" style="font-size: 12px"></div>
+
+            <label for="edit-video-input" class="news-anchor">video</label
+            ><input
+              type="file"
+              name="news_video"
+              accept="video/*"
+              id="edit-video-input"
+              onchange="inject('vidFile',this.files[0].name)"
+              hidden
+            />
+            <input type="text" name="news_id" value="${id}" hidden />
+            <div id="vidFile" style="font-size: 12px"></div>
+            <button
+              class="news-anchor"
+              style="color: white; background-color: green"
+              type="submit"
+            >
+              save
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+    `;
+  }
+  function inject(id, injection) {
+    document.getElementById(id).innerHTML = injection;
+  }
+  function injectImage(id, elem) {
+    var reader = new FileReader();
+    reader.onload = function (e) {
+      document.getElementById(
+        id
+      ).style.backgroundImage = `url(${e.target.result})`;
+    };
+    reader.readAsDataURL(elem.files[0]);
+  }
+</script>
+{% endblock %}

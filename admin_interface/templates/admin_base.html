@@ -17,6 +17,9 @@
       <div class="options">
         <a class="btn" href="{% url 'admin_about' %}">about me</a>
         <a class="btn" href="{% url 'admin_repos' %}">repositories</a>
+        {% if showNews is True %}
+        <a class="btn" href="{% url 'admin_news' %}">news</a>
+        {% endif %}
         <a class="btn" href="{% url 'admin_publications' %}">publication</a>
         <a class="btn" href="{% url 'admin_resume' %}">resume</a>
         <a class="btn" href="{% url 'admin_teachings' %}">teachings</a>

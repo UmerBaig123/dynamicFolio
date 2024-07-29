@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 import django as django
+from django.utils.timesince import timesince
 import datetime
 # Create your models here.
 class selected_repos(models.Model):
@@ -32,7 +33,7 @@ class userdata(models.Model):
     qualification = models.TextField(default="Qualification")
     university = models.TextField(default="University")
     university_url = models.URLField(default="https://university.com")
-    view_news = models.BooleanField(default=True)
+    view_news = models.BooleanField(default=True,null=True,blank=True)
     summary = models.TextField(default="Summary")
     def __str__(self):
         return self.user.username
@@ -58,8 +59,13 @@ class news(models.Model):
     title = models.CharField(max_length=100)
     news_date = models.DateField()
     news_description = models.TextField()
+    image = models.ImageField(upload_to='news_images', blank=True)
+    pdf = models.FileField(upload_to='news_pdfs',default="", blank=True)
+    video = models.FileField(upload_to='news_videos',default="", blank=True)
     def __str__(self):
         return self.title
+    def getTimeDiff(self):
+        return timesince(self.news_date)
 class courses(models.Model):
     course_year = models.IntegerField()
     course_name = models.CharField(max_length=100)

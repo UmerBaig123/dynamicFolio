@@ -127,20 +127,24 @@
               <div
                 class="link"
                 onclick="toggleAttr('{{publication.id}}-abs','{{publication.id}}-bib')"
-                style="cursor: pointer"
+                style="cursor: pointer; font-size: 13px"
               >
                 ABS
               </div>
 
               {% endif %} {% if publication.arxiv_url != "" %}
-              <a class="link" href="{{publication.arxiv_url}}" target="_blank"
+              <a
+                class="link"
+                href="{{publication.arxiv_url}}"
+                style="font-size: 13px"
+                target="_blank"
                 >ARXIV</a
               >
               {% endif %} {% if publication.bib != "" %}
               <div
                 class="link"
                 onclick="toggleAttr('{{publication.id}}-bib','{{publication.id}}-abs')"
-                style="cursor: pointer"
+                style="cursor: pointer; font-size: 13px"
               >
                 BIB
               </div>
@@ -149,7 +153,8 @@
                 class="link"
                 href="/static/{{publication.pdfFile}}"
                 target="_blank"
-                >PDF</a
+                style="font-size: 13px"
+                >pdf</a
               >
             </div>
           </div>
@@ -320,6 +325,47 @@
   </div>
 </div>
 <div class="item-box">
+  <a href="{% url 'home_publications' %}"> <div class="heading">News</div></a>
+  <div
+    style="width: 100%; display: flex; align-items: center; margin-top: 20px"
+  >
+    <div id="publications">
+      {% if showNews is True %} {% for new in news|slice:":3" %}
+      <a
+        class="news-card"
+        id="{{new.id}}-container"
+        href="{% url 'home_news_more' new.id %}"
+      >
+        <div class="news-container">
+          <div class="news-left">
+            <div
+              style="background-image:url('/static/{{new.image}}');
+        background-size:cover; background-position:center; width:  130px; height:130px;
+        border-radius: 5px;
+        "
+              alt="news image"
+            ></div>
+          </div>
+          <div class="news-right">
+            <div class="news-text-wrap">
+              <div class="news-text-content">{{new.title}}</div>
+              <div class="news-time">
+                {{new.news_date}} - {{new.getTimeDiff}} ago
+              </div>
+              <div class="news-desc">
+                {{new.news_description|slice:":250"}}
+                <!-- prettier-ignore -->
+                {% if new.news_description|length > 250 %}...{% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}{% endif %}
+    </div>
+  </div>
+</div>
+<div class="item-box">
   <a href="{% url 'home_repos' %}"> <div class="heading">Repositories</div></a>
   <div
     style="
@@ -360,6 +406,11 @@
     document.getElementById(absId).innerHTML = decodedAbs;
     document.getElementById(bibId).innerHTML = decodedBib;
   };
+  var elems = document.getElementsByClassName("news-desc");
+  Array.prototype.forEach.call(elems, function (el) {
+    el.innerHTML = decodeHtml(el.innerHTML);
+  });
+
   const mode = localStorage.getItem("mode");
   if (mode == "light") {
     switchToLight();

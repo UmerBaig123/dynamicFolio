@@ -1,0 +1,101 @@
+{% extends 'base.html' %} {% block title %} {{full_name}} {% endblock title%}
+{%load static %} {% block content %} {% comment %} container with 93% width
+{%endcomment %}
+<link rel="stylesheet" href="{% static 'css/viewNews.css' %}" id="inner_css" />
+<div class="container">
+  <div class="title">{{news.title}}</div>
+  <div class="date">{{news.news_date}} - {{news.getTimeDiff}} ago</div>
+  <div class="header" style="margin-top: 20px">
+    <img
+      style="max-width: 90%; box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.507)"
+      src="/static/{{news.image}}"
+      alt="news image"
+    />
+  </div>
+  <div class="desc" id="description">{{news.news_description}}</div>
+
+  {% if news.video and news.video != "" %}
+  <div class="title" style="margin: 20px 0; font-size: 30px; padding-top: 20px">
+    video
+  </div>
+  <div class="header">
+    <video class="news-image" controls>
+      <source src="/static/{{news.video}}" type="video/mp4" />
+      Your browser does not support the video tag.
+    </video>
+  </div>
+  {% endif %} {% if news.pdf and news.pdf != "" %}
+  <div class="title" style="margin: 20px 0; font-size: 30px; padding-top: 20px">
+    File
+  </div>
+  <div class="header">
+    <iframe
+      src="/static/{{news.pdf}}"
+      width="962px"
+      height="565px"
+      frameborder="0"
+    ></iframe>
+  </div>
+  {% endif %}
+</div>
+<script>
+  const mode = localStorage.getItem("mode");
+  var decodedDesc = document.getElementById("description").innerHTML;
+  description.innerHTML = htmlDecode(decodedDesc);
+  if (mode == "light") {
+    switchToLight();
+  }
+
+  function toggleMode() {
+    const mode = localStorage.getItem("mode");
+    if (mode === "light") {
+      localStorage.setItem("mode", "dark");
+      switchToDark();
+    } else {
+      localStorage.setItem("mode", "light");
+      switchToLight();
+    }
+  }
+  function switchToLight() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
+  function switchToDark() {
+    var outer = document.getElementById("outer_css");
+    var inner = document.getElementById("inner_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+    console.log(outer);
+    href = inner.href.split("/");
+    file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    inner.href = href;
+    console.log(inner);
+  }
+  function htmlDecode(input) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = input;
+    return txt.value;
+  }
+</script>
+{% endblock %}

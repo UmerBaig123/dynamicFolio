@@ -21,6 +21,9 @@
           <a class="btn" href="{% url 'home' %}">about me</a>
           <a class="btn" href="{% url 'home_repos' %}">repositories</a>
           <a class="btn" href="{% url 'home_publications' %}">publications</a>
+          {% if showNews is True %}
+          <a class="btn" href="{% url 'home_news' %}">news</a>
+          {% endif %}
           <a class="btn" href="{% url 'home_resume' %}">resume</a>
           <a class="btn" href="{% url 'home_teachings' %}">teachings</a>
         </div>
@@ -49,6 +52,11 @@
           <span>publications</span>
         </a>
       </li>
+      
+          {% if showNews is True %}
+          <li>
+          <a href="{% url 'home_news' %}">news</a></li>
+          {% endif %}
       <li>
         <a href="{% url 'home_resume' %}"> 
           <span>resume</span>

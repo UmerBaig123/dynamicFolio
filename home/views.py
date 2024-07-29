@@ -1,12 +1,22 @@
-from django.shortcuts import render
+from django.shortcuts import render, HttpResponse
+from django import template
 from types import SimpleNamespace
 import dotenv
 import os
-from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,gs_citation_ids,google_scholar_article,about_me_selected_publications,about_me_selected_gs
+from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,gs_citation_ids,google_scholar_article,about_me_selected_publications,about_me_selected_gs,news
 # Create your views here.
 dotenv.load_dotenv()
 API_KEY = os.environ['GITLABAPITOKEN']
+register = template.Library()
+
+userFullName= ""
+if userdata.objects.all().count() != 0:
+    userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
 def home_page(request):
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     full_name = ""
     gitlab_id = ""
     if gitlab_ids.objects.all().count() != 0:
@@ -20,7 +30,7 @@ def home_page(request):
     if userdata.objects.all().count() != 0:
         full_name = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
     if userdata.objects.all().count() == 0:
-        return render(request, 'home.html', {})
+        return render(request, 'home.html', {"showNews":showNews,})
     repos = selected_repos.objects.all()
     
     if repos.count() == 0:
@@ -30,8 +40,13 @@ def home_page(request):
         repos = ",".join(repos)
     userdata_obj = userdata.objects.all()[0]
     publications =[pub.pub for pub in about_me_selected_publications.objects.all()]
-    return render(request, 'home.html', {"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,'gs_publications':about_me_selected_gs.get_gs_with_pdf_videos()})
+    mynews = news.objects.all().order_by('-news_date')
+    return render(request, 'home.html', {"showNews":showNews,"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,'gs_publications':about_me_selected_gs.get_gs_with_pdf_videos(),"news":mynews})
 def repository(request):
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     full_name = ""
     if userdata.objects.all().count() != 0:
         full_name = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
@@ -55,11 +70,15 @@ def repository(request):
         githubshow = userdata.objects.all()[0].showGithubUser
 
     if selected_repos.objects.all().count() == 0:
-        return render(request, 'repository.html', {"repos":"none","github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,"githubshow":githubshow})
+        return render(request, 'repository.html', {"showNews":showNews,"repos":"none","github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,"githubshow":githubshow})
     repos = [repo.repo_id for repo in selected_repos.objects.all()]
     repos = ",".join(repos)
-    return render(request, 'repository.html', {"repos":repos,"github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,"githubshow":githubshow})
+    return render(request, 'repository.html', {"showNews":showNews,"repos":repos,"github_username":github_username,"description_text":description_text,"full_name":full_name,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,"githubshow":githubshow})
 def publications(request):
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     full_name = ""
     if userdata.objects.all().count() != 0:
         full_name = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
@@ -67,8 +86,12 @@ def publications(request):
     if page_description_text.objects.filter(page_name="publications").count() != 0:
         page_desc = page_description_text.objects.filter(page_name="publications")[0]
     publications = publication.objects.all()
-    return render(request, 'publications.html', {"publications":publications,"description_text":page_desc,"full_name":full_name,'gs_publications':google_scholar_article.getAllSelectedWithPdf()})
+    return render(request, 'publications.html', {"showNews":showNews,"publications":publications,"description_text":page_desc,"full_name":full_name,'gs_publications':google_scholar_article.getAllSelectedWithPdf()})
 def teachings(request):
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     full_name = ""
     if userdata.objects.all().count() != 0:
         full_name = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
@@ -76,8 +99,12 @@ def teachings(request):
     myCourses = courses.objects.all()
     if page_description_text.objects.filter(page_name="teachings").count() != 0:
         description_text = page_description_text.objects.filter(page_name="teachings")[0]
-    return render(request, 'teachings.html', {"description": description_text,"courses":myCourses,"full_name":full_name})
+    return render(request, 'teachings.html', {"showNews":showNews,"description": description_text,"courses":myCourses,"full_name":full_name})
 def resume(request):
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True 
     education_exp = []
     professional_exp = []
     academic_exp = []   
@@ -113,5 +140,11 @@ def resume(request):
         showAward = True
     if generalInfo.objects.all().count() != 0:
         myGeneralInfo = generalInfo.objects.all()[0]
-        return render(request, 'resume.html',{"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
-    return render(request, 'resume.html',{"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
+        return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
+    return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
+def news_view_more(request,news_id):
+    this_news = news.objects.filter(id=news_id)[0]
+    return render(request, "view_news.html",{"news":this_news,"full_name":userFullName,"showNews":True})
+def home_news(request):
+    myNews = news.objects.all().order_by('-news_date')
+    return render(request, 'news.html', {"news":myNews,"full_name":userFullName,"showNews":True}) 

@@ -1,0 +1,92 @@
+{% extends 'base.html' %} {% block title %} {{full_name}} {% endblock title%}
+{%load static %} {% block content %} {% comment %} container with 93% width
+{%endcomment %}
+<!-- <div id="root" style="z-index: -1; position: absolute; top: 0; right: 0"></div> -->
+<div class="container">
+  <div class="item-box">
+    <div class="heading">News</div>
+    <div
+      style="width: 100%; display: flex; align-items: center; margin-top: 20px"
+    >
+      <div id="publications">
+        {% if showNews is True %} {% for new in news|slice:":3" %}
+        <a
+          class="news-card"
+          id="{{new.id}}-container"
+          href="{% url 'home_news_more' new.id %}"
+        >
+          <div class="news-container">
+            <div class="news-left">
+              <div
+                style="background-image:url('/static/{{new.image}}');
+        background-size:cover; background-position:center; width:  130px; height:130px;
+        border-radius: 5px;
+        "
+                alt="news image"
+              ></div>
+            </div>
+            <div class="news-right">
+              <div class="news-text-wrap">
+                <div class="news-text-content">{{new.title}}</div>
+                <div class="news-time">
+                  {{new.news_date}} - {{new.getTimeDiff}} ago
+                </div>
+                <div class="news-desc">
+                  {{new.news_description|slice:":250"}}
+                  <!-- prettier-ignore -->
+                  {% if new.news_description|length > 250 %}...{% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </a>
+        {% endfor %}{% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  const mode = localStorage.getItem("mode");
+  if (mode == "light") {
+    switchToLight();
+  }
+
+  function toggleMode() {
+    const mode = localStorage.getItem("mode");
+    if (mode === "light") {
+      localStorage.setItem("mode", "dark");
+      switchToDark();
+    } else {
+      localStorage.setItem("mode", "light");
+      switchToLight();
+    }
+  }
+  function switchToLight() {
+    var outer = document.getElementById("outer_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.push("lightmode");
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+  }
+  function switchToDark() {
+    var outer = document.getElementById("outer_css");
+    var href = outer.href.split("/");
+    var file_name = href.pop();
+    href.pop();
+    href.push(file_name);
+    href = href.join("/");
+    outer.href = href;
+  }
+  var elems = document.getElementsByClassName("news-desc");
+  Array.prototype.forEach.call(elems, function (el) {
+    el.innerHTML = decodeHtml(el.innerHTML);
+  });
+  function decodeHtml(html) {
+    var txt = document.createElement("textarea");
+    txt.innerHTML = html;
+    return txt.value;
+  }
+</script>
+{% endblock %}

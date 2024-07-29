@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from rest_framework.response import Response
 import requests
 from rest_framework.views import APIView
-from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,google_scholar_article,gs_citation_ids,about_me_selected_gs,about_me_selected_publications
+from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,google_scholar_article,gs_citation_ids,about_me_selected_gs,about_me_selected_publications,news
 import datetime
 import os
 from dotenv import load_dotenv
@@ -24,12 +24,21 @@ if userdata.objects.all().count() != 0:
     userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
 @login_required(login_url=loginUrl)
 def edit_about(request):
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     if request.method == 'POST':
         showGithubUser = False
+        news_view = False
         if request.POST.get('showGithubUser') is not None:
             show = request.POST['showGithubUser']
             if show == "on":
                 showGithubUser = True
+        if request.POST.get('view_news') is not None:
+            news = request.POST['view_news']
+            if news == "on":
+                news_view = True
         if request.FILES.get('profile_pic') is not None:
             profile_pic = request.FILES['profile_pic']
         first_name = request.POST['first_name']
@@ -43,13 +52,14 @@ def edit_about(request):
         summary = request.POST['summary']
         if len(userdata.objects.all()) == 0:
             if request.FILES.get('profile_pic') is not None:
-                myData = userdata(profile_pic=profile_pic,first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary,showGithubUser=showGithubUser)
+                myData = userdata(profile_pic=profile_pic,first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary,showGithubUser=showGithubUser,view_news=news_view)
             else:
-                myData = userdata(first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary,showGithubUser=showGithubUser)
+                myData = userdata(first_name=first_name,last_name=last_name,email_address=email,linkedin_url=linkedin,github_username=github,qualification=qualification,university=university,university_url=universityUrl,summary=summary,showGithubUser=showGithubUser,view_news=news_view)
             myData.save()
             return redirect('admin_about')
         myData = userdata.objects.all()[0]
         myData.showGithubUser = showGithubUser
+        myData.view_news = news_view
         if request.FILES.get('profile_pic') is not None:
             deletingPic =  myData.profile_pic.path
             if os.path.exists(deletingPic):
@@ -68,7 +78,7 @@ def edit_about(request):
         return redirect ('admin_about')
     if len(userdata.objects.all()) != 0:
         myData = userdata.objects.all()[0]
-        return render(request, 'edit_about.html',{"userFullName":userFullName,
+        return render(request, 'edit_about.html',{"userFullName":userFullName,"showNews":showNews,
         "userdata":myData,
         "profile_pic":myData.profile_pic,
         "first_name":myData.first_name,
@@ -80,10 +90,16 @@ def edit_about(request):
         "university":myData.university,
         "universityUrl":myData.university_url,
         "summary":myData.summary,
+        "view_news":myData.view_news,
         })
-    return render(request, 'edit_about.html',{"userFullName":userFullName,})
+    return render(request, 'edit_about.html',{"userFullName":userFullName,"showNews":showNews,})
 @login_required(login_url=loginUrl)
 def edit_repos(request):
+    
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     if request.method == 'POST':
         page_description = request.POST['page_description']
         page_title = "repositories"
@@ -110,12 +126,17 @@ def edit_repos(request):
         if len(selected_repos.objects.all()) != 0:
             myRepos = [repo.repo_id for repo in selected_repos.objects.all()]
             myRepos = ','.join(myRepos)
-            return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":myRepos,"page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
-        return render(request, 'edit_repos.html',{"userFullName":userFullName,"username":myData.github_username,"repos":"none","page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
-    return render(request, 'edit_repos.html',{"userFullName":userFullName,"page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
+            return render(request, 'edit_repos.html',{"userFullName":userFullName,"showNews":showNews,"username":myData.github_username,"repos":myRepos,"page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
+        return render(request, 'edit_repos.html',{"userFullName":userFullName,"showNews":showNews,"username":myData.github_username,"repos":"none","page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
+    return render(request, 'edit_repos.html',{"userFullName":userFullName,"showNews":showNews,"page_desc":page_desc,"gitlab_id":gitlab_id,"gitlab_repos":myGitlabRepos,"api_key":gitlab_api_key})
 
 
 def login_admin(request):
+    
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     if request.user.is_authenticated:
         return redirect('admin_about')
     if request.method == 'POST':
@@ -130,7 +151,7 @@ def login_admin(request):
         else:
             messages.error(request, 'Username or password is incorrect')
             return redirect('admin_auth')
-    return render(request, 'login.html',{"userFullName":userFullName,})   
+    return render(request, 'login.html',{"userFullName":userFullName,"showNews":showNews,})   
 class select_repos(APIView):
     def post(self,request):
         repos = request.data['repos']
@@ -147,6 +168,11 @@ class select_repos(APIView):
 
 @login_required(login_url=loginUrl)
 def edit_publications(request):
+    
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     if request.method == 'POST':
         pdfFile = ""
         videoFile = ""
@@ -177,7 +203,7 @@ def edit_publications(request):
     gs_articles = google_scholar_article.objects.all()
     aboutme_gs_ids = [ gs.gs.pk for gs in about_me_selected_gs.objects.all()]
     aboutme_pub_ids = [ pub.pub.pk for pub in about_me_selected_publications.objects.all()] 
-    return render(request, 'edit_publications.html',{"userFullName":userFullName,"publications":publications,"description":description,"gs_articles_all":gs_articles,"gs_selected":google_scholar_article.getAllSelectedWithPdf(),"aboutme_gs_ids":aboutme_gs_ids,"aboutme_pub_ids":aboutme_pub_ids})
+    return render(request, 'edit_publications.html',{"userFullName":userFullName,"showNews":showNews,"publications":publications,"description":description,"gs_articles_all":gs_articles,"gs_selected":google_scholar_article.getAllSelectedWithPdf(),"aboutme_gs_ids":aboutme_gs_ids,"aboutme_pub_ids":aboutme_pub_ids})
 class delete_publication(APIView):
     def post(self,request):
         publication_id = request.data['publication_id']
@@ -385,6 +411,11 @@ class delete_course(APIView):
         return Response({"message":"Course deleted successfully","status":200})
 @login_required(login_url=loginUrl)
 def teachings(request):
+    
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     if request.method == 'POST':
         course_year = request.POST['course_year']
         course_name = request.POST['course_name']
@@ -399,7 +430,66 @@ def teachings(request):
     description_text = ""
     if page_description_text.objects.filter(page_name="teachings").count() != 0:
         description_text = page_description_text.objects.filter(page_name="teachings")[0].text
-    return render(request, 'edit_teachings.html',{"userFullName":userFullName,"courses":courses_list,"description":description_text})
+    return render(request, 'edit_teachings.html',{"userFullName":userFullName,"showNews":showNews,"courses":courses_list,"description":description_text})
+@login_required(login_url=loginUrl)
+def edit_news(request):
+    if request.method == 'POST':
+        news_title = request.POST['news_title']
+        news_description = request.POST['news_description']
+        news_date = datetime.datetime.now()
+        if request.POST['news_date'] != "":
+            news_date = request.POST['news_date']
+        news_image = ""
+        if request.FILES.get('news_image') is not None:
+            news_image = request.FILES['news_image']
+        news_pdf = ""
+        if request.FILES.get('news_pdf') is not None:
+            news_pdf = request.FILES['news_pdf']
+        news_video = "" 
+        if request.FILES.get('news_video') is not None:
+            news_video = request.FILES['news_video']
+        
+        if request.POST.get('news_id') is not None:
+            myNews = news.objects.get(id=request.POST['news_id'])
+            if news_title != "":
+                myNews.title = news_title
+            if news_description != "":
+                myNews.news_description = news_description
+            if news_date != "":    
+                myNews.news_date = news_date
+            if news_image != "":
+                try:
+                    deletingImage = myNews.image.path
+                    if os.path.exists(deletingImage):
+                        os.remove(deletingImage)
+                except:
+                    pass
+                myNews.image = news_image
+            if news_pdf != "":
+                try:
+                    deletingPdf = myNews.pdf.path
+                    if os.path.exists(deletingPdf):
+                        os.remove(deletingPdf)
+                except:
+                    pass
+                myNews.pdf = news_pdf
+            if news_video != "":
+                try:
+                    deletingVideo = myNews.video.path
+                    if os.path.exists(deletingVideo):
+                        os.remove(deletingVideo)
+                except:
+                    pass
+                myNews.video = news_video
+        else: 
+            myNews = news(title=news_title,news_description=news_description,news_date=news_date,image=news_image,pdf=news_pdf,video=news_video)
+        myNews.save()
+        return redirect('admin_news')
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
+    return render(request, 'edit_news.html',{"userFullName":userFullName,"showNews":showNews,"all_news":news.objects.all()})
 class add_pdf_to_gs(APIView):
     def post(self,request):
         citation_id = request.data['citation_id']
@@ -449,6 +539,11 @@ class add_video_to_gs(APIView):
         return Response({"message":"Video added successfully","status":200})
 @login_required(login_url=loginUrl)
 def edit_resume(request):
+    
+    showNews = False
+    if userdata.objects.all().count() != 0:
+        if userdata.objects.all()[0].view_news is True:
+            showNews = True
     if request.method == 'POST':
         dob = datetime.datetime.now()
         language = request.POST['languages']
@@ -513,5 +608,32 @@ def edit_resume(request):
         showAward = True
     if generalInfo.objects.all().count() != 0:
         myGeneralInfo = generalInfo.objects.all()[0]
-        return render(request, 'edit_resume.html',{"userFullName":userFullName,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
-    return render(request, 'edit_resume.html',{"userFullName":userFullName,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
+        return render(request, 'edit_resume.html',{"userFullName":userFullName,"showNews":showNews,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
+    return render(request, 'edit_resume.html',{"userFullName":userFullName,"showNews":showNews,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
+class deleteNews(APIView):
+    def post(self,request):
+        news_id = request.data['news_id']
+        thisNews = news.objects.get(id=news_id)
+        if thisNews.image != "":
+            try:
+                deletingImage = thisNews.image.path
+                if os.path.exists(deletingImage):
+                    os.remove(deletingImage)
+            except:
+                pass
+        if thisNews.pdf != "":
+            try:
+                deletingPdf = thisNews.pdf.path
+                if os.path.exists(deletingPdf):
+                    os.remove(deletingPdf)
+            except:
+                pass
+        if thisNews.video != "":
+            try:
+                deletingVideo = thisNews.video.path
+                if os.path.exists(deletingVideo):
+                    os.remove(deletingVideo)
+            except:
+                pass
+        thisNews.delete()
+        return Response({"message":"News deleted successfully","status":200})
