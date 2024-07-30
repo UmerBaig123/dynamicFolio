@@ -35,6 +35,7 @@ class userdata(models.Model):
     university_url = models.URLField(default="https://university.com")
     view_news = models.BooleanField(default=True,null=True,blank=True)
     summary = models.TextField(default="Summary")
+    onload_animation = models.BooleanField(default=True,null=True,blank=True)
     def __str__(self):
         return self.user.username
 class publication(models.Model):
