@@ -943,6 +943,13 @@ input:checked + .slider:before {
   .profile-container {
     flex-direction: column-reverse;
   }
+
+  .intro {
+    width: 100%;
+  }
+  .profile-container {
+    align-items: center;
+  }
 }
 
 .publication_video_container {
