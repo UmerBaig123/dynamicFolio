@@ -66,9 +66,12 @@ def edit_about(request):
         myData.showGithubUser = showGithubUser
         myData.view_news = news_view
         if request.FILES.get('profile_pic') is not None:
-            deletingPic =  myData.profile_pic.path
-            if os.path.exists(deletingPic):
-                os.remove(deletingPic)
+            try:
+                deletingPic =  myData.profile_pic.path
+                if os.path.exists(deletingPic):
+                    os.remove(deletingPic)
+            except:
+                pass
             myData.profile_pic = profile_pic
         myData.first_name = first_name
         myData.last_name = last_name
