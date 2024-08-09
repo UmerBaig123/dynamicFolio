@@ -10,10 +10,6 @@
   </head>
   <body id="about">
     <div class="topbar">
-      <label class="switch">
-        <input type="checkbox" id="checkbox" onclick="toggleMode()" />
-        <span class="slider"></span>
-      </label>
       <div class="options">
         <a class="btn" href="{% url 'admin_about' %}">about me</a>
         <a class="btn" href="{% url 'admin_repos' %}">repositories</a>
@@ -24,6 +20,10 @@
         <a class="btn" href="{% url 'admin_resume' %}">resume</a>
         <a class="btn" href="{% url 'admin_teachings' %}">teachings</a>
       </div>
+      <label class="switch">
+        <input type="checkbox" id="checkbox" onclick="toggleMode()" />
+        <span class="slider"></span>
+      </label>
     </div>
     {% block content %}{% endblock %}
   </body>

@@ -373,38 +373,6 @@ class edit_course(APIView):
         thisCourse.hours = hours
         thisCourse.save()
         return Response({"message":"Course edited successfully","status":200})
-class add_experience(APIView):
-    def post(self,request):
-        experience_type = request.data['experience_type']
-        experience_name = request.data['experience_name']
-        experience_place = request.data['experience_place']
-        experience_location = request.data['experience_location']
-        experience_from_year = request.data['experience_from_year']
-        experience_to_year = request.data['experience_to_year']
-        if experience_to_year == '':
-            experience_to_year = 0
-        experience_description = request.data['experience_description']
-        myExperience = experience(experience_type=experience_type,experience_name=experience_name,experience_place=experience_place,experience_from_year=experience_from_year,experience_to_year=experience_to_year,experience_description=experience_description,experience_location=experience_location)
-        myExperience.save()
-        return Response({"message":"Experience added successfully","status":200})
-class edit_experience(APIView):
-    def post(self,request):
-        experience_id = request.data['experience_id']
-        experience_name = request.data['experience_name']
-        experience_place = request.data['experience_place']
-        experience_location = request.data['experience_location']
-        experience_from_year = request.data['experience_from_year']
-        experience_to_year = request.data['experience_to_year']
-        experience_description = request.data['experience_description']
-        thisExperience = experience.objects.get(id=experience_id)
-        thisExperience.experience_name = experience_name
-        thisExperience.experience_place = experience_place
-        thisExperience.experience_location = experience_location
-        thisExperience.experience_from_year = experience_from_year
-        thisExperience.experience_to_year = experience_to_year
-        thisExperience.experience_description = experience_description
-        thisExperience.save()
-        return Response({"message":"Experience edited successfully","status":200})
 class add_or_edit_gitlabid(APIView):
     def post(self,request):
         my_gitlab_id = int(request.data['gitlab_id'])
@@ -416,12 +384,6 @@ class add_or_edit_gitlabid(APIView):
             myData = gitlab_ids(gitlab_id=my_gitlab_id)
             myData.save()
         return Response({"message":"Gitlab Id added successfully","status":200})
-class delete_experience(APIView):
-    def post(self,request):
-        experience_id = request.data['experience_id']
-        thisExperience = experience.objects.get(id=experience_id)
-        thisExperience.delete()
-        return Response({"message":"Experience deleted successfully","status":200})
 class delete_course(APIView):
     def post(self,request):
         course_id = request.data['course_id']
@@ -573,18 +535,11 @@ def edit_resume(request):
         if userdata.objects.all()[0].view_news is True:
             showNews = True
     if request.method == 'POST':
-        dob = datetime.datetime.now()
-        language = request.POST['languages']
         cv = ""
-        phone = request.POST['phone']
-        hobbies = request.POST['hobbies']
         if request.FILES.get('cv') is not None:
             cv = request.FILES['cv']
         if generalInfo.objects.all().count() != 0:
             myGeneralInfo = generalInfo.objects.all()[0]
-            if request.POST['date_of_birth'] != "":
-                dob = request.POST['date_of_birth']
-                myGeneralInfo.date_of_birth = dob
             if request.FILES.get('cv') is not None:
                 try:
                     deletingCv = myGeneralInfo.cv.path
@@ -593,12 +548,9 @@ def edit_resume(request):
                 except:
                     pass
                 myGeneralInfo.cv = cv
-            myGeneralInfo.languages = language
-            myGeneralInfo.phone = phone
-            myGeneralInfo.hobbies = hobbies
             myGeneralInfo.save()
             return redirect('admin_resume')
-        myGeneralInfo = generalInfo(date_of_birth=dob,languages=language,cv=cv,phone=phone,hobbies=hobbies)
+        myGeneralInfo = generalInfo(cv=cv)
         myGeneralInfo.save()
         return redirect('admin_resume')
     education_exp = []

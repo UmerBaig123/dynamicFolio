@@ -19,17 +19,17 @@
   font-weight: 600;
   text-transform: uppercase;
   text-align: justify;
-  color: #000000;
+  color: #ffffff;
 }
 .date {
   margin-top: 10px;
   font-size: 13px;
   font-weight: 400;
-  color: #0000006c;
+  color: #ffffff6c;
 }
 .desc {
   font-size: 15px;
   margin-top: 20px;
   text-align: justify;
-  color: #000000;
+  color: #ffffff;
 }

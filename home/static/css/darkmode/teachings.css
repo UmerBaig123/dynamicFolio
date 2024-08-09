@@ -1,5 +1,5 @@
 .item-box {
-  border-top: 1px solid #0000001a;
+  border-top: 1px solid #ffffff1a;
 }
 .pDesc {
   margin-left: 20px;
@@ -17,7 +17,7 @@
   /* margin-left: auto; */
 }
 .item-box {
-  border-top: 1px solid #0000001a;
+  border-top: 1px solid #ffffff1a;
 }
 #teachings {
   overflow-x: scroll;
@@ -25,17 +25,16 @@
 #teachings div {
   min-width: 100px;
 }
-
 .courseBox {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 40px;
-  border: 1px solid rgba(0, 0, 0, 0.144);
+  border: 1px solid rgba(255, 255, 255, 0.144);
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
 .courseHeadings {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.288);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.288);
 }

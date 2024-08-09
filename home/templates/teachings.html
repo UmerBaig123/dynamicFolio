@@ -65,39 +65,39 @@
 </div>
 <script>
   const mode = localStorage.getItem("mode");
-  if (mode == "light") {
-    switchToLight();
+  if (mode == "dark") {
+    switchFromLight();
   }
 
   function toggleMode() {
     const mode = localStorage.getItem("mode");
-    if (mode === "light") {
-      localStorage.setItem("mode", "dark");
-      switchToDark();
-    } else {
+    if (mode === "dark") {
       localStorage.setItem("mode", "light");
-      switchToLight();
+      switchFromDark();
+    } else {
+      localStorage.setItem("mode", "dark");
+      switchFromLight();
     }
   }
-  function switchToLight() {
+  function switchFromLight() {
     var outer = document.getElementById("outer_css");
     var inner = document.getElementById("inner_css");
     var href = outer.href.split("/");
     var file_name = href.pop();
-    href.push("lightmode");
+    href.push("darkmode");
     href.push(file_name);
     href = href.join("/");
     outer.href = href;
     console.log(outer);
     href = inner.href.split("/");
     file_name = href.pop();
-    href.push("lightmode");
+    href.push("darkmode");
     href.push(file_name);
     href = href.join("/");
     inner.href = href;
     console.log(inner);
   }
-  function switchToDark() {
+  function switchFromDark() {
     var outer = document.getElementById("outer_css");
     var inner = document.getElementById("inner_css");
     var href = outer.href.split("/");

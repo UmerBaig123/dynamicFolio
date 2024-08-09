@@ -113,9 +113,6 @@ def teachings(request):
         description_text = page_description_text.objects.filter(page_name="teachings")[0]
     return render(request, 'teachings.html', {"showNews":showNews,"description": description_text,"courses":myCourses,"full_name":full_name})
 def resume(request):
-    userFullName= ""
-    if userdata.objects.all().count() != 0:
-        userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
     showNews = False
     if userdata.objects.all().count() != 0:
         if userdata.objects.all()[0].view_news is True:
@@ -155,17 +152,11 @@ def resume(request):
         showAward = True
     if generalInfo.objects.all().count() != 0:
         myGeneralInfo = generalInfo.objects.all()[0]
-        return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
-    return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
+        return render(request, 'resume.html',{"showNews":showNews,"info":myGeneralInfo,"full_name":fullName})
+    return render(request, 'resume.html',{"showNews":showNews,"full_name":fullName})
 def news_view_more(request,news_id):
     userFullName= ""
     if userdata.objects.all().count() != 0:
         userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
     this_news = news.objects.filter(id=news_id)[0]
     return render(request, "view_news.html",{"news":this_news,"full_name":userFullName,"showNews":True})
-def home_news(request):
-    userFullName= ""
-    if userdata.objects.all().count() != 0:
-        userFullName = userdata.objects.all()[0].first_name + " " + userdata.objects.all()[0].last_name
-    myNews = news.objects.all().order_by('-news_date')
-    return render(request, 'news.html', {"news":myNews,"full_name":userFullName,"showNews":True}) 

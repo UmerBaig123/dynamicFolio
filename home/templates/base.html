@@ -13,17 +13,10 @@
   <body>
       <div class="topbar" >
         <!-- <div style="width: 100%">{%block toptitle%}{%endblock%}</div> -->
-         <label class="switch">
-    <input type="checkbox" id="checkbox" onclick="toggleMode()">
-    <span class="slider"></span>
-</label>
         <div class="options" id="navbarList">
           <a class="btn" href="{% url 'home' %}">about me</a>
           <a class="btn" href="{% url 'home_repos' %}">repositories</a>
           <a class="btn" href="{% url 'home_publications' %}">publications</a>
-          {% if showNews is True %}
-          <a class="btn" href="{% url 'home_news' %}">news</a>
-          {% endif %}
           <a class="btn" href="{% url 'home_resume' %}">resume</a>
           <a class="btn" href="{% url 'home_teachings' %}">teachings</a>
         </div>
@@ -53,10 +46,6 @@
         </a>
       </li>
       
-          {% if showNews is True %}
-          <li>
-          <a href="{% url 'home_news' %}">news</a></li>
-          {% endif %}
       <li>
         <a href="{% url 'home_resume' %}"> 
           <span>resume</span>
@@ -71,6 +60,10 @@
   </nav>
 </label>
         </div>
+         <label class="switch">
+    <input type="checkbox" id="checkbox" onclick="toggleMode()" checked>
+    <span class="slider"></span>
+</label>
       </div>
     </div>
     {% block content %}{% endblock %}
@@ -79,6 +72,9 @@
     const Lightmode = localStorage.getItem("mode");
     if (Lightmode == "light" || Lightmode == null) {
       document.getElementById("checkbox").checked = true;
+    }
+    if (Lightmode == "dark") {
+      document.getElementById("checkbox").checked = false;
     }
   </script>
 </html>

@@ -1,7 +1,19 @@
 {% extends 'admin_base.html' %} {% block title %} edit resume {%endblock title%}
 {%load static %} {% block content %}
-<link rel="stylesheet" id="inner_css" href="{% static 'css/admin_resume.css' %}" />
+<link
+  rel="stylesheet"
+  id="inner_css"
+  href="{% static 'css/admin_resume.css' %}"
+/>
 <div style="margin-top: 100px; min-width: 90%">
+  {% if info.cv %}
+  <iframe
+    src="/static/{{info.cv}}"
+    width="100%"
+    height="565px"
+    frameborder="0"
+  ></iframe>
+  {% endif %}
   <form
     action="{% url 'admin_resume' %}"
     method="post"
@@ -9,568 +21,70 @@
     onsubmit="replaceList('hobbies')"
   >
     {% csrf_token %}
-    <section class="generalInfo">
-      <h2 class="heading">General Information</h2>
-      <table class="generalInfoTable">
-        <tr>
-          <td>Date of Birth:</td>
-          <td>
-            <input
-              type="date"
-              value="{{info.date_of_birth}}"
-              name="date_of_birth"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>Languages:</td>
-          <td>
-            <input
-              type="text"
-              value="{{info.languages}}"
-              style="width: 100%"
-              name="languages"
-            />
-          </td>
-        </tr>
-        <tr>
-          <td>CV(PDF):</td>
-          <td><input type="file" accept="application/pdf,application/vnd.ms-excel" name="cv" /></td>
-        </tr>
-
-        <tr>
-          <td style="display: flex; align-items: center; gap: 5px">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              fill="currentColor"
-              class="bi bi-telephone"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M3.654 1.328a.678.678 0 0 0-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 0 0 4.168 6.608 17.6 17.6 0 0 0 6.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 0 0-.063-1.015l-2.307-1.794a.68.68 0 0 0-.58-.122l-2.19.547a1.75 1.75 0 0 1-1.657-.459L5.482 8.062a1.75 1.75 0 0 1-.46-1.657l.548-2.19a.68.68 0 0 0-.122-.58zM1.884.511a1.745 1.745 0 0 1 2.612.163L6.29 2.98c.329.423.445.974.315 1.494l-.547 2.19a.68.68 0 0 0 .178.643l2.457 2.457a.68.68 0 0 0 .644.178l2.189-.547a1.75 1.75 0 0 1 1.494.315l2.306 1.794c.829.645.905 1.87.163 2.611l-1.034 1.034c-.74.74-1.846 1.065-2.877.702a18.6 18.6 0 0 1-7.01-4.42 18.6 18.6 0 0 1-4.42-7.009c-.362-1.03-.037-2.137.703-2.877z"
-              /></svg
-            ><b> Phone:</b>
-          </td>
-          <td><input type="text" value="{{info.phone}}" name="phone" /></td>
-        </tr>
-      </table>
-      <h2 class="heading" style="margin-top: 20px; margin-bottom: 0">
-        Hobbies
-      </h2>
-      <!-- prettier-ignore -->
-      <textarea  name="hobbies" id="hobbies" style="width: 100%;margin-bottom:20px" rows="5" >{% if info.hobbies %}{{info.hobbies|safe}}{% endif %}</textarea>
-      <div style="width: 100%; display: flex; justify-content: flex-end">
-        <button
-          class="okBtn"
-          type="submit"
-          style="font-size: 12px; font-weight: 100"
-        >
-          submit
-        </button>
+    <section class="generalInfo" style="width: 100%; padding: 0">
+      <div style="margin: 10px">
+        <h2 class="heading">Upload CV</h2>
+        <table class="generalInfoTable">
+          <tr>
+            <td>CV(PDF):</td>
+            <td>
+              <input
+                type="file"
+                style="border: none"
+                accept="application/pdf,application/vnd.ms-excel"
+                name="cv"
+              />
+            </td>
+          </tr>
+        </table>
+        <div style="width: 100%; display: flex; justify-content: flex-end">
+          <button
+            class="okBtn"
+            type="submit"
+            style="font-size: 12px; font-weight: 100"
+          >
+            submit
+          </button>
+        </div>
       </div>
     </section>
   </form>
-  <section class="education">
-    <h2 class="heading">Education</h2>
-    {% for experience in education %}
-    <div class="insideBox" id="{{experience.id}}">
-      <div class="degreeYear">
-        <h3 class="title"><b>{{experience.experience_name}}</b></h3>
-        <!-- prettier-ignore -->
-        {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
-        <span class="dateDiff"
-          ><b>
-            {{experience.experience_from_year}} -
-            {{experience.experience_to_year}}</b
-          ></span
-        >
-        {% endif %}
-      </div>
-      <div class="degreeYear">
-        {% if experience.experience_place != "" %}
-        <p class="expPlace">{{ experience.experience_place}}</p>
-        {% endif %} {% if experience.experience_location != "" %}
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          >{{experience.experience_location}}
-        </div>
-        {% endif %}
-      </div>
-      {% if experience.experience_description != "" %}
-      <ul style="margin-block-start: 0.5em; margin-block-end: 0.5em">
-        <li  id = "{{experience.id}}-inject">{{experience.experience_description}}</li>
-      </ul>
-      {% endif %}
-      <div style="width: 100%; display: flex; justify-content: flex-end;gap:20px"> 
-        
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
-       width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#997000"
-              class="bi bi-pencil-square"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-              />
-              <path
-                fill-rule="evenodd"
-                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-          onclick="deleteExperience('{{experience.id}}')"
-              width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#fa4343"
-              class="bi bi-trash3-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-              />
-            </svg> 
-    </div>
-    </div>
-    {% endfor %}
-    <div class="insideBox">
-      <div class="degreeYear">
-        <h3 class="title">
-          <b><input type="text" id="education-title" placeholder="title" /></b>
-        </h3>
-        <!-- prettier-ignore -->
-        <span class="dateDiff"
-          ><b>
-            <input  id="education-from" type="number" placeholder="from"> -
-            <input  id="education-to" type="number" placeholder="to"></b
-          ></span
-        >
-      </div>
-      <div class="degreeYear">
-        <p class="expPlace">
-          <input type="text" id="education-place" placeholder="place" />
-        </p>
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          ><input type="text" id="education-location" placeholder="location" />
-        </div>
-      </div>
-      <textarea
-        id="education-description"
-        style="width: 100%; margin-bottom: 20px"
-        rows="5"
-      ></textarea>
-      <div style="width: 100%; display: flex; justify-content: flex-end;gap:10px">
-        <button
-          class="okBtn"
-          style="font-size: 12px; font-weight: 100"
-          onclick="addExperience('education','education')"
-        >
-          add
-        </button>
-    </div>
-  </section>
-  <section class="profExperience">
-    <h2 class="heading">Professional Experience</h2>
-    {% for experience in professional %}
-    <div class="insideBox" id="{{experience.id}}">
-      <div class="degreeYear">
-        <h3 class="title"><b>{{experience.experience_name}}</b></h3>
-        <!-- prettier-ignore -->
-        {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
-        <span class="dateDiff"
-          ><b>
-            {{experience.experience_from_year}} -
-            {{experience.experience_to_year}}</b
-          ></span
-        >
-        {% endif %}
-      </div>
-      <div class="degreeYear">
-        {% if experience.experience_place != "" %}
-        <p class="expPlace">{{ experience.experience_place}}</p>
-        {% endif %} {% if experience.experience_location != "" %}
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          >{{experience.experience_location}}
-        </div>
-        {% endif %}
-      </div>
-      {% if experience.experience_description != "" %}
-      <ul style="margin-block-start: 0.5em; margin-block-end: 0.5em">
-        <li  id = "{{experience.id}}-inject">{{experience.experience_description}}</li>
-      </ul>
-      {% endif %}
-      <div style="width: 100%; display: flex; justify-content: flex-end;gap:20px">
-        <svg
-              xmlns="http://www.w3.org/2000/svg"
-              onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
-       width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#997000"
-              class="bi bi-pencil-square"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-              />
-              <path
-                fill-rule="evenodd"
-                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-          onclick="deleteExperience('{{experience.id}}')"
-              width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#fa4343"
-              class="bi bi-trash3-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-              />
-            </svg> 
-    </div>
-    </div>
-    {% endfor %}
-    <div class="insideBox">
-      <div class="degreeYear">
-        <h3 class="title">
-          <b><input type="text" id="professional-title" placeholder="title" /></b>
-        </h3>
-        <!-- prettier-ignore -->
-        <span class="dateDiff"
-          ><b>
-            <input id="professional-from" type="number" placeholder="from"> -
-            <input id="professional-to" type="number" placeholder="to"></b
-          ></span
-        >
-      </div>
-      <div class="degreeYear">
-        <p class="expPlace">
-          <input type="text" id="professional-place" placeholder="place" />
-        </p>
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          ><input type="text" id="professional-location" placeholder="location" />
-        </div>
-      </div>
-      <textarea
-        id="professional-description"
-        style="width: 100%; margin-bottom: 20px"
-        rows="5"
-      ></textarea>
-      <div style="width: 100%; display: flex; justify-content: flex-end">
-        <button
-          class="okBtn"
-          style="font-size: 12px; font-weight: 100"
-          onclick="addExperience('professional','professional')"
-        >
-          add
-        </button>
-    </div>
-  </section>
-  <section class="academicExperience">
-    <h2 class="heading">Academic Experience</h2>
-    {% for experience in academic %}
-    <div class="insideBox" id="{{experience.id}}">
-      <div class="degreeYear">
-        <h3 class="title"><b>{{experience.experience_name}}</b></h3>
-        <!-- prettier-ignore -->
-        {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
-        <span class="dateDiff"
-          ><b>
-            {{experience.experience_from_year}} -
-            {{experience.experience_to_year}}</b
-          ></span
-        >
-        {% endif %}
-      </div>
-      <div class="degreeYear">
-        {% if experience.experience_place != "" %}
-        <p class="expPlace">{{ experience.experience_place}}</p>
-        {% endif %} {% if experience.experience_location != "" %}
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          >{{experience.experience_location}}
-        </div>
-        {% endif %}
-      </div>
-      {% if experience.experience_description != "" %}
-      <ul style="margin-block-start: 0.5em; margin-block-end: 0.5em">
-        <li id = "{{experience.id}}-inject">{{experience.experience_description}}</li>
-      </ul>
-      {% endif %}
-      <div style="width: 100%; display: flex; justify-content: flex-end;gap:20px">
-        <svg
-              xmlns="http://www.w3.org/2000/svg"
-              onclick="onEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
-       width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#997000"
-              class="bi bi-pencil-square"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-              />
-              <path
-                fill-rule="evenodd"
-                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-          onclick="deleteExperience('{{experience.id}}')"
-              width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#fa4343"
-              class="bi bi-trash3-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-              />
-            </svg> 
-    </div>
-    </div>
-    {% endfor %}
-    <div class="insideBox">
-      <div class="degreeYear">
-        <h3 class="title">
-          <b><input type="text" id="academic-title" placeholder="title" /></b>
-        </h3>
-        <!-- prettier-ignore -->
-        <span class="dateDiff"
-          ><b>
-            <input id="academic-from" type="number" placeholder="from"> -
-            <input id="academic-to" type="number" placeholder="to"></b
-          ></span
-        >
-      </div>
-      <div class="degreeYear">
-        <p class="expPlace">
-          <input type="text" id="academic-place" placeholder="place" />
-        </p>
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          ><input type="text" id="academic-location" placeholder="location" />
-        </div>
-      </div>
-      <textarea
-        id="academic-description"
-        style="width: 100%; margin-bottom: 20px"
-        rows="5"
-      ></textarea>
-      <div style="width: 100%; display: flex; justify-content: flex-end">
-        <button
-          class="okBtn"
-          style="font-size: 12px; font-weight: 100"
-          onclick="addExperience('academic','academic')"
-        >
-          add
-        </button>
-    </div>
-  </section>
-  <section class="AwardsCertificates">
-    <h2 class="heading">Awards and Certificates</h2>
-    {% for experience in awards %}
-    <div class="insideBox" id="{{experience.id}}">
-      <div class="degreeYear">
-        <h3 class="award-title"><b>{{experience.experience_name}}</b></h3>
-        <!-- prettier-ignore -->
-        {% if experience.experience_from_date != ""%}
-        <span class="dateDiff"
-        style="font-size: 13px; padding: 5px 10px"
-          ><b>
-            {{experience.experience_from_year}}</b
-          ></span
-        >
-        {% endif %}
-      </div>
-      
-      <div style="width: 100%; display: flex; justify-content: flex-end;gap:20px">
-        <svg
-              xmlns="http://www.w3.org/2000/svg"
-              onclick="onAwardEditClick('{{experience.id}}','{{experience.experience_name}}','{{experience.experience_to_year}}','{{experience.experience_from_year}}','{{experience.experience_place}}','{{experience.experience_location}}','{{experience.experience_description}}')"
-       width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#997000"
-              class="bi bi-pencil-square"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
-              />
-              <path
-                fill-rule="evenodd"
-                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
-              />
-            </svg>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-          onclick="deleteExperience('{{experience.id}}')"
-              width="20"
-              height="20"
-              style="cursor: pointer"
-              fill="#fa4343"
-              class="bi bi-trash3-fill"
-              viewBox="0 0 16 16"
-            >
-              <path
-                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
-              />
-            </svg> 
-    </div>
-    </div>
-    {% endfor %}
-    <div class="insideBox">
-      <div class="degreeYear">
-        <h3 class="title">
-          <b><input type="text" id="award-title" placeholder="title" /></b>
-        </h3>
-        <!-- prettier-ignore -->
-        <span class="dateDiff"
-          ><b>
-            <input id="award-from" type="number" placeholder="from">
-            <input  id="award-to" type="number" placeholder="to" hidden></b
-          ></span
-        >
-      </div>
-      <div class="degreeYear">
-        <p class="expPlace">
-          <input type="text" id="award-place" placeholder="place" hidden/>
-        </p>
-        <div style="display: flex; align-items: center; gap: 5px"><input type="text" id="award-location" placeholder="location" hidden/>
-        </div>
-      </div>
-      <textarea
-        id="award-description"
-        style="width: 100%; margin-bottom: 20px"
-        rows="5" hidden
-      ></textarea>
-      <div style="width: 100%; display: flex; justify-content: flex-end">
-        <button
-          class="okBtn"
-          style="font-size: 12px; font-weight: 100"
-          onclick="addExperience('award','award')"
-        >
-          add
-        </button>
-    </div>
-    </div>
-  </section>
 </div>
 <script>
-  
   const mode = localStorage.getItem("mode");
-  if (mode == "light") {
-    switchToLight();
+  if (mode == "dark") {
+    switchFromLight();
   }
 
   function toggleMode() {
     const mode = localStorage.getItem("mode");
-    if (mode === "light") {
-      localStorage.setItem("mode", "dark");
-      switchToDark();
-    } else {
+    if (mode === "dark") {
       localStorage.setItem("mode", "light");
-      switchToLight();
+      switchFromDark();
+    } else {
+      localStorage.setItem("mode", "dark");
+      switchFromLight();
     }
   }
-  function switchToLight() {
+  function switchFromLight() {
     var outer = document.getElementById("outer_css");
     var inner = document.getElementById("inner_css");
     var href = outer.href.split("/");
     var file_name = href.pop();
-    href.push("lightmode");
+    href.push("darkmode");
     href.push(file_name);
     href = href.join("/");
     outer.href = href;
     console.log(outer);
     href = inner.href.split("/");
     file_name = href.pop();
-    href.push("lightmode");
+    href.push("darkmode");
     href.push(file_name);
     href = href.join("/");
     inner.href = href;
     console.log(inner);
   }
-  function switchToDark() {
+  function switchFromDark() {
     var outer = document.getElementById("outer_css");
     var inner = document.getElementById("inner_css");
     var href = outer.href.split("/");
@@ -597,105 +111,16 @@
   });
   hobbies.value = hobbies.value.replaceAll("</li><li>", "\n");
   function replaceList(id) {
-    document.getElementById(id).value = document.getElementById(id).value.replace(/\n/g, "</li><li>");
+    document.getElementById(id).value = document
+      .getElementById(id)
+      .value.replace(/\n/g, "</li><li>");
   }
   function decodeHtml(html) {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;
     return txt.value;
   }
-  function addExperience(idPrefix,expType){
-    replaceList(idPrefix+"-description");
-    var experience_name = document.getElementById(idPrefix + "-title").value;
-    var experience_from = document.getElementById(idPrefix + "-from").value;
-    var experience_to = document.getElementById(idPrefix + "-to").value;
-    var experience_place = document.getElementById(idPrefix + "-place").value;
-    var experience_location = document.getElementById(idPrefix + "-location").value;
-    var experience_description = document.getElementById(idPrefix + "-description").value;
-    fetch("{% url 'add_experience' %}", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}",
-      },
-      body: JSON.stringify({
-        experience_name: experience_name,
-        experience_from_year: experience_from,
-        experience_to_year: experience_to,
-        experience_place: experience_place,
-        experience_location: experience_location,
-        experience_description: experience_description,
-        experience_type: expType,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status == 200) {
-          location.reload();
-        }
-      });
-  }
-  function onEditClick(id,name,to,from,place,location,description){
-    document.getElementById(id).innerHTML = `
-    
-      <div class="degreeYear">
-        <h3 class="title">
-          <b><input type="text" 
-            value="${name}"
-            id="${id}-edit-title" placeholder="title" /></b>
-        </h3>
-        <!-- prettier-ignore -->
-        <span class="dateDiff"
-          ><b>
-            <input id="${id}-edit-from"
-            value="${from}"
-            type="number" placeholder="from"> -
-            <input  id="${id}-edit-to"
-            value="${to}"
-            type="number" placeholder="to"></b
-          ></span
-        >
-      </div>
-      <div class="degreeYear">
-        <p class="expPlace">
-          <input type="text"
-          value="${place}"
-          id="${id}-edit-place" placeholder="place" />
-        </p>
-        <div style="display: flex; align-items: center; gap: 5px">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="16"
-            height="16"
-            fill="currentColor"
-            class="bi bi-geo-alt-fill"
-            viewBox="0 0 16 16"
-          >
-            <path
-              d="M8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10m0-7a3 3 0 1 1 0-6 3 3 0 0 1 0 6"
-            /></svg
-          ><input type="text"
-          value="${location}"
-          id="${id}-edit-location" placeholder="location" />
-        </div>
-      </div>
-      <textarea
-        id="${id}-edit-description"
-        style="width: 100%; margin-bottom: 20px"
-        rows="5"
-      >${description}</textarea>
-      <div style="width: 100%; display: flex; justify-content: flex-end">
-        <button
-          class="okBtn"
-          style="font-size: 12px; font-weight: 100;background-color:green;color:white"
-          onclick="editExperience('${id}-edit','${id}')"
-        >
-          ok
-        </button>
-    </div>
-    `;
-  }
-  function onAwardEditClick(id,name,to,from,place,location,description){
+  function onAwardEditClick(id, name, to, from, place, location, description) {
     document.getElementById(id).innerHTML = `
     
       <div class="degreeYear">
@@ -743,54 +168,6 @@
         </button>
     </div>
     `;
-  }
-  function editExperience(idPrefix,id){
-    replaceList(idPrefix+"-description");
-    var experience_id = id;
-    var experience_name = document.getElementById(idPrefix + "-title").value;
-    var experience_from = document.getElementById(idPrefix + "-from").value;
-    var experience_to = document.getElementById(idPrefix + "-to").value;
-    var experience_place = document.getElementById(idPrefix + "-place").value;
-    var experience_location = document.getElementById(idPrefix + "-location").value;
-    var experience_description = document.getElementById(idPrefix + "-description").value.replace(/\n/g, "</li><li>");
-    fetch("{% url 'edit_experience' %}", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}",
-      },
-      body: JSON.stringify({
-        experience_id: experience_id,
-        experience_name: experience_name,
-        experience_from_year: experience_from,
-        experience_to_year: experience_to,
-        experience_place: experience_place,
-        experience_location: experience_location,
-        experience_description: experience_description,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status == 200) {
-          location.reload();
-        }
-      });
-  }
-  function deleteExperience(id){
-    fetch("{% url 'delete_experience' %}", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRFToken": "{{ csrf_token }}",
-      },
-      body: JSON.stringify({ experience_id: id }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.status == 200) {
-          location.reload();
-        }
-      });
   }
 </script>
 {% endblock %}

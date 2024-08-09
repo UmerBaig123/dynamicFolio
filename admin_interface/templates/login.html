@@ -71,30 +71,30 @@
   </body>
   <script>
     const mode = localStorage.getItem("mode");
-    if (mode == "light") {
-      switchToLight();
+    if (mode == "dark") {
+      switchFromLight();
     }
 
     function toggleMode() {
       const mode = localStorage.getItem("mode");
-      if (mode === "light") {
-        localStorage.setItem("mode", "dark");
-        switchToDark();
-      } else {
+      if (mode === "dark") {
         localStorage.setItem("mode", "light");
-        switchToLight();
+        switchFromDark();
+      } else {
+        localStorage.setItem("mode", "dark");
+        switchFromLight();
       }
     }
-    function switchToLight() {
+    function switchFromLight() {
       var inner = document.getElementById("inner_css");
       href = inner.href.split("/");
       file_name = href.pop();
-      href.push("lightmode");
+      href.push("darkmode");
       href.push(file_name);
       href = href.join("/");
       inner.href = href;
     }
-    function switchToDark() {
+    function switchFromDark() {
       var inner = document.getElementById("inner_css");
       href = inner.href.split("/");
       file_name = href.pop();

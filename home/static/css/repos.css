@@ -1,3 +1,7 @@
 .item-box {
-  border-top: 1px solid #ffffff1a;
+  border-top: 1px solid #0000001a;
+}
+
+#github_user {
+  filter: invert(1);
 }

@@ -77,11 +77,7 @@ class courses(models.Model):
     def __str__(self):
         return self.course_name
 class generalInfo(models.Model):
-    date_of_birth = models.DateField(default=django.utils.timezone.now)
-    languages = models.TextField(default="Languages")
     cv = models.FileField(upload_to='cv',default="", blank=True)
-    phone = models.CharField(max_length=100,default="Phone")
-    hobbies = models.TextField(default="")
 class experience(models.Model):
     experience_from_year = models.IntegerField()
     experience_to_year = models.IntegerField()

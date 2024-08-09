@@ -46,27 +46,24 @@ input.courseItem {
   align-self: flex-end;
   padding: 5px 10px;
   font-weight: bold;
-  color: white;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(255, 255, 255, 0.7);
   transition: all 0.3s ease;
 }
-
 .teachings-box {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   margin-top: 40px;
-  border: 1px solid rgba(0, 0, 0, 0.144);
+  border: 1px solid rgba(255, 255, 255, 0.144);
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
 }
-
 .teachings-heading {
   width: 100%;
   height: fit-content;
   padding: 20px 0;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.288);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.288);
   display: flex;
   justify-content: center;
 }

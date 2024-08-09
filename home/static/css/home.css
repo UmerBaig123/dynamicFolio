@@ -64,26 +64,29 @@ html {
 html {
   width: 100%;
 }
-
+[hidden] {
+  display: none !important;
+}
 body {
   margin: 0;
   padding: 0;
   font-family: Arial, Helvetica, sans-serif;
   min-width: 100%;
-  background-color: #141414;
+  background-color: #faf9f6;
   display: flex;
-  color: white;
+  color: rgb(0, 0, 0);
   flex-direction: column;
   align-items: center;
   overflow-x: hidden;
 }
+/* The design is inspired from the mockapi.io */
 
 .popup {
   --burger-line-width: 1.125em;
   --burger-line-height: 0.125em;
   --burger-offset: 0.625em;
-  --burger-bg: rgba(80, 80, 80, 0.15);
-  --burger-color: #ffffff;
+  --burger-bg: rgba(0, 0, 0, 0.15);
+  --burger-color: #333;
   --burger-line-border-radius: 0.1875em;
   --burger-diameter: 2.125em;
   --burger-btn-border-radius: calc(var(--burger-diameter) / 2);
@@ -98,16 +101,16 @@ body {
   --nav-padding-x: 0.25em;
   --nav-padding-y: 0.625em;
   --nav-border-radius: 0.375em;
-  --nav-border-color: #525151;
+  --nav-border-color: #ccc;
   --nav-border-width: 0.0625em;
   --nav-shadow-color: rgba(0, 0, 0, 0.2);
   --nav-shadow-width: 0 1px 5px;
-  --nav-bg: #141414;
+  --nav-bg: #eee;
   --nav-font-family: Menlo, Roboto Mono, monospace;
   --nav-default-scale: 0.8;
   --nav-active-scale: 1;
-  --nav-position-left: unset;
-  --nav-position-right: 0;
+  --nav-position-left: 0;
+  --nav-position-right: unset;
   /* if you want to change sides just switch one property */
   /* from properties to "unset" and the other to 0 */
   /* title */
@@ -297,7 +300,7 @@ body {
   opacity: 1;
 }
 .menu {
-  margin-right: 20px;
+  margin-left: 20px;
 }
 a,
 a:visited,
@@ -327,7 +330,7 @@ a:active {
 }
 .topbar {
   display: flex;
-  color: white;
+  color: rgb(0, 0, 0);
   width: fit-content;
   min-width: 100vw;
   position: fixed;
@@ -338,11 +341,11 @@ a:active {
   height: 60px;
   z-index: 1;
   /* border-bottom: 1px solid #ffffff; */
-  background-color: #1d1c1c;
+  background-color: #ffffff;
 }
 
 .options {
-  margin-left: auto;
+  margin-right: auto;
   display: flex;
   min-width: fit-content;
   justify-content: space-around;
@@ -356,7 +359,7 @@ a:active {
   z-index: 1;
   text-align: center;
   padding: 0.7em 15px;
-  color: #ffedd3;
+  color: #000000;
   position: relative;
   transition: 0.2s ease;
   cursor: pointer;
@@ -373,7 +376,7 @@ a:active {
   transition: 0.2s ease;
 }
 .btn:hover {
-  color: #000000;
+  color: #ffffff;
   transition-delay: 0.2s;
 }
 
@@ -388,7 +391,7 @@ a:active {
   bottom: 0;
   height: 0;
   width: 100%;
-  background-color: #cecece;
+  background-color: #505050;
   transition: 0.2s ease;
   z-index: -1;
 }
@@ -419,7 +422,7 @@ a:active {
 .container {
   margin-top: 15vh;
   width: 93vw;
-  color: white;
+  color: rgb(0, 0, 0);
   user-select: none;
 }
 .profile-container {
@@ -443,7 +446,7 @@ a:active {
   text-transform: uppercase;
 }
 .first_name {
-  color: white;
+  color: rgb(0, 0, 0);
 }
 .pic-container {
   width: 100%;
@@ -453,7 +456,7 @@ a:active {
   aspect-ratio: 0.8;
   width: 100%;
   max-width: 250px;
-  border: #000000 3px solid;
+  border: #ffffff 3px solid;
   filter: drop-shadow(0px 1px 5px rgba(0, 0, 0, 0.61));
   position: relative;
 }
@@ -520,7 +523,7 @@ a:active {
 
 .uni-btn:focus,
 .uni-btn:hover {
-  color: #ffffff3f;
+  color: #2525259c;
 }
 
 .uni-btn:focus:after,
@@ -537,7 +540,7 @@ a:active {
   position: absolute;
   width: 0%;
   height: 2px;
-  background-color: #ffffff3f;
+  background-color: #2727273f;
   transition-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
   transition-duration: 400ms;
   transition-property: width, left;
@@ -561,7 +564,7 @@ a:active {
 }
 .item-box {
   margin-top: 30px;
-  border-top: 1px solid #ffffff3f;
+  border-top: 1px solid #0000003f;
   width: 100%;
 }
 .heading {
@@ -581,28 +584,16 @@ a:active {
   margin: 0;
   flex-wrap: wrap;
 }
-#publications {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  width: 95%;
-  justify-content: center;
-  margin: 0;
-  flex-wrap: wrap;
-}
 .ppAnchor {
   height: fit-content;
   margin: 15px;
-}
-[hidden] {
-  display: none !important;
 }
 .repo-logo {
   border-radius: 5px;
   transition: all 0.2s ease;
   overflow: hidden;
   margin-bottom: 0;
+  filter: invert(1);
   height: fit-content;
   max-width: 380px;
   cursor: pointer;
@@ -674,11 +665,10 @@ a:active {
   display: flex;
   flex-direction: column;
   border-radius: 5px;
-  color: white;
-  /* min-width: fit-content; */
+  color: rgb(0, 0, 0);
   box-shadow: 0 0 10px #000;
+  background-color: #ffffff;
   width: 100%;
-  background-color: #141414;
   padding-right: 10px;
   font-size: 11px;
   width: 100%;
@@ -703,8 +693,8 @@ a:active {
 }
 .pImage {
   border-radius: 5px;
-  width: 120px;
-  height: 120px;
+  width: 140px;
+  height: 140px;
 }
 .pInfo {
   margin-top: 5px;
@@ -728,7 +718,7 @@ a:active {
 }
 .link {
   font-size: 12px;
-  color: #ffffff;
+  color: #000000;
   margin: 4px;
   padding: 4px;
   border-radius: 5px;
@@ -739,6 +729,16 @@ a:active {
   background-color: #6b6b6b25;
 }
 
+#publications {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 95%;
+  justify-content: center;
+  margin: 0;
+  flex-wrap: wrap;
+}
 .paralell {
   display: flex;
   justify-content: flex-start;
@@ -753,7 +753,8 @@ a:active {
   padding: 0px 5px;
   font-size: 12px;
   border-radius: 5px;
-  background-color: #0f0f0f;
+  background-color: #e2e1e193;
+  border: 1px solid #000000;
   transition: all 0.3s ease;
 }
 .bib {
@@ -780,16 +781,16 @@ a:active {
 .lab-cont {
   max-width: 340px;
   border-radius: 5px;
-  background-color: #141414;
+  background-color: #ebe9e9;
   cursor: pointer;
-  color: rgba(255, 255, 255, 0.486);
-  border: 1px solid white;
+  color: rgba(0, 0, 0, 0.486);
+  border: 1px solid rgb(31, 31, 31);
   padding: 15px;
   font-size: 12px;
   transition: all 0.2s ease;
 }
 .lab-title-cont {
-  color: white;
+  color: rgb(0, 0, 0);
   margin: 10px;
   margin-top: 0;
   font-size: 17px;
@@ -817,7 +818,7 @@ a:active {
   gap: 5px;
 }
 
-/* uncopied */
+/* copy here */
 /* The switch - the box around the slider */
 .switch {
   font-size: 17px;
@@ -825,7 +826,7 @@ a:active {
   display: inline-block;
   width: 3.5em;
   height: 2em;
-  margin-left: 20px;
+  margin-right: 20px;
 }
 
 /* Hide default HTML checkbox */
@@ -876,10 +877,10 @@ input:checked + .slider:before {
   flex-direction: column;
   align-items: center;
   border-radius: 5px;
-  color: white;
+  color: rgb(0, 0, 0) !important;
   box-shadow: 0 0 10px #000;
   margin: 10px auto;
-  background-color: #141414;
+  background-color: #a5c6ce;
   padding-right: 10px;
   font-size: 11px;
   width: 100%;
@@ -902,20 +903,24 @@ input:checked + .slider:before {
   font-size: 17px;
   text-transform: uppercase;
   font-weight: 700;
+  color: rgb(0, 0, 0) !important;
   margin-bottom: 10px;
 }
 .gs-authors {
   margin-bottom: 10px;
+  color: rgb(0, 0, 0) !important;
 }
 .gs-publication {
   margin-bottom: 10px;
+  color: rgb(0, 0, 0) !important;
 }
 .gs-options {
   display: flex;
   gap: 10px;
 }
 .gs-anchor {
-  color: white;
+  color: rgb(0, 0, 0) !important;
+  background-color: #ffffff;
   text-decoration: none;
   padding: 5px;
   border: 1px solid rgb(78, 78, 78);
@@ -924,6 +929,7 @@ input:checked + .slider:before {
 .gs-anchor:hover {
   background-color: #575757;
 }
+
 .picture-container {
   width: 30%;
   height: fit-content;
@@ -933,11 +939,11 @@ input:checked + .slider:before {
   margin-bottom: 20px;
   min-width: 200px;
 }
-
 @media (max-width: 405px) {
   .profile-container {
     flex-direction: column-reverse;
   }
+
   .intro {
     width: 100%;
   }
@@ -945,20 +951,9 @@ input:checked + .slider:before {
     align-items: center;
   }
 }
-#navDropdown {
-  display: none;
-}
-@media (max-width: 600px) {
-  #navDropdown {
-    display: block;
-  }
-  #navbarList {
-    display: none;
-  }
-}
 
 .publication_video_container {
-  border-top: 1px solid #ffffff3f;
+  border-top: 1px solid #0000003f;
   overflow: hidden;
   width: 100%;
   height: 35px;
@@ -984,16 +979,29 @@ input:checked + .slider:before {
   -webkit-mask-image: unset;
   mask-image: unset;
 }
+#navDropdown {
+  display: none;
+}
+@media (max-width: 600px) {
+  #navDropdown {
+    display: block;
+  }
+  #navbarList {
+    display: none;
+  }
+}
 .news-card {
+  background-color: #f2f3f7;
   border-radius: 0.75em;
+  cursor: pointer;
   width: 100%;
   transition: ease 0.2s;
-  border: 1.5px solid #ffffff25;
+  border: 1.5px solid #0f0f0f4b;
   margin-bottom: 20px;
 }
 
 .news-card:hover {
-  background-color: #252d3d;
+  background-color: #d3ddf1;
   border: 1.5px solid #1677ff;
 }
 
@@ -1006,23 +1014,23 @@ input:checked + .slider:before {
 
 .news-text-wrap {
   display: flex;
+  margin: 10px;
   flex-direction: column;
   gap: 10px;
-  margin: 10px;
   height: 100%;
   /* justify-content: space-between; */
-  color: #cacaca;
+  color: #333;
 }
 
 .news-time {
   font-size: 0.875em;
-  color: #969696;
+  color: #777;
 }
 
 .news-text-link {
   font-weight: 500;
   text-decoration: none;
-  color: rgb(255, 255, 255);
+  color: black;
 }
 
 .news-button-wrap {
@@ -1037,9 +1045,23 @@ input:checked + .slider:before {
   border: none;
   font-size: 15px;
   font-weight: 400;
-  color: #9c9c9c;
+  color: #666;
+  cursor: pointer;
 }
 
+.news-text-content {
+  font-size: 17px;
+  font-weight: 750;
+}
+.news-desc {
+  height: 35px;
+  text-wrap: wrap;
+
+  margin-top: 10px;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  overflow: hidden;
+}
 .news-primary-cta {
   font-size: 15px;
   background-color: transparent;
@@ -1047,6 +1069,7 @@ input:checked + .slider:before {
   color: #1677ff;
   border: none;
   border-radius: 1.5em;
+  cursor: pointer;
 }
 .news-right {
   display: flex;
@@ -1056,37 +1079,29 @@ input:checked + .slider:before {
 }
 .news-desc {
   height: 35px;
-  margin-top: 10px;
-  text-wrap: wrap;
-
-  text-overflow: ellipsis;
   font-size: 12px;
   overflow: hidden;
 }
-.news-text-content {
-  font-size: 17px;
-  font-weight: 750;
-}
 .news-anchor {
   text-decoration: none;
-  color: rgb(255, 255, 255);
-  background-color: #141414;
-  border: 1px solid rgba(255, 255, 255, 0.295);
-  padding: 3px 5px;
+  color: black;
   cursor: pointer;
+  background-color: white;
+  border: 1px solid rgba(0, 0, 0, 0.295);
+  padding: 3px 5px;
   border-radius: 5px;
   font-size: 12px;
 }
 .news-anchor:hover {
-  background-color: #303030;
+  background-color: #d8d8d8;
 }
 .news-card input[type="text"] {
   width: 100%;
-  border: 1px solid #6e6e6e;
+  border: 1px solid #a3a2a2;
   border-radius: 5px;
 }
 .news-card input[type="date"] {
   width: 100px;
-  border: 1px solid #6e6e6e;
+  border: 1px solid #a3a2a2;
   border-radius: 5px;
 }

@@ -53,7 +53,7 @@
 }
 .link {
   font-size: 12px;
-  color: #ffffff;
+  color: #000000;
   margin: 4px;
   padding: 4px;
   border-radius: 5px;
@@ -111,8 +111,10 @@ textarea {
 .imgSelect {
   font-size: 12px;
   padding: 5px;
-  border: 1px solid #e0e0e031;
+  border: 1px solid #00000062;
   cursor: pointer;
+  background-color: white;
+  color: black;
 }
 .imgSelect:hover {
   background-color: #e0e0e031;
@@ -130,17 +132,19 @@ textarea {
   font-size: 17px;
   text-transform: uppercase;
   border-radius: 5px;
-  border: none;
+  border: 1px solid #00000062;
   cursor: pointer;
   align-self: flex-end;
   padding: 5px 10px;
   color: #0f0f0f;
+
   font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.7);
+  background-color: rgb(255, 255, 255);
+
   transition: all 0.3s ease;
 }
 .okBtn:hover {
-  background-color: rgba(255, 255, 255);
+  background-color: rgb(204, 204, 204);
 }
 #gs_id {
   width: fit-content;
@@ -520,7 +524,7 @@ textarea {
   border-radius: 5px;
   color: white;
   box-shadow: 0 0 10px #000;
-  background-color: #141414;
+  background-color: #a5c6ce;
   padding-right: 10px;
   font-size: 11px;
   width: 100%;
@@ -551,14 +555,15 @@ textarea {
   gap: 10px;
 }
 .gs-anchor {
-  color: white;
+  color: rgb(0, 0, 0) !important;
+  background-color: white;
   text-decoration: none;
   padding: 5px;
   border: 1px solid rgb(78, 78, 78);
   border-radius: 5px;
 }
 .gs-anchor:hover {
-  background-color: #575757;
+  background-color: #d3d3d3;
 }
 #select_gs_articles {
   display: flex;
