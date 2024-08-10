@@ -33,7 +33,7 @@
   word-break: break-all;
   max-width: 90vw;
   margin-right: 10px;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 .pAuthors {
   font-size: 12px;
@@ -130,7 +130,7 @@ textarea {
 .okBtn {
   /* margin-top: 10px; */
   font-size: 17px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   border-radius: 5px;
   border: 1px solid #00000062;
   cursor: pointer;
@@ -540,7 +540,7 @@ textarea {
 }
 .gs-title {
   font-size: 17px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-weight: 700;
   margin-bottom: 10px;
 }

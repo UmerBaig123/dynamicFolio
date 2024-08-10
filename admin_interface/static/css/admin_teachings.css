@@ -1,5 +1,5 @@
 .title {
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-size: 15px;
   font-weight: 100;
 }
@@ -39,7 +39,7 @@ input.courseItem {
 .okBtn {
   /* margin-top: 10px; */
   font-size: 17px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   border-radius: 5px;
   border: none;
   cursor: pointer;

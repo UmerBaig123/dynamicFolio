@@ -17,19 +17,19 @@
 .title {
   font-size: 40px;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize;
   text-align: justify;
-  color: #ffffff;
+  color: #000000;
 }
 .date {
   margin-top: 10px;
   font-size: 13px;
   font-weight: 400;
-  color: #ffffff6c;
+  color: #0000006c;
 }
 .desc {
   font-size: 15px;
   margin-top: 20px;
   text-align: justify;
-  color: #ffffff;
+  color: #000000;
 }

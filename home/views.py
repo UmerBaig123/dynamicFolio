@@ -42,7 +42,7 @@ def home_page(request):
         repos = [repo.repo_id for repo in selected_repos.objects.all()]
         repos = ",".join(repos)
     userdata_obj = userdata.objects.all()[0]
-    publications =[pub.pub for pub in about_me_selected_publications.objects.all()]
+    publications =[pub.pub for pub in about_me_selected_publications.objects.all().order_by('-pub_date')]
     mynews = news.objects.all().order_by('-news_date')
     return render(request, 'home.html', {"showNews":showNews,"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,'gs_publications':about_me_selected_gs.get_gs_with_pdf_videos(),"news":mynews,"animation":animation})
 def repository(request):
@@ -94,7 +94,7 @@ def publications(request):
     page_desc = ""
     if page_description_text.objects.filter(page_name="publications").count() != 0:
         page_desc = page_description_text.objects.filter(page_name="publications")[0]
-    publications = publication.objects.all()
+    publications = publication.objects.all().order_by('-publication_date')
     return render(request, 'publications.html', {"showNews":showNews,"publications":publications,"description_text":page_desc,"full_name":full_name,'gs_publications':google_scholar_article.getAllSelectedWithPdf()})
 def teachings(request):
     userFullName= ""

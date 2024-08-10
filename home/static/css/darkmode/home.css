@@ -206,7 +206,7 @@ body {
   margin: 0;
   color: var(--nav-title-color);
   font-size: var(--nav-title-size);
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .popup-window ul {
@@ -440,7 +440,7 @@ a:active {
   font-size: 45px;
   margin-bottom: 10px;
   color: rgb(156, 156, 156);
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 .first_name {
   color: white;
@@ -506,7 +506,7 @@ a:active {
 .qualification {
   font-size: 20px;
   font-weight: 900;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 .uni-btn {
   cursor: pointer;
@@ -569,7 +569,7 @@ a:active {
   font-weight: 900;
   margin-bottom: 40px;
   margin-top: 20px;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 #repos {
@@ -711,7 +711,7 @@ a:active {
 }
 .pTitle {
   font-size: 17px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-weight: 700;
   margin-bottom: 10px;
 }
@@ -900,7 +900,7 @@ input:checked + .slider:before {
 }
 .gs-title {
   font-size: 17px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   font-weight: 700;
   margin-bottom: 10px;
 }

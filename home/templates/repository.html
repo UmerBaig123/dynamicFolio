@@ -125,7 +125,8 @@
     db_gitlab_repo_ids = db_gitlab_repo_ids.split(",");
   }
   var selectedRepos = `{{repos}}`;
-  page_description.innerHTML = decodeHtml("{{description_text}}");
+  if (document.getElementById("page_description") != null) {
+  document.getElementById("page_description").innerHTML = decodeHtml("{{description_text}}");}
   function decodeHtml(html) {
     var txt = document.createElement("textarea");
     txt.innerHTML = html;

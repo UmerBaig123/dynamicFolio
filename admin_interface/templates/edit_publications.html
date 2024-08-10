@@ -43,6 +43,8 @@ publication {%endblock title%} {%load static %} {% block content %}
           class="pCard paralell publ"
           onclick="decodeAbsBib('{{publication.id}}-abs-inner','{{publication.id}}-bib-inner','{{publication.abs}}','{{publication.bib}}')"
         >
+          <!-- prettier-ignore -->
+          {% if publication.publication_image and publication.publication_image != "" %}
           <div class="pImageContainer">
             <div
               class="pImage"
@@ -53,6 +55,9 @@ publication {%endblock title%} {%load static %} {% block content %}
           "
             ></div>
           </div>
+          {% else %}
+          <div style="margin: 2px"></div>
+          {% endif %}
           <div class="pInfo" style="width: 100%" id="{{publication.id}}">
             <div class="pTitle" style="width: 100%">{{publication.title}}</div>
             <div class="pAuthors" style="width: 100%">

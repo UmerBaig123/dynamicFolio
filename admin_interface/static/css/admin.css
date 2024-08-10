@@ -203,7 +203,7 @@ a:active {
 .first_name {
   font-size: 45px;
   color: rgb(0, 0, 0);
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 .pic-container {
   width: 200px;
@@ -281,7 +281,7 @@ a:active {
   color: #000;
   width: 100%;
   font-weight: 900;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 .uni-btn {
   cursor: pointer;
@@ -322,7 +322,7 @@ a:active {
 .okBtn {
   /* margin-top: 10px; */
   font-size: 17px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   border-radius: 5px;
   border: none;
   cursor: pointer;
@@ -335,7 +335,7 @@ a:active {
 .submitBtn {
   /* margin-top: 10px; */
   font-size: 12px;
-  text-transform: uppercase;
+  text-transform: capitalize;
   border-radius: 5px;
   border: none;
   cursor: pointer;
@@ -386,7 +386,7 @@ textarea:focus {
   font-weight: 900;
   margin-bottom: 40px;
   margin-top: 50px;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 .repo-container {
   padding: 10px;

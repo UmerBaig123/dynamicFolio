@@ -17,7 +17,7 @@
 .title {
   font-size: 40px;
   font-weight: 600;
-  text-transform: uppercase;
+  text-transform: capitalize;
   text-align: justify;
   color: #ffffff;
 }
