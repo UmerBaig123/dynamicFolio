@@ -50,7 +50,8 @@ class publication(models.Model):
     pdfFile = models.FileField(upload_to='publication_pdfs',default="", blank=True)
     video = models.FileField(upload_to='publication_videos',default="", blank=True)
     doi = models.CharField(max_length=100,default="")
-    publication_date = models.DateField(default=django.utils.timezone.now)
+    preference = models.IntegerField(default=0)
+    publication_date = models.DateTimeField(default=django.utils.timezone.now)
     def __str__(self):
         return self.title
     def isDoi(self):
@@ -96,7 +97,6 @@ class google_scholar_article(models.Model):
     cited_by = models.IntegerField(null=True,blank=True)
     citation_id = models.CharField(max_length=100,default="")
     isSelected = models.BooleanField(default=False)
-    pub_date = models.DateField(auto_now=True, blank=True, null=True)
     link = models.URLField(default="")
     def getAllSelectedWithPdf():
         if google_scholar_article.objects.filter(isSelected=True).count() == 0 or google_scholar_article.objects.filter(isSelected=True) is None:
@@ -172,4 +172,6 @@ class about_me_selected_gs(models.Model):
         return all_gs
 class about_me_selected_publications(models.Model):
     pub = models.OneToOneField(publication, on_delete=models.CASCADE)
-    add_date = models.DateField(auto_now=True, blank=True, null=True)
+    def GetOrderedByPref():
+        selected = [pub.pub.pk for pub in about_me_selected_publications.objects.all()]
+        return publication.objects.filter(pk__in=selected).order_by('-preference')

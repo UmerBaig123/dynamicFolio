@@ -59,7 +59,14 @@ publication {%endblock title%} {%load static %} {% block content %}
           <div style="margin: 2px"></div>
           {% endif %}
           <div class="pInfo" style="width: 100%" id="{{publication.id}}">
-            <div class="pTitle" style="width: 100%">{{publication.title}}</div>
+            <div
+              style="width: 100%; display: flex; justify-content: space-between"
+            >
+              <div class="pTitle" style="width: 100%">
+                {{publication.title}}
+              </div>
+              {{publication.preference}}
+            </div>
             <div class="pAuthors" style="width: 100%">
               {{publication.authors}}
             </div>
@@ -106,7 +113,7 @@ publication {%endblock title%} {%load static %} {% block content %}
               {% endif %}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                onclick="edit_publication('{{publication.id}}','{{publication.title}}','{{publication.authors}}','{{publication.description}}','{{publication.abs}}','{{publication.arxiv_url}}','{{publication.bib}}','{{publication.publication_image}}','{{publication.doi}}')"
+                onclick="edit_publication('{{publication.id}}','{{publication.title}}','{{publication.authors}}','{{publication.description}}','{{publication.abs}}','{{publication.arxiv_url}}','{{publication.bib}}','{{publication.publication_image}}','{{publication.doi}}','{{publication.preference}}')"
                 width="20"
                 height="20"
                 style="cursor: pointer; margin: 0 15px"
@@ -279,12 +286,21 @@ publication {%endblock title%} {%load static %} {% block content %}
             />
           </div>
           <div class="pInfo" style="width: 100%">
-            <input
-              class="pTitle"
-              style="width: 100%"
-              name="publication_title"
-              placeholder="title"
-            />
+            <div style="display: flex; gap: 5px">
+              <input
+                class="pTitle"
+                style="width: 100%"
+                name="publication_title"
+                placeholder="title"
+              />
+              <input
+                class="pTitle"
+                style="min-width: 100px; font-size: 12px"
+                name="preference"
+                type="number"
+                placeholder="pref"
+              />
+            </div>
             <input
               class="pAuthors"
               style="width: 100%"
@@ -874,7 +890,8 @@ publication {%endblock title%} {%load static %} {% block content %}
           arxiv,
           bib,
           image,
-          doi
+          doi,
+          pref
         ) => {
           document.getElementById(
             `${publication_id}-container`
@@ -901,6 +918,7 @@ publication {%endblock title%} {%load static %} {% block content %}
             />
           </div>
           <div class="pInfo" style="width: 100%">
+            <div style="display:flex;gap:5px">
             <input
               class="pTitle"
               value = "${name}"
@@ -908,7 +926,14 @@ publication {%endblock title%} {%load static %} {% block content %}
               style="width: 100%"
               name="publication_title"
               placeholder="title"
-            />
+            /><input
+              class="pTitle"
+              value = "${pref}"
+              id="edit-preference"
+              style="min-width:100px;font-size:12px"
+              name="publication_title"
+              placeholder="pref"
+            /></div>
             <input
               class="pAuthors"
               style="width: 100%"
@@ -1049,6 +1074,7 @@ publication {%endblock title%} {%load static %} {% block content %}
           var image = document.getElementById("edit-image").files[0];
           var doi = document.getElementById("edit-doi").value;
           var date = document.getElementById("edit-date").value;
+          var pref = document.getElementById("edit-preference").value;
           var pdf = document.getElementById("edit-pdfInput").files[0];
           var video = document.getElementById("edit-video_input").files[0];
           var formData = new FormData();
@@ -1064,6 +1090,7 @@ publication {%endblock title%} {%load static %} {% block content %}
           formData.append("image", image);
           formData.append("pdf", pdf);
           formData.append("video", video);
+          formData.append("preference", pref);
 
           fetch("{% url 'edit_publication' %}", {
             method: "POST",

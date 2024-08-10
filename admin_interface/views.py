@@ -196,6 +196,9 @@ def edit_publications(request):
         pdfFile = ""
         videoFile = ""
         publication_image = ""
+        pref = 0
+        if request.POST['preference'] != "":
+            pref = request.POST['preference']
         publication_date = datetime.datetime.now()
         title = request.POST['publication_title']
         authors = request.POST['publication_authors']
@@ -212,13 +215,13 @@ def edit_publications(request):
             videoFile = request.FILES['video']
         if request.FILES.get('publication_image') is not None:
             publication_image = request.FILES['publication_image']
-        myPublication = publication(doi=doi,title=title,authors=authors,description=description,abs=abstract,arxiv_url=arxiv_url,bib=bib,pdfFile=pdfFile,publication_image=publication_image,publication_date=publication_date,video=videoFile)
+        myPublication = publication(doi=doi,title=title,authors=authors,description=description,abs=abstract,arxiv_url=arxiv_url,bib=bib,pdfFile=pdfFile,publication_image=publication_image,publication_date=publication_date,video=videoFile,preference=pref)
         myPublication.save()
         return redirect('admin_publications')
     description = ""
     if page_description_text.objects.filter(page_name="publications").count() != 0:
         description = page_description_text.objects.filter(page_name="publications")[0].text
-    publications = publication.objects.all()
+    publications = publication.objects.all().order_by('-preference')
     gs_articles = google_scholar_article.objects.all()
     aboutme_gs_ids = [ gs.gs.pk for gs in about_me_selected_gs.objects.all()]
     aboutme_pub_ids = [ pub.pub.pk for pub in about_me_selected_publications.objects.all()] 
@@ -292,6 +295,9 @@ class edit_publication(APIView):
         publication_id = request.data['id']
         title = request.data['title']
         authors = request.data['authors']
+        pref = 0
+        if request.data['preference'] != "":
+            pref = request.data['preference']
         description = request.data['desc']
         abstract = request.data['abs']
         arxiv_url = request.data['arxiv']
@@ -315,6 +321,7 @@ class edit_publication(APIView):
         thisPublication.arxiv_url = arxiv_url
         thisPublication.bib = bib
         thisPublication.doi = doi
+        thisPublication.preference = pref
         if pdfFile != "":
             try:
                 deletingPdf = thisPublication.pdfFile.path
