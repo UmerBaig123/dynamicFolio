@@ -513,6 +513,7 @@
         href="{% url 'home_news_more' new.id %}"
       >
         <div class="news-container">
+          {% if new.image and new.image != ""%}
           <div class="news-left">
             <div
               style="background-image:url('/static/{{new.image}}');
@@ -522,6 +523,7 @@
               alt="news image"
             ></div>
           </div>
+          {% endif %}
           <div class="news-right">
             <div class="news-text-wrap">
               <div class="news-text-content">{{new.title}}</div>

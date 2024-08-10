@@ -96,7 +96,7 @@ class google_scholar_article(models.Model):
     cited_by = models.IntegerField(null=True,blank=True)
     citation_id = models.CharField(max_length=100,default="")
     isSelected = models.BooleanField(default=False)
-    pub_date = models.DateField(default="2021-01-01")
+    pub_date = models.DateField(auto_now=True, blank=True, null=True)
     link = models.URLField(default="")
     def getAllSelectedWithPdf():
         if google_scholar_article.objects.filter(isSelected=True).count() == 0 or google_scholar_article.objects.filter(isSelected=True) is None:
@@ -172,3 +172,4 @@ class about_me_selected_gs(models.Model):
         return all_gs
 class about_me_selected_publications(models.Model):
     pub = models.OneToOneField(publication, on_delete=models.CASCADE)
+    add_date = models.DateField(auto_now=True, blank=True, null=True)

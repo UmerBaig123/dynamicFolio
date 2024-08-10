@@ -42,7 +42,7 @@ def home_page(request):
         repos = [repo.repo_id for repo in selected_repos.objects.all()]
         repos = ",".join(repos)
     userdata_obj = userdata.objects.all()[0]
-    publications =[pub.pub for pub in about_me_selected_publications.objects.all().order_by('-pub_date')]
+    publications =[pub.pub for pub in about_me_selected_publications.objects.all().order_by('-add_date')]
     mynews = news.objects.all().order_by('-news_date')
     return render(request, 'home.html', {"showNews":showNews,"userdata": userdata_obj, "repos": repos,"publications":publications,"full_name":full_name,"api_key":API_KEY,"gitlab_id":gitlab_id,"gitlab_repos":gitlab_repos,'gs_publications':about_me_selected_gs.get_gs_with_pdf_videos(),"news":mynews,"animation":animation})
 def repository(request):
