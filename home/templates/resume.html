@@ -39,7 +39,7 @@
     background-size: cover;
     "
       ></div>
-
+      {% if skillsLength != 0 %}
       <div class="resume-heading">SKILLS</div>
       {% for type in skillTypes %} {% if type.isNotEmpty %}
       <div class="min-heading">{{type.type_name}}</div>
@@ -48,7 +48,7 @@
         <li>{{skill.skill_name}}</li>
         {% endfor %}
       </ul>
-      {% endif %} {% endfor %}
+      {% endif %} {% endfor %}{% endif %} {% if languagesLength != 0 %}
       <div class="resume-heading">LANGUAGES</div>
       <table class="details">
         {% for language in languages %}
@@ -58,6 +58,7 @@
         </tr>
         {% endfor %}
       </table>
+      {% endif %}
       <div class="resume-heading">DETAILS</div>
       <table class="details">
         <tr>
