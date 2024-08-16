@@ -27,7 +27,7 @@
 </div>
 <div class="resumeContainer" style="margin-top: 100px; margin-bottom: 20px">
   <div class="resumeContainer" id="resume" style="width: 100%">
-    <div class="resumeLeft">
+    <div class="resumeLeft" id="resumeLeft">
       <div class="resume-name">
         <div class="fName">{{fName}}</div>
         <div class="lName">{{lName}}</div>
@@ -505,14 +505,32 @@
       filename: "resume.pdf",
       margin: 0,
       image: { type: "jpeg", quality: 2 },
-      html2canvas: { dpi: 192, letterRendering: true, scale: 3 },
+      html2canvas: { dpi: 192, letterRendering: true, scale: 1 },
       jsPDF: {
         unit: "in",
         format: "letter",
         orientation: "portrait",
       },
     };
-    html2pdf().set(options).from(element).save();
+    var newMode = localStorage.getItem("mode");
+    document.getElementById("resumeLeft").style.background =
+      newMode == "light" ? "rgb(60, 78, 160)" : "rgb(38, 1, 48)";
+    document.getElementById("resumeLeft").style.color = "white";
+    document.querySelectorAll("section")[0].style.background =
+      newMode == "light" ? "white" : "#272727";
+    document.querySelectorAll(".insideBox").forEach((elem) => {
+      elem.style.background = newMode == "light" ? "white" : "#272727";
+      document.querySelectorAll("svg").forEach((svg) => {
+        svg.style.fill = newMode == "light" ? "black" : "white";
+      });
+    });
+    html2pdf()
+      .set(options)
+      .from(element)
+      .save()
+      .then(() => {
+        window.location.reload();
+      });
   }
 </script>
 {% endblock %}
