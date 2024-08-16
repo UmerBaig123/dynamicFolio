@@ -2,6 +2,11 @@
 <!-- prettier-ignore -->
 {%load static %} {% block content %}
 <link rel="stylesheet" id="inner_css" href="{% static 'css/resume.css' %}" />
+<style>
+  media print {
+    print-color-adjust: exact;
+  }
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.2/html2pdf.bundle.js"></script>
 <div class="download" onclick="downloadResume()">
   <svg
@@ -168,10 +173,7 @@
         {% if showEducation %}
         <h2 class="heading">Education</h2>
         {% for experience in education %}
-        <div
-          class="insideBox"
-          style="display: flex; justify-content: space-between; gap: 40px"
-        >
+        <div class="insideBox" style="display: flex; gap: 40px">
           <div class="left">
             <!-- prettier-ignore -->
             {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
@@ -224,10 +226,7 @@
         {% endfor %} {% endif %} {% if showProfessional %}
         <h2 class="heading">Professional Experience</h2>
         {% for experience in professional %}
-        <div
-          class="insideBox"
-          style="display: flex; justify-content: space-between; gap: 40px"
-        >
+        <div class="insideBox" style="display: flex; gap: 40px">
           <div class="left">
             <!-- prettier-ignore -->
             {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
@@ -280,10 +279,7 @@
         {% endfor %} {% endif %} {% if showAcademic %}
         <h2 class="heading">Academic Experience</h2>
         {% for experience in academic %}
-        <div
-          class="insideBox"
-          style="display: flex; justify-content: space-between; gap: 40px"
-        >
+        <div class="insideBox" style="display: flex; gap: 40px">
           <div class="left">
             <!-- prettier-ignore -->
             {% if experience.experience_from_date != "" and experience.experience_to_date != "" %}
@@ -509,7 +505,7 @@
       filename: "resume.pdf",
       margin: 0,
       image: { type: "jpeg", quality: 2 },
-      html2canvas: { scale: 3 },
+      html2canvas: { dpi: 192, letterRendering: true, scale: 3 },
       jsPDF: {
         unit: "in",
         format: "letter",
