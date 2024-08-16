@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from rest_framework.response import Response
 import requests
 from rest_framework.views import APIView
-from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,google_scholar_article,gs_citation_ids,about_me_selected_gs,about_me_selected_publications,news
+from .models import userdata,selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,google_scholar_article,gs_citation_ids,about_me_selected_gs,about_me_selected_publications,news,languages,skill,skill_type
 import datetime
 import os
 from dotenv import load_dotenv
@@ -636,8 +636,8 @@ def edit_resume(request):
         showAward = True
     if generalInfo.objects.all().count() != 0:
         myGeneralInfo = generalInfo.objects.all()[0]
-        return render(request, 'edit_resume.html',{"userFullName":userFullName,"showNews":showNews,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
-    return render(request, 'edit_resume.html',{"userFullName":userFullName,"showNews":showNews,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward})
+        return render(request, 'edit_resume.html',{"userFullName":userFullName,"showNews":showNews,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"languages":languages.objects.all(),"skillTypes":skill_type.objects.all()})
+    return render(request, 'edit_resume.html',{"userFullName":userFullName,"showNews":showNews,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"languages":languages.objects.all(),"skillTypes":skill_type.objects.all()})
 class deleteNews(APIView):
     def post(self,request):
         news_id = request.data['news_id']
@@ -665,3 +665,53 @@ class deleteNews(APIView):
                 pass
         thisNews.delete()
         return Response({"message":"News deleted successfully","status":200})
+class languages_crud(APIView):
+    def post(self,request):
+        language = request.data['language']
+        proficiency = request.data['proficiency']
+        myLanguage = languages(language_name=language,language_proficiency=proficiency)
+        myLanguage.save()
+        return Response({"message":"Language added successfully","status":200})
+    def delete(self,request):
+        language_id = request.data['language_id']
+        thisLanguage = languages.objects.get(id=language_id)
+        thisLanguage.delete()
+        return Response({"message":"Language deleted successfully","status":200})
+    def put(self,request):
+        language_id = request.data['language_id']
+        language = request.data['language_name']
+        proficiency = request.data['language_proficiency']
+        thisLanguage = languages.objects.get(id=language_id)
+        thisLanguage.language_name = language
+        thisLanguage.language_proficiency = proficiency
+        thisLanguage.save()
+        return Response({"message":"Language edited successfully","status":200})
+class skills_crud(APIView):
+    def post(self,request):
+        this_skill = request.data['name']
+        this_skill_type = request.data['type']
+        if skill_type.objects.filter(type_name=this_skill_type).count() == 0:
+            mySkillType = skill_type(type_name=this_skill_type)
+            mySkillType.save()
+        this_skill_type = skill_type.objects.filter(type_name=this_skill_type).first()
+        mySkill = skill(skill_name=this_skill,type=this_skill_type)
+        mySkill.save()
+        return Response({"message":"Skill added successfully","status":200})
+    def delete(self,request):
+        skill_id = request.data['skill_id'] 
+        thisSkill = skill.objects.get(id=skill_id)
+        thisSkill.delete()
+        return Response({"message":"Skill deleted successfully","status":200})
+    def put(self,request):
+        skill_id = request.data['skill_id']
+        this_skill = request.data['skill_name']
+        this_skill_type = request.data['skill_type']
+        if skill_type.objects.filter(type_name=this_skill_type).count() == 0:
+            mySkillType = skill_type(type_name=this_skill_type)
+            mySkillType.save()
+        this_skill_type = skill_type.objects.filter(type_name=this_skill_type).first()
+        thisSkill = skill.objects.get(id=skill_id)
+        thisSkill.skill_name = this_skill
+        thisSkill.type = this_skill_type
+        thisSkill.save()
+        return Response({"message":"Skill edited successfully","status":200})

@@ -24,5 +24,7 @@ urlpatterns = [
     path('select_for_about_me/', views.select_for_about_me.as_view(), name='select_aboutme'),
     path('delete_news/', views.deleteNews.as_view(), name='delete_news'),
     path('news/', views.edit_news, name='admin_news'),
+    path('languages/', views.languages_crud.as_view(), name='languages'),
+    path('skills/', views.skills_crud.as_view(), name='skills'),
 
 ]

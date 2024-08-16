@@ -6,32 +6,29 @@
   font-size: 1.2em;
   font-weight: lighter;
 }
-.generalInfo,
-.contactInfo,
-.profExperience,
-.education,
-.AwardsCertificates,
-.academicExperience,
-.hobbies {
-  margin-bottom: 1rem;
-  padding: 1rem;
-  background: #e5e7eb;
-  border-radius: 0.2rem;
+section {
+  padding: 0 1rem;
+  width: inherit;
+  background: #ffffff;
+  border-top-right-radius: 0.2rem;
+  border-bottom-right-radius: 0.2rem;
   border: 2px solid rgba(100, 98, 98, 0.1);
   box-shadow: 0rem 0rem 1rem rgba(117, 114, 114, 0.1);
+  padding-bottom: 10px;
 }
 .insideBox {
   margin-bottom: 0.8rem;
   padding: 20px;
   border-radius: 8px;
   background-color: #ffffff;
-  box-shadow: 0rem 1rem 2rem rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #0000001c;
 }
 
 .heading {
-  padding-bottom: 10px;
-  margin-bottom: 20px;
-  margin-top: 0;
+  padding-bottom: 5px;
+  margin-bottom: 25px;
+  margin-top: 20px;
+  border-bottom: 2px solid rgba(60, 127, 252, 0.384);
 }
 
 .title {
@@ -40,19 +37,11 @@
   box-sizing: border-box;
 }
 
-.degreeYear {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
 .dateDiff {
-  background: #ebedf0;
   color: rgb(0, 0, 0);
-  padding: 0rem 0.7rem;
-  box-sizing: border-box;
-  font-size: 12px;
-  box-shadow: 0rem 0rem 0.2rem rgb(14, 13, 13);
+  /* margin: 1rem 0rem; */
+  max-width: fit-content;
+  font-size: 22px;
   height: fit-content;
 }
 ul li {
@@ -68,17 +57,36 @@ ul li {
 }
 
 @media (min-width: 600px) {
-  section {
-    max-width: 800px;
-    margin: 20px auto;
+}
+@media (min-width: 1000px) {
+  .resumeLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: inherit;
+    width: 100%;
+    background-color: rgb(60, 78, 160);
+    min-width: 24vw;
+  }
+  .hide {
+    display: none;
   }
 }
-
+@media (max-width: 1000px) {
+  .resumeLeft {
+    display: none;
+  }
+  .hide {
+    display: block;
+  }
+}
 @media (max-width: 600px) {
   .header {
     font-size: 0.8em;
   }
-
+  .resumeLeft {
+    display: none;
+  }
   .name {
     font-size: 2em;
   }
@@ -99,7 +107,9 @@ hr {
   font-weight: 100;
 }
 .expPlace {
-  font-size: 13px;
+  font-size: 18px;
+  margin-bottom: 10px;
+  color: rgba(0, 0, 0, 0.692);
 }
 
 .award-title {
@@ -109,4 +119,91 @@ hr {
 .awardBox {
   border: 1px solid rgba(0, 0, 0, 0.233);
   padding: 5px 10px !important;
+}
+.left {
+  min-width: fit-content;
+  opacity: 0.4;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.resumeContainer {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  width: 95%;
+}
+.resume-name {
+  margin: 20px 0;
+  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* gap: 5px; */
+  color: white;
+  font-size: 50px;
+  font-weight: 800;
+  text-transform: uppercase;
+  text-align: center;
+}
+.resume-heading {
+  color: white;
+  font-size: 20px;
+  font-weight: 800;
+  margin: 20px 0;
+  margin-top: 50px;
+  padding-bottom: 5px;
+  width: 90%;
+  border-bottom: 2px solid rgb(255, 255, 255);
+  text-align: center;
+  text-transform: uppercase;
+}
+.details {
+  color: white;
+  width: 86%;
+  font-size: 13px;
+}
+.details a {
+  color: rgb(141, 141, 255) !important;
+}
+td {
+  text-align: right;
+}
+td.label {
+  font-weight: 600;
+  text-align: left;
+}
+.skill-list {
+  color: white;
+  width: 80%;
+}
+.skill-list li {
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+.min-heading {
+  width: 85%;
+  font-weight: 800;
+  font-size: 15px;
+  color: white;
+}
+
+.download {
+  position: fixed;
+  right: 0;
+  top: 100;
+  background-color: rgb(238, 238, 238);
+  padding: 10px 20px;
+  border: 1px solid rgba(0, 0, 0, 0.267);
+  padding-right: 30px;
+  transform: translateX(10px);
+  color: black;
+  cursor: pointer;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+  transition: all 0.3s ease;
+}
+.download:hover {
+  transform: translateX(0px);
 }

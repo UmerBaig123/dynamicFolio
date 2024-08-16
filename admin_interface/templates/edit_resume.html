@@ -22,7 +22,8 @@
             />
           </td>
         </tr>
-        <tr>
+        <tr 
+              hidden>
           <td>Languages:</td>
           <td>
             <input
@@ -35,7 +36,7 @@
         </tr>
         <tr>
           <td>CV(PDF):</td>
-          <td><input type="file" accept="application/pdf,application/vnd.ms-excel" name="cv" /></td>
+          <td><input type="file" style="border: none;cursor: pointer;" accept="application/pdf,application/vnd.ms-excel" name="cv" /></td>
         </tr>
 
         <tr>
@@ -69,6 +70,135 @@
         >
           submit
         </button>
+      </div>
+    </section>
+    <section class="generalInfo">
+      <h2 class="heading">Languages</h2>
+      <div class="language lHeading">
+        <div >Name</div>
+        <div >Proficiency</div>
+      </div>
+      {% for language in languages %}
+      <div id="{{language.pk}}">
+      <div class="language" style="font-size: 12px;margin-bottom:0;">
+        <div><b>{{language.language_name}}</b></div> 
+        <div>{{language.language_proficiency}}</div> 
+      </div>
+      <div class="language" style="justify-content: flex-end;padding-bottom:5px;margin-bottom:15px;border-bottom:1px solid rgba(0, 0, 0, 0.226);gap:10px">     
+        
+        <svg
+              xmlns="http://www.w3.org/2000/svg"
+              onclick="editLanguage('{{language.id}}','{{language.language_name}}','{{language.language_proficiency}}')"
+               width="14"
+              height="14"
+              style="cursor: pointer"
+              fill="#997000"
+              class="bi bi-pencil-square"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+              />
+            </svg><svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              style="cursor: pointer"
+              fill="#fa4343"
+              class="bi bi-trash3-fill"
+              viewBox="0 0 16 16"
+              onclick="deleteLanguage('{{language.id}}')"
+            >
+              <path
+                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+              />
+            </svg> 
+      </div></div>
+      {% endfor %}
+      <div class="language">
+        <input type="text" id="lang_add_name" placeholder="language name" class="lang_add">
+        <input type="text" id="lang_add_proficiency" class="lang_add" placeholder="language proficiency">
+      </div>
+      <div style="width: 95%; display: flex; justify-content: flex-end;margin-top:10px;">
+        <button
+          class="okBtn"
+          type="button"
+          style="font-size: 12px; font-weight: 100"
+          onclick="addLanguage()"
+        >
+          add
+        </button>
+
+      </div>
+    </section>
+    <section class="generalInfo">
+      <h2 class="heading">Skills</h2>
+      <div class="language lHeading">
+        <div >Name</div>
+        <div >Type</div>
+      </div>
+      {% for type in skillTypes %}
+      {% for skill in type.get_skills %}
+      <div id="{{skill.pk}}">
+      <div class="language" style="font-size: 12px;margin-bottom:0;">
+        <div><b>{{skill.skill_name}}</b></div> 
+        <div>{{type.type_name}}</div> 
+      </div>
+      <div class="language" style="justify-content: flex-end;padding-bottom:5px;margin-bottom:15px;border-bottom:1px solid rgba(0, 0, 0, 0.226);gap:10px">     
+        
+        <svg
+              xmlns="http://www.w3.org/2000/svg"
+              onclick="editSkill('{{skill.id}}','{{skill.skill_name}}','{{type.type_name}}')"
+               width="14"
+              height="14"
+              style="cursor: pointer"
+              fill="#997000"
+              class="bi bi-pencil-square"
+              viewBox="0 0 16 16"
+            >
+              <path
+                d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"
+              />
+              <path
+                fill-rule="evenodd"
+                d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"
+              />
+            </svg><svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              style="cursor: pointer"
+              fill="#fa4343"
+              class="bi bi-trash3-fill"
+              viewBox="0 0 16 16"
+              onclick="deleteSkill('{{skill.id}}')"
+            >
+              <path
+                d="M11 1.5v1h3.5a.5.5 0 0 1 0 1h-.538l-.853 10.66A2 2 0 0 1 11.115 16h-6.23a2 2 0 0 1-1.994-1.84L2.038 3.5H1.5a.5.5 0 0 1 0-1H5v-1A1.5 1.5 0 0 1 6.5 0h3A1.5 1.5 0 0 1 11 1.5m-5 0v1h4v-1a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 0-.5.5M4.5 5.029l.5 8.5a.5.5 0 1 0 .998-.06l-.5-8.5a.5.5 0 1 0-.998.06m6.53-.528a.5.5 0 0 0-.528.47l-.5 8.5a.5.5 0 0 0 .998.058l.5-8.5a.5.5 0 0 0-.47-.528M8 4.5a.5.5 0 0 0-.5.5v8.5a.5.5 0 0 0 1 0V5a.5.5 0 0 0-.5-.5"
+              />
+            </svg> 
+      </div></div>
+      {%endfor%}
+      {%endfor%}
+      
+      <div class="language">
+        <input type="text" id="skill_add_name" placeholder="skill name" class="lang_add">
+        <input type="text" id="skill_add_type" class="lang_add" placeholder="Skill Type">
+      </div>
+      <div style="width: 95%; display: flex; justify-content: flex-end;margin-top:10px;">
+        <button
+          class="okBtn"
+          type="button"
+          style="font-size: 12px; font-weight: 100"
+          onclick="addSkill()"
+        >
+          add
+        </button>
+
       </div>
     </section>
   </form>
@@ -784,6 +914,150 @@
         "X-CSRFToken": "{{ csrf_token }}",
       },
       body: JSON.stringify({ experience_id: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  }
+  function addLanguage(){
+    var name = document.getElementById("lang_add_name").value;  
+    var proficiency = document.getElementById("lang_add_proficiency").value;  
+    fetch("{% url 'languages' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ language: name, proficiency: proficiency }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  }
+  function deleteLanguage(id){
+    fetch("{% url 'languages' %}", {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ language_id: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  }
+  function editLanguage(id,name,prof){
+    document.getElementById(id).innerHTML = `
+    <div class="language">
+        <input type="text" id="${id}-name" placeholder="language name" value="${name}" class="lang_add">
+        <input type="text" id="${id}-proficiency" class="lang_add" value="${prof}" placeholder="language proficiency">
+      </div>
+      <div style="width: 95%; display: flex; justify-content: flex-end;margin:10px 0; margin-bottom:20px;">
+        <button
+          class="okBtn"
+          type="button"
+          style="font-size: 12px; font-weight: 100"
+          onclick="updateLanguage('${id}')"
+        >
+          ok
+        </button>
+
+      </div>`;
+  }
+  function updateLanguage(id){
+    var idPrefix = id;
+    var language_id = id;
+    var language_name = document.getElementById(idPrefix + "-name").value;
+    var language_proficiency = document.getElementById(idPrefix + "-proficiency").value;
+    fetch("{% url 'languages' %}", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ language_id: language_id, language_name: language_name, language_proficiency: language_proficiency }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  }
+  function addSkill(){
+    var name = document.getElementById("skill_add_name").value;  
+    var type = document.getElementById("skill_add_type").value;  
+    fetch("{% url 'skills' %}", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ name: name, type: type }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  }
+  function deleteSkill(id){
+    fetch("{% url 'skills' %}", {
+      method: "delete",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ skill_id: id }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          location.reload();
+        }
+      });
+  }
+  function editSkill(id,name,type){
+    document.getElementById(id).innerHTML = `
+    <div class="language">
+        <input type="text" id="${id}-name" placeholder="skill name" value="${name}" class="lang_add">
+        <input type="text" id="${id}-type" class="lang_add" value="${type}" placeholder="skill type">
+      </div>
+      <div style="width: 95%; display: flex; justify-content: flex-end;margin:10px 0; margin-bottom:20px;">
+        <button
+          class="okBtn"
+          type="button"
+          style="font-size: 12px; font-weight: 100"
+          onclick="updateSkill('${id}')"
+        >
+          ok
+        </button>
+
+      </div>`;
+  }
+  function updateSkill(id){
+    var idPrefix = id;
+    var skill_id = id;
+    var skill_name = document.getElementById(idPrefix + "-name").value;
+    var skill_type = document.getElementById(idPrefix + "-type").value;
+    fetch("{% url 'skills' %}", {
+      method: "put",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRFToken": "{{ csrf_token }}",
+      },
+      body: JSON.stringify({ skill_id: skill_id, skill_name: skill_name, skill_type: skill_type }),
     })
       .then((response) => response.json())
       .then((data) => {

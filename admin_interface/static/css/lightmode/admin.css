@@ -323,8 +323,8 @@ a:active {
   /* margin-top: 10px; */
   font-size: 17px;
   text-transform: uppercase;
+  border: 1px solid rgba(0, 0, 0, 0.445);
   border-radius: 5px;
-  border: none;
   cursor: pointer;
   align-self: flex-end;
   padding: 5px 10px;

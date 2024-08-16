@@ -3,7 +3,7 @@ from django import template
 from types import SimpleNamespace
 import dotenv
 import os
-from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,gs_citation_ids,google_scholar_article,about_me_selected_publications,about_me_selected_gs,news
+from admin_interface.models import userdata, selected_repos,publication,page_description_text,courses,experience,generalInfo,gitlab_ids,selected_gitlab_repos,gs_citation_ids,google_scholar_article,about_me_selected_publications,about_me_selected_gs,news,languages,skill,page_description_text,skill_type
 # Create your views here.
 dotenv.load_dotenv()
 API_KEY = os.environ['GITLABAPITOKEN']
@@ -132,11 +132,17 @@ def resume(request):
     fullName=""
     email=""
     linkedin=""
+    first_name = ""
+    last_name = ""
+    profile_image = ""
     if userdata.objects.all().count() != 0:
         myUserdata = userdata.objects.all()[0]
         fullName = myUserdata.first_name + " " + myUserdata.last_name
         email = myUserdata.email_address
         linkedin = myUserdata.linkedin_url
+        first_name = myUserdata.first_name
+        last_name = myUserdata.last_name
+        profile_image = myUserdata.profile_pic
     experience_ids = []
     if experience.objects.all().count() != 0:
         experience_ids = [str(exp.id) for exp in experience.objects.all()]
@@ -155,8 +161,8 @@ def resume(request):
         showAward = True
     if generalInfo.objects.all().count() != 0:
         myGeneralInfo = generalInfo.objects.all()[0]
-        return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
-    return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName})
+        return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"info":myGeneralInfo,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName,"fName":first_name,"lName":last_name,"pImage":profile_image,"languages":languages.objects.all(),"skillTypes":skill_type.objects.all()})   
+    return render(request, 'resume.html',{"showNews":showNews,"experience_ids":experience_ids,"education":education_exp,"professional":professional_exp,"academic":academic_exp,"awards":award_exp,"fullname":fullName,"email":email,"linkedin":linkedin,"showEducation":showEducation,"showProfessional":showProfessional,"showAcademic":showAcademic,"showAward":showAward,"full_name":fullName,"fName":first_name,"lName":last_name,"pImage":profile_image,"languages":languages.objects.all(),"skillTypes":skill_type.objects.all()})
 def news_view_more(request,news_id):
     userFullName= ""
     if userdata.objects.all().count() != 0:

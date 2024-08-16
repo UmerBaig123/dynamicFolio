@@ -175,3 +175,21 @@ class about_me_selected_gs(models.Model):
         return all_gs
 class about_me_selected_publications(models.Model):
     pub = models.OneToOneField(publication, on_delete=models.CASCADE)
+class languages(models.Model):
+    language_name = models.CharField(default="",max_length=100)
+    language_proficiency = models.CharField(default="",max_length=100)
+    def __str__(self):
+        self.language_name
+class skill_type(models.Model):
+    type_name = models.CharField(default="",max_length=100)
+    def get_skills(self):
+        return skill.objects.filter(type=self)
+    def isNotEmpty(self):
+        return skill.objects.filter(type=self).count()!=0
+    def __str__(self):
+        self.type_name
+class skill(models.Model):
+    skill_name = models.CharField(default="",max_length=100)
+    type = models.ForeignKey(skill_type,on_delete=models.CASCADE,default=0)
+    def __str__(self):
+        self.skill_name

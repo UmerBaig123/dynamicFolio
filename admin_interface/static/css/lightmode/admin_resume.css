@@ -114,3 +114,28 @@ textarea {
 .award-title {
   font-size: 12px;
 }
+
+/* copy from here */
+.language {
+  width: 90%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.language div {
+  margin-bottom: 10px;
+}
+.lHeading {
+  font-weight: 700;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.459);
+  margin-bottom: 10px;
+}
+.lHeading div {
+  margin-bottom: 0;
+}
+.lang_add {
+  width: 200px;
+  padding: 5px;
+}
