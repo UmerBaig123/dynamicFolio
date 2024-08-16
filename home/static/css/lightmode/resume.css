@@ -65,6 +65,7 @@ ul li {
     align-items: center;
     height: inherit;
     width: 100%;
+    max-width: 30vw;
     background-color: rgb(60, 78, 160);
     min-width: 24vw;
   }
